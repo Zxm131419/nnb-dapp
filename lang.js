@@ -233,9 +233,7 @@ function __mergeDict(lang){
   return out;
 }
 
-function currentLang(){try{return localStorage.getItem(LANG_KEY)||(navigator.language||'zh-CN').slice(0,2)==='zh'? 
-  ((navigator.language||'').indexOf('TW')>-1?'zh-TW':'zh-CN') : mapNavigator(navigator.language)}
-  catch(e){return 'zh-CN'}}
+function currentLang(){try{var stored=localStorage.getItem(LANG_KEY);if(stored&&NNB_DICT[stored]){return stored}}catch(e){}try{var nav=(navigator.language||'').toLowerCase();if(nav.indexOf('en')>-1)return 'en';if(nav.indexOf('ja')>-1)return 'ja';if(nav.indexOf('ko')>-1)return 'ko';if(nav.indexOf('vi')>-1)return 'vi';if(nav.indexOf('ms')>-1||nav.indexOf('id')>-1)return 'ms';if(nav.indexOf('zh')>-1)return 'zh-CN';}catch(e){}return 'zh-CN'}
 function mapNavigator(lang){
   var l=(lang||'').toLowerCase();
   if(l.indexOf('en')>-1)return 'en';if(l.indexOf('ja')>-1)return'ja';
