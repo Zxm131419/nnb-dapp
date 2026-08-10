@@ -497,7 +497,7 @@ button{cursor:pointer;font-family:inherit}
 
   <div class="card">
     <div class="row" style="margin-bottom:12px"><div class="g-icon" style="background:rgba(16,185,129,0.15);color:var(--green)"><i class="ph ph-user"></i></div><div style="font-weight:700;font-size:16px" data-i18n="node.identity">身份:矿工</div></div>
-    <div class="invite-card" style="margin-bottom:6px"><div class="invite-icon"><i class="ph ph-link"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="node.website">官网链接</div><div class="invite-val">https://nnb-dapp-2026.surge.sh</div></div><button class="invite-copy" onclick="copyText('https://nnb-dapp-2026.surge.sh')" data-i18n="invite.copy">复制</button></div>
+    <div class="invite-card" style="margin-bottom:6px"><div class="invite-icon"><i class="ph ph-link"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="node.website">官网链接</div><div class="invite-val">https://nnb2026.top</div></div><button class="invite-copy" onclick="copyText('https://nnb2026.top')" data-i18n="invite.copy">复制</button></div>
     <div class="invite-card" style="margin-bottom:6px"><div class="invite-icon"><i class="ph ph-identification-card"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="invite.promoId">推广ID</div><div class="invite-val" id="nodeAddr" data-i18n="common.notConnected">未连接</div></div><button class="invite-copy" onclick="copyText(document.getElementById('nodeAddr').getAttribute('data-full')||document.getElementById('nodeAddr').textContent)" data-i18n="invite.copy">复制</button></div>
     <div class="invite-card"><div class="invite-icon"><i class="ph ph-file-text"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="invite.contract">合约地址</div><div class="invite-val">0xb9200aE34c94090EbCc84D7323f911dE60BA3202</div></div><button class="invite-copy" onclick="copyText('0xb9200aE34c94090EbCc84D7323f911dE60BA3202')" data-i18n="invite.copy">复制</button></div>
   </div>
@@ -649,7 +649,7 @@ async function connectWallet(){
       nodeAddrEl.textContent=short;
       nodeAddrEl.setAttribute('data-full',addr);
     }
-    const fullLink='https://nnb-dapp-2026.surge.sh/?ref='+addr;
+    const fullLink='https://nnb2026.top/?ref='+addr;
     const inviteUrlEl=document.getElementById('inviteUrl');
     if(inviteUrlEl){
       inviteUrlEl.textContent=fullLink;
