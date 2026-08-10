@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NNB 合约一键部署升级</title>
+<style>
+  :root{--bg:#0b0e1a;--card:#151a2e;--line:#2a3150;--txt:#e8ecf5;--muted:#8b93a8;--gold:#d4af37;--gold-l:#f0d568;--purple:#7c5cff;--green:#2ecc71;--red:#ff5c5c}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:linear-gradient(160deg,#0b0e1a,#111633 60%,#0b0e1a);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:24px 16px}
+  .wrap{max-width:680px;margin:0 auto}
+  header{text-align:center;margin-bottom:26px}
+  .logo{font-size:28px;font-weight:800;letter-spacing:1px}.logo span{color:var(--gold)}
+  .sub{color:var(--muted);font-size:13px;margin-top:6px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:18px}
+  .row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(42,49,80,.5);font-size:14px}
+  .row .k{color:var(--muted)} .row .v{font-weight:600;word-break:break-all}
+  .btn{display:inline-flex;align-items:center;gap:8px;justify-content:center;border:none;border-radius:10px;padding:13px 18px;font-size:15px;font-weight:700;cursor:pointer;color:#0b0e1a;min-width:160px}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-l))}
+  .btn-purple{background:linear-gradient(135deg,var(--purple),#9d83ff);color:#fff}
+  .btn-green{background:linear-gradient(135deg,#27ae60,#2ecc71);color:#fff}
+  .btn:hover:not(:disabled){filter:brightness(1.06)}
+  .addr-box{background:#0e1226;border:1px solid var(--line);border-radius:8px;padding:10px;font-family:monospace;font-size:12px;color:var(--gold-l);word-break:break-all;min-height:40px;margin:8px 0}
+  .log{background:#0e1226;border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:14px;max-height:220px;overflow:auto;font-family:monospace;font-size:12px;white-space:pre-wrap}
+  .log .ok{color:var(--green)}.log .err{color:var(--red)}.log .info{color:var(--muted)}
+  .warn{background:rgba(255,92,92,.08);border:1px solid rgba(255,92,92,.3);border-radius:10px;padding:12px;font-size:12px;color:#ffb3b3;margin-top:12px}
+  .tip{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.7}
+  textarea{width:100%;min-height:90px;background:#0e1226;border:1px solid var(--line);border-radius:8px;color:var(--txt);font-family:monospace;font-size:12px;padding:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">NNB <span>一键部署升级</span></div>
+    <div class="sub">NNB 业务合约企业级升级工具 · 全程钱包点确认 · 省Gas</div>
+  </header>
+
+  <div class="card">
+    <div class="row"><span class="k">Proxy 合约</span><span class="v">0xB94cD1E6f6D73022FFb8C813864411405d706125</span></div>
+    <div class="row"><span class="k">当前实现</span><span class="v" id="curImpl">读取中...</span></div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-gold" onclick="connectOwner()">连接 Owner 钱包</button>
+      <button class="btn btn-purple" onclick="refreshImpl()">刷新当前实现</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="logo" style="font-size:18px">① 部署新实现（需要新版本 bytecode）</div>
+    <div class="tip">替换为新版本时：把编译产物（合约的 <b>创建字节码 bytecode</b>）粘贴到下方文本域，然后点部署。</div>
+    <textarea id="newBytecode" placeholder="0x... 粘贴新的合约创建字节码(bytecode)。由开发者在本地编译后填入。"></textarea>
+    <div class="addr-box" id="newImpl">新实现地址：待部署</div>
+    <button class="btn btn-purple" id="deployBtn" style="width:100%" onclick="deployNewImpl()" disabled>① 部署新实现</button>
+  </div>
+
+  <div class="card">
+    <div class="logo" style="font-size:18px">② 升级 Proxy</div>
+    <div class="row"><span class="k">指向新实现</span><span class="v" id="upgradeTarget">待部署</span></div>
+    <button class="btn btn-green" id="upgradeBtn" style="width:100%;margin-top:10px" onclick="upgradeProxy()" disabled>② 升级 Proxy</button>
+  </div>
+
+  <div class="log" id="logBox">等待操作...</div>
+  <div class="warn"><b>安全提示：</b>仅管理员(Proxy Owner)操作。升级不可逆。部署前请确认：①新版本已在本地用 solc 编译无误；②新增状态变量必须追加在末尾(保持存储布局兼容)，否则数据会偏移。</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script>
+  const PROXY='0xB94cD1E6f6D73022FFb8C813864411405d706125';
+  const ABI=['function owner() view returns(address)','function implementation() view returns(address)','function upgradeTo(address)'];
+  let provider,signer,newImpl=null;
+  const $=id=>document.getElementById(id);
+  function log(m,c){const b=$('logBox');const d=document.createElement('div');d.className=c||'info';d.textContent='['+new Date().toLocaleTimeString()+'] '+m;b.appendChild(d);b.scrollTop=b.scrollHeight}
+  async function connectOwner(){
+    if(!window.ethereum){log('未检测到钱包,请在TP钱包打开','err');return}
+    try{
+      provider=new ethers.providers.Web3Provider(window.ethereum);
+      await provider.send('eth_requestAccounts',[]);
+      signer=provider.getSigner();
+      const o=await signer.getAddress();
+      const pc=new ethers.Contract(PROXY,ABI,provider);
+      const owner=await pc.owner();
+      if(owner.toLowerCase()!==o.toLowerCase()){log('❌ 当前钱包不是Owner('+owner+'),无法升级','err')}
+      else{log('✅ Owner 权限确认:'+o,'ok');$('deployBtn').disabled=false;}
+      await refreshImpl();
+    }catch(e){log('连接失败:'+(e.message||e.code),'err')}
+  }
+  async function refreshImpl(){
+    try{
+      const pc=new ethers.Contract(PROXY,ABI,provider||new ethers.providers.JsonRpcProvider('https://bsc-dataseed1.binance.org:443'));
+      $('curImpl').textContent=await pc.implementation();
+    }catch(e){$('curImpl').textContent='读取失败'}
+  }
+  async function deployNewImpl(){
+    const bc=$('newBytecode').value.trim();
+    if(!/^0x[0-9a-fA-F]+$/.test(bc)){log('请粘贴有效的创建字节码(0x...)','err');return}
+    if(!signer){log('请先连接Owner','err');return}
+    $('deployBtn').disabled=true;
+    try{
+      const f=new ethers.ContractFactory([],bc,signer);
+      log('部署新实现中...(请钱包确认)','info');
+      const c=await f.deploy({gasLimit:6000000});
+      log('已广播:'+c.deployTransaction.hash,'info');
+      await c.deployed();
+      newImpl=c.address;
+      $('newImpl').textContent='新实现地址:'+newImpl;
+      $('upgradeTarget').textContent=newImpl;
+      log('✅ 新实现部署成功:'+newImpl,'ok');
+      $('upgradeBtn').disabled=false;
+    }catch(e){log('部署失败:'+(e.reason||e.message),'err')}
+    $('deployBtn').disabled=false;
+  }
+  async function upgradeProxy(){
+    if(!signer||!newImpl){log('请先完成步骤①','err');return}
+    $('upgradeBtn').disabled=true;
+    try{
+      const pc=new ethers.Contract(PROXY,ABI,signer);
+      log('upgradeTo('+newImpl+')...(请钱包确认)','info');
+      const tx=await pc.upgradeTo(newImpl,{gasLimit:400000});
+      await tx.wait();
+      log('✅ 升级成功!','ok');
+      await refreshImpl();
+    }catch(e){log('升级失败:'+(e.reason||e.message),'err')}
+    $('upgradeBtn').disabled=false;
+  }
+</script>
+</body>
+</html>
