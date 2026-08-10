@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NNB 后台管理</title>
+<style>
+  :root{--bg:#0b0e1a;--card:#151a2e;--line:#2a3150;--txt:#e8ecf5;--muted:#8b93a8;--gold:#d4af37;--green:#2ecc71;--red:#ff5c5c;--purple:#7c5cff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:linear-gradient(160deg,#0b0e1a,#111633 60%,#0b0e1a);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:22px 16px}
+  .wrap{max-width:680px;margin:0 auto}
+  header{text-align:center;margin-bottom:22px}
+  .logo{font-size:26px;font-weight:800}.logo span{color:var(--gold)}
+  .sub{color:var(--muted);font-size:13px;margin-top:4px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+  .card-title{font-weight:700;font-size:15px;margin-bottom:12px;color:var(--gold)}
+  .row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(42,49,80,.5);font-size:13px}
+  .row:last-child{border-bottom:none}.row .k{color:var(--muted)}.row .v{font-weight:600;word-break:break-all}
+  .inp{width:100%;padding:11px 12px;border-radius:9px;border:1px solid var(--line);background:#0e1226;color:var(--txt);font-size:14px;margin:6px 0}
+  .btn{display:inline-block;border:none;border-radius:9px;padding:11px 16px;font-size:14px;font-weight:700;cursor:pointer;color:#0b0e1a;margin:4px 4px 4px 0}
+  .btn-gold{background:linear-gradient(135deg,var(--gold),#f0d568)}
+  .btn-purple{background:linear-gradient(135deg,#7c5cff,#9d83ff);color:#fff}
+  .btn-green{background:#2ecc71;color:#fff}.btn-red{background:#ff5c5c;color:#fff}
+  .btn:hover{filter:brightness(1.06)}
+  .grid2{display:flex;gap:8px;flex-wrap:wrap}.grid2 .inp{flex:1;min-width:200px}
+  .log{background:#0e1226;border:1px solid var(--line);border-radius:10px;padding:12px;max-height:260px;overflow:auto;font-family:monospace;font-size:12px;white-space:pre-wrap}
+  .log .ok{color:var(--green)}.log .err{color:var(--red)}.log .info{color:var(--muted)}
+  .sec{margin-top:8px;font-size:13px;color:var(--muted);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">NNB <span>后台管理</span></div>
+    <div class="sub">V17 · Owner 权限操作 · Proxy: 0xB94cD1...</div>
+  </header>
+
+  <!-- 连接 -->
+  <div class="card">
+    <div class="card-title">连接 Owner</div>
+    <div class="row"><span class="k">钱包</span><span class="v" id="ownerVal">未连接</span></div>
+    <button class="btn btn-gold" onclick="connectOwner()">连接 Owner 钱包</button>
+    <div class="row"><span class="k">Proxy Owner</span><span class="v" id="proxyOwner">-</span></div>
+  </div>
+
+  <!-- 用户查询 -->
+  <div class="card">
+    <div class="card-title">用户查询</div>
+    <div class="grid2">
+      <input class="inp" id="qAddr" placeholder="用户钱包地址 0x...">
+      <button class="btn btn-purple" onclick="queryUser()">查询用户信息</button>
+    </div>
+    <div id="qResult"></div>
+  </div>
+
+  <!-- adminSetUserLevel -->
+  <div class="card">
+    <div class="card-title">设置用户级别 (teamLevel → 代数)</div>
+    <div class="grid2">
+      <input class="inp" id="setLevelAddr" placeholder="用户地址">
+      <input class="inp" id="setLevelVal" placeholder="级别(0-19)">
+      <button class="btn btn-purple" onclick="setUserLevel()">设置级别</button>
+    </div>
+  </div>
+
+  <!-- adminSetNode -->
+  <div class="card">
+    <div class="card-title">设置节点 (isNode) — 仅用于处理后台上设置的合法节点</div>
+    <div class="grid2">
+      <input class="inp" id="setNodeAddr" placeholder="用户地址">
+      <select class="inp" id="setNodeVal" style="flex:0 0 120px"><option value="true">设为节点</option><option value="false">取消节点</option></select>
+      <button class="btn btn-purple" onclick="setNode()">设置节点</button>
+    </div>
+    <div class="sec">⚠️ 节点必须单独花500U激活(activateNode)或后台设置(adminSetNode)才算，其他一律不算。</div>
+  </div>
+
+  <!-- adminSetActive -->
+  <div class="card">
+    <div class="card-title">设置激活状态</div>
+    <div class="grid2">
+      <input class="inp" id="setActiveAddr" placeholder="用户地址">
+      <select class="inp" id="setActiveVal" style="flex:0 0 120px"><option value="true">激活</option><option value="false">取消激活</option></select>
+      <button class="btn btn-purple" onclick="setActive()">设置激活</button>
+    </div>
+  </div>
+
+  <!-- adminSetMyBalance -->
+  <div class="card">
+    <div class="card-title">设置产能余额 (myBalance)</div>
+    <div class="grid2">
+      <input class="inp" id="setBalAddr" placeholder="用户地址">
+      <input class="inp" id="setBalVal" placeholder="产能NNB">
+      <button class="btn btn-purple" onclick="setMyBalance()">设置产能</button>
+    </div>
+  </div>
+
+  <!-- adminResetUser -->
+  <div class="card">
+    <div class="card-title">重置用户 (adminResetUser)</div>
+    <div class="grid2">
+      <input class="inp" id="resetAddr" placeholder="用户地址">
+      <button class="btn btn-red" onclick="resetUser()">重置用户</button>
+    </div>
+  </div>
+
+  <!-- adminDistribute -->
+  <div class="card">
+    <div class="card-title">发放NNB (adminDistribute)</div>
+    <div class="grid2">
+      <input class="inp" id="distAddr" placeholder="用户地址">
+      <input class="inp" id="distVal" placeholder="NNB数量">
+      <button class="btn btn-green" onclick="distribute()">发放</button>
+    </div>
+  </div>
+
+  <div class="log" id="logBox"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script>
+  const V35='0xB94cD1E6f6D73022FFb8C813864411405d706125';
+  const ABI=[
+    'function owner() view returns(address)',
+    'function users(address) view returns(tuple(bool activated,bool isNode,uint256 totalInvestedUSD,uint256 totalMined,uint256 lastBuyTime,uint256 myBalance,uint256 directPushTotalUSD,uint256 teamLevel,uint256 teamCount,address referrer,uint256 totalReinvestCount,uint256 totalWithdrawCount,uint256 lockedUntil,uint256 boostMultiplier,uint256 boostExpireTime))',
+    'function getGenerations(address) view returns(uint8)',
+    'function isNode(address) view returns(bool)',
+    'function getDirectReferralAmount(address) view returns(uint256)',
+    'function getDirectReferralCount(address) view returns(uint256)',
+    'function getUserReferrer(address) view returns(address)',
+    'function adminSetUserLevel(address,uint256)',
+    'function adminSetNode(address,bool)',
+    'function adminSetActive(address,bool)',
+    'function adminSetMyBalance(address,uint256)',
+    'function adminResetUser(address)',
+    'function adminDistribute(address,uint256)',
+    'function adminUnburn(address)'
+  ];
+  let provider,signer,owner=null;
+  function $(id){return document.getElementById(id)}
+  function log(msg,cls){const b=$('logBox');const d=document.createElement('div');d.className=cls||'info';d.textContent='['+new Date().toLocaleTimeString()+'] '+msg;b.appendChild(d);b.scrollTop=b.scrollHeight}
+  function getContract(){return new ethers.Contract(V35,ABI,signer||provider)}
+  async function connectOwner(){
+    if(!window.ethereum){log('未检测到钱包，请在TP钱包打开','err');return}
+    try{
+      provider=new ethers.providers.Web3Provider(window.ethereum);
+      await provider.send('eth_requestAccounts',[]);
+      signer=provider.getSigner();
+      owner=await signer.getAddress();
+      $('ownerVal').textContent=owner;
+      const po=await getContract().owner();
+      $('proxyOwner').textContent=po;
+      log('✅ 已连接 Owner: '+owner, 'ok');
+      log(po.toLowerCase()===owner.toLowerCase()?'权限确认：你拥有管理权':'⚠️ 当前钱包不是Owner，无法操作','ok');
+    }catch(e){log('连接失败:'+(e.message||e.code),'err')}
+  }
+  async function queryUser(){
+    const a=$('qAddr').value.trim();
+    if(!/^0x[0-9a-fA-F]{40}$/.test(a)){log('地址格式错误','err');return}
+    try{
+      const c=getContract();
+      const u=await c.users(a);
+      const gen=await c.getGenerations(a);
+      const ref=await c.getUserReferrer(a);
+      const dp=await c.getDirectReferralAmount(a);
+      const dc=await c.getDirectReferralCount(a);
+      $('qResult').innerHTML=
+        '<div class="row"><span class="k">激活</span><span class="v">'+(u.activated?'是':'否')+'</span></div>'+
+        '<div class="row"><span class="k">节点(isNode)</span><span class="v" style="color:'+(u.isNode?'var(--green)':'var(--red)')+'">'+(u.isNode?'是（节点）':'否')+'</span></div>'+
+        '<div class="row"><span class="k">teamLevel</span><span class="v">'+u.teamLevel.toString()+'</span></div>'+
+        '<div class="row"><span class="k">生效代数getGenerations</span><span class="v">'+gen+'</span></div>'+
+        '<div class="row"><span class="k">totalInvestedUSD</span><span class="v">'+(Number(u.totalInvestedUSD)/1e18).toFixed(2)+' U</span></div>'+
+        '<div class="row"><span class="k">直推业绩</span><span class="v">'+(Number(dp)/1e18).toFixed(2)+' U</span></div>'+
+        '<div class="row"><span class="k">直推人数</span><span class="v">'+dc+'</span></div>'+
+        '<div class="row"><span class="k">产能myBalance</span><span class="v">'+(Number(u.myBalance)/1e18).toFixed(2)+' NNB</span></div>'+
+        '<div class="row"><span class="k">复投次数</span><span class="v">'+u.totalReinvestCount.toString()+'</span></div>'+
+        '<div class="row"><span class="k">上级</span><span class="v">'+ref+'</span></div>';
+    }catch(e){$('qResult').innerHTML='<div style="color:var(--red);font-size:13px">查询失败:'+(e.reason||e.message)+'</div>'}
+  }
+  async function setUserLevel(){
+    const a=$('setLevelAddr').value.trim();const v=parseInt($('setLevelVal').value);
+    if(!/^0x[0-9a-fA-F]{40}$/.test(a)||isNaN(v)){log('填写完整且级别有效','err');return}
+    if(!signer){log('请先连接Owner','err');return}
+    try{
+      const c=getContract();
+      const tx=await c.adminSetUserLevel(a,v);
+      log('TX已广播:'+tx.hash,'info');await tx.wait();
+      const u=await c.users(a);
+      const gen=await c.getGenerations(a);
+      log('✅ 设置级别='+v+' → 链上teamLevel='+u.teamLevel.toString()+' 生效代数='+gen, 'ok');
+      if(u.teamLevel.toString()!==String(v))log('⚠️ 未按预期写入，请检查','err');
+    }catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function setNode(){
+    const a=$('setNodeAddr').value.trim();const v=$('setNodeVal').value==='true';
+    if(!/^0x[0-9a-fA-F]{40}$/.test(a)){log('地址格式错误','err');return}
+    if(!signer){log('请先连接Owner','err');return}
+    try{
+      const c=getContract();
+      const tx=await c.adminSetNode(a,v);
+      log('TX已广播:'+tx.hash,'info');await tx.wait();
+      const isN=await c.isNode(a);
+      log('✅ 设置节点='+v+' → 链上isNode='+isN,'ok');
+    }catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function setActive(){
+    const a=$('setActiveAddr').value.trim();const v=$('setActiveVal').value==='true';
+    if(!/^0x[0-9a-fA-F]{40}$/.test(a)){log('地址格式错误','err');return}
+    if(!signer){log('请先连接Owner','err');return}
+    try{const c=getContract();const tx=await c.adminSetActive(a,v);log('TX:'+tx.hash,'info');await tx.wait();log('✅ 设置激活='+v,'ok')}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function setMyBalance(){
+    const a=$('setBalAddr').value.trim();const v=$('setBalVal').value.trim();
+    if(!/^0x[0-9a-fA-F]{40}$/.test(a)||!v||isNaN(v)){log('填写地址和数量','err');return}
+    if(!signer){log('请先连接Owner','err');return}
+    try{const c=getContract();const tx=await c.adminSetMyBalance(a,ethers.utils.parseUnits(v,18));log('TX:'+tx.hash,'info');await tx.wait();log('✅ 已设产能='+v,'ok')}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function resetUser(){
+    const a=$('resetAddr').value.trim();
+    if(!/^0x[0-9a-fA-F]{40}$/.test(a)){log('地址格式错误','err');return}
+    if(!signer){log('请先连接Owner','err');return}
+    try{const c=getContract();const tx=await c.adminResetUser(a);log('TX:'+tx.hash,'info');await tx.wait();log('✅ 已重置','ok')}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function distribute(){
+    const a=$('distAddr').value.trim();const v=$('distVal').value.trim();
+    if(!/^0x[0-9a-fA-F]{40}$/.test(a)||!v||isNaN(v)){log('填写地址和NNB数量','err');return}
+    if(!signer){log('请先连接Owner','err');return}
+    try{const c=getContract();const tx=await c.adminDistribute(a,ethers.utils.parseUnits(v,18));log('TX:'+tx.hash,'info');await tx.wait();log('✅ 已发放'+v+'NNB','ok')}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+</script>
+</body>
+</html>
