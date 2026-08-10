@@ -217,7 +217,7 @@ button{cursor:pointer;font-family:inherit}
   color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;z-index:999;display:none;box-shadow:0 4px 16px rgba(16,185,129,0.35)}
 .toast.show{display:block}
 </style>
-<script src="lang.js?v=17011"></script>
+<script src="lang.js?v=17012"></script>
 </head>
 <body>
 <div class="toast" id="toast"></div>
@@ -456,8 +456,8 @@ button{cursor:pointer;font-family:inherit}
     <div class="muted" style="margin-bottom:10px;margin-top:4px;font-size:12px">用累计直推业绩(U)解锁推广代数</div>
     <div style="display:flex;gap:10px;text-align:center;margin-bottom:12px">
       <div style="flex:1;background:rgba(8,4,20,.5);border:1px solid var(--border);border-radius:12px;padding:10px"><div class="muted" style="font-size:12px">直推人数</div><div style="font-size:22px;font-weight:800;color:var(--gold)" id="perfDirectCount">0</div></div>
-      <div style="flex:1;background:rgba(8,4,20,.5);border:1px solid var(--border);border-radius:12px;padding:10px"><div class="muted" style="font-size:12px">直推业绩</div><div style="font-size:22px;font-weight:800;color:var(--gold)" id="perfDirectAmt">0.00<small> U</small></div></div>
-      <div style="flex:1;background:rgba(8,4,20,.5);border:1px solid var(--border);border-radius:12px;padding:10px"><div class="muted" style="font-size:12px">已解锁代数</div><div style="font-size:22px;font-weight:800;color:#22d3ee" id="perfGenerations">0<small> 代</small></div></div>
+      <div style="flex:1;background:rgba(8,4,20,.5);border:1px solid var(--border);border-radius:12px;padding:10px"><div class="muted" style="font-size:12px" data-i18n="perf.directAmt">直推业绩</div><div style="font-size:22px;font-weight:800;color:var(--gold)" id="perfDirectAmt">0.00<small> U</small></div></div>
+      <div style="flex:1;background:rgba(8,4,20,.5);border:1px solid var(--border);border-radius:12px;padding:10px"><div class="muted" style="font-size:12px" data-i18n="perf.gen">已解锁代数</div><div style="font-size:22px;font-weight:800;color:#22d3ee" id="perfGenerations">0<small> 代</small></div></div>
     </div>
     <div style="background:rgba(8,4,20,.5);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px">
       <div class="muted" style="margin-bottom:6px">解锁阶梯</div>
@@ -1329,7 +1329,7 @@ async function updatePerfUnlock(){
     const gen=parseInt(genHex||'0x0',16)||0;
     if(elCount)elCount.textContent=dc;
     if(elAmt)elAmt.innerHTML=da.toFixed(2)+'<small> U</small>';
-    if(elGen)elGen.innerHTML=gen+'<small> 代</small>';
+    if(elGen)elGen.innerHTML=gen+'<small> '+nnbT('perf.unit')+'</small>';
     // 解锁阶梯
     const tiers=[[200,3],[1000,10],[2000,15],[5000,19]];
     if(elTiers){
@@ -1341,11 +1341,11 @@ async function updatePerfUnlock(){
     if(elPBar&&elPText){
       if(!nextT){
         elPBar.style.width='100%';
-        elPText.textContent='已解锁满级 '+gen+' 代';
+        elPText.textContent=nnbT('perf.maxReached')+' '+gen+' '+nnbT('perf.unit');
       }else{
         const pct=Math.min(100,((da-curThreshold)/(nextT[0]-curThreshold))*100);
         elPBar.style.width=Math.max(0,pct)+'%';
-        elPText.textContent='当前 '+gen+'代·距'+nextT[0]+'U解锁'+nextT[1]+'代还差 '+Math.max(0,(nextT[0]-da)).toFixed(2)+' U';
+        elPText.textContent=nnbT('perf.progress')+' '+gen+nnbT('perf.unit')+'·'+nnbT('perf.toReach')+nextT[0]+'U'+nnbT('perf.unlock')+nextT[1]+nnbT('perf.unit')+nnbT('perf.remain')+Math.max(0,(nextT[0]-da)).toFixed(2)+' U';
       }
     }
   }catch(e){}
