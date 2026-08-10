@@ -1,119 +1,255 @@
-// ===== NNB 语言系统 =====
-// 支持 简体中文(zh-CN) 繁体中文(zh-TW) English(en)
-// 提供: nnbApplyLang() 应用语言, nnbToggleLangPanel() 切换面板
-var NNB_LANG = {
-  "zh-CN": {
-    back:"返回首页","wallet.connect":"连接钱包","price.market":"价格市场","price.origin":"原始价格:","price.total":"总涨幅:",
-    "subscribe.title":"一键认购","subscribe.desc":"原始 2100 万枚 · 认购即销毁 · 3 倍产能","subscribe.price":"认购价格","subscribe.triple":"3倍产出",
-    "mine.estReceive":"预计锁仓产能(3倍)","subscribe.btn":"立即认购","nav.tradeCenter":"交易中心","nav.buyMining":"购买矿机",
-    "nav.inviteShare":"邀请分享","nav.activateNode":"激活节点","banner.brand":"金牛聚财运 · 牛牛金币","banner.fengshui":"2024-2043 离火大运 · NNB生态",
-    "banner.reward":"NNB 挂单奖励","banner.rewardDesc":"参与挂单赢取丰厚奖励","banner.live":"上线","banner.title":"NNB 多空套利",
-    "banner.desc":"智能永续合约,锁定市场套利收益","banner.audit":"智能合约审计","banner.auditDesc":"安全高效的自动化链上执行协议","banner.audited":"已审计",
-    "home.advantage":"核心优势","home.lever":"动态杠杆","home.leverDesc":"根据市场情况动态调整挖矿杠杆,最大化收益潜力",
-    "home.transparent":"透明机制","home.transparentDesc":"所有合约和交易均可在链上公开验证,确保透明公平",
-    "home.referral":"推荐系统","home.referralDesc":"邀请好友加入,获得额外推荐奖励,共同分享挖矿成果",
-    "trade.title":"NNB/USDT 交易池","trade.buy":"买入 NNB","trade.sell":"卖出 NNB","trade.buyAmount":"支付 USDT","trade.receive":"收到 NNB (预计)",
-    "trade.price":"价格","trade.buyBtn":"确认买入(挂单)","trade.receiveUSDT":"收到 USDT (预计 90%)","trade.sellBtn":"确认卖出",
-    "trade.pool":"底池 USDT 总量","trade.poolClosed":"未开放","common.refresh":"刷新","common.connectFirst":"请先连接钱包",
-    "trade.noBuyOrders":"暂无购买挂单","mine.price":"矿机价格","common.all":"全部","mine.purchaseHint":"持NNB即可购买矿机,不限额度.",
-    "mine.currentValue":"当前价值","mine.estBase":"预计基础 NNB","mine.estTotal":"预计挖矿总量","common.approve":"授权",
-    "bind.title":"绑定上级地址","bind.desc":"购买矿机前需要绑定上级地址,绑定后无法更改","bind.btn":"确认绑定",
-    "mine.title":"我的矿机","mine.status":"矿机状态","mine.capacity":"剩余产能","mine.rate":"当前日化率","mine.claimable":"今日可领",
-    "claim.timer.loading":"加载中...","mine.claim":"领取今日收益","mine.gasHint":"领取需要极少量 BNB 作为 gas 费",
-    "node.title":"成为推广节点,解锁团队收益!","node.cost":"激活节点需支付 500 USDT","node.income":"额外获得推广矿机挖矿收益的 9%",
-    "invite.title":"我的推广","invite.link":"我的推广链接(一键绑定)","common.connectToShow":"连接钱包后显示","invite.copy":"复制",
-    "invite.id":"我的推广ID(钱包地址)","common.notConnected":"未连接","invite.contract":"NNB 合约地址",
-    "invite.desc":"分享此推广ID给好友,当好友使用您的地址绑定并购买矿机后,您将获得收益.","invite.count":"累计邀请",
-    "invite.list":"邀约用户列表","invite.empty":"暂无邀约用户开始分享推广链接吧!","node.btn":"授权激活节点","node.identity":"身份:矿工",
-    "node.website":"官网链接","invite.promoId":"推广ID","mine.reinvest":"复投","mine.reinvestDesc":"产能产完后复投重新获得3倍产能,最低2000 NNB(约20U).",
-    "mine.reinvestBtn":"复投 (最低2000 NNB)","node.status":"节点状态","profile.title":"我的收益","node.revenue":"推广节点收益(9%)",
-    "nav.home":"首页","nav.trade":"交易","nav.mining":"矿机","nav.invite":"邀请","nav.profile":"我的",
-    "trade.noOrders":"暂无挂单","profile.direct":"直推人数","profile.nodeIncome":"节点收益(9%)"
-  },
-  "zh-TW": {
-    back:"返回首頁","wallet.connect":"連接錢包","price.market":"價格市場","price.origin":"原始價格:","price.total":"總漲幅:",
-    "subscribe.title":"一鍵認購","subscribe.desc":"原始 2100 萬枚 · 認購即銷毀 · 3 倍產能","subscribe.price":"認購價格","subscribe.triple":"3倍產出",
-    "mine.estReceive":"預計鎖倉產能(3倍)","subscribe.btn":"立即認購","nav.tradeCenter":"交易中心","nav.buyMining":"購買礦機",
-    "nav.inviteShare":"邀請分享","nav.activateNode":"啟動節點","banner.brand":"金牛聚財運 · 牛牛金幣","banner.fengshui":"2024-2043 離火大運 · NNB生態",
-    "banner.reward":"NNB 掛單獎勵","banner.rewardDesc":"參與掛單贏取豐厚獎勵","banner.live":"上線","banner.title":"NNB 多空套利",
-    "banner.desc":"智能永續合約,鎖定市場套利收益","banner.audit":"智能合約審計","banner.auditDesc":"安全高效的自動化鏈上執行協議","banner.audited":"已審計",
-    "home.advantage":"核心優勢","home.lever":"動態槓桿","home.leverDesc":"根據市場情況動態調整挖礦槓桿,最大化收益潛力",
-    "home.transparent":"透明機制","home.transparentDesc":"所有合約和交易均可在鏈上公開驗證,確保透明公平",
-    "home.referral":"推薦系統","home.referralDesc":"邀請好友加入,獲得額外推薦獎勵,共同分享挖礦成果",
-    "trade.title":"NNB/USDT 交易池","trade.buy":"買入 NNB","trade.sell":"賣出 NNB","trade.buyAmount":"支付 USDT","trade.receive":"收到 NNB (預計)",
-    "trade.price":"價格","trade.buyBtn":"確認買入(掛單)","trade.receiveUSDT":"收到 USDT (預計 90%)","trade.sellBtn":"確認賣出",
-    "trade.pool":"底池 USDT 總量","trade.poolClosed":"未開放","common.refresh":"刷新","common.connectFirst":"請先連接錢包",
-    "trade.noBuyOrders":"暫無購買掛單","mine.price":"礦機價格","common.all":"全部","mine.purchaseHint":"持NNB即可購買礦機,不限額度.",
-    "mine.currentValue":"當前價值","mine.estBase":"預計基礎 NNB","mine.estTotal":"預計挖礦總量","common.approve":"授權",
-    "bind.title":"綁定上級地址","bind.desc":"購買礦機前需要綁定上級地址,綁定後無法更改","bind.btn":"確認綁定",
-    "mine.title":"我的礦機","mine.status":"礦機狀態","mine.capacity":"剩餘產能","mine.rate":"當前日化率","mine.claimable":"今日可領",
-    "claim.timer.loading":"加載中...","mine.claim":"領取今日收益","mine.gasHint":"領取需要極少量 BNB 作為 gas 費",
-    "node.title":"成為推廣節點,解鎖團隊收益!","node.cost":"啟動節點需支付 500 USDT","node.income":"額外獲得推廣礦機挖礦收益的 9%",
-    "invite.title":"我的推廣","invite.link":"我的推廣連結(一鍵綁定)","common.connectToShow":"連接錢包後顯示","invite.copy":"複製",
-    "invite.id":"我的推廣ID(錢包地址)","common.notConnected":"未連接","invite.contract":"NNB 合約地址",
-    "invite.desc":"分享此推廣ID給好友,當好友使用您的地址綁定並購買礦機後,您將獲得收益.","invite.count":"累計邀請",
-    "invite.list":"邀約用戶列表","invite.empty":"暫無邀約用戶開始分享推廣連結吧!","node.btn":"授權啟動節點","node.identity":"身份:礦工",
-    "node.website":"官網連結","invite.promoId":"推廣ID","mine.reinvest":"復投","mine.reinvestDesc":"產能產完後復投重新獲得3倍產能,最低2000 NNB(約20U).",
-    "mine.reinvestBtn":"復投 (最低2000 NNB)","node.status":"節點狀態","profile.title":"我的收益","node.revenue":"推廣節點收益(9%)",
-    "nav.home":"首頁","nav.trade":"交易","nav.mining":"礦機","nav.invite":"邀請","nav.profile":"我的",
-    "trade.noOrders":"暫無掛單","profile.direct":"直推人數","profile.nodeIncome":"節點收益(9%)"
-  },
-  "en": {
-    back:"Back","wallet.connect":"Connect Wallet","price.market":"Market Price","price.origin":"Original:","price.total":"Total:",
-    "subscribe.title":"Subscribe","subscribe.desc":"Orig 21M · Burn on sub · 3x capacity","subscribe.price":"Sub Price","subscribe.triple":"3x output",
-    "mine.estReceive":"Est locked cap (3x)","subscribe.btn":"Subscribe Now","nav.tradeCenter":"Trade","nav.buyMining":"Buy Miner",
-    "nav.inviteShare":"Invite","nav.activateNode":"Activate Node","banner.brand":"Bull Gold · NNB Coin","banner.fengshui":"Fire Era 2024-2043 · NNB",
-    "banner.reward":"NNB Order Rewards","banner.rewardDesc":"Earn rewards from orders","banner.live":"Live","banner.title":"NNB Long/Short",
-    "banner.desc":"Smart perpetual locking arbitrage","banner.audit":"Smart Contract Audit","banner.auditDesc":"Safe automated on-chain protocol","banner.audited":"Audited",
-    "home.advantage":"Core Advantage","home.lever":"Dynamic Leverage","home.leverDesc":"Adjust mining leverage dynamically","home.transparent":"Transparent",
-    "home.transparentDesc":"All contracts verifiable on-chain","home.referral":"Referral","home.referralDesc":"Invite friends, earn rewards",
-    "trade.title":"NNB/USDT Pool","trade.buy":"Buy NNB","trade.sell":"Sell NNB","trade.buyAmount":"Pay USDT","trade.receive":"Receive NNB (est)",
-    "trade.price":"Price","trade.buyBtn":"Confirm Buy","trade.receiveUSDT":"Receive USDT (est 90%)","trade.sellBtn":"Confirm Sell",
-    "trade.pool":"Pool USDT Total","trade.poolClosed":"Closed","common.refresh":"Refresh","common.connectFirst":"Connect wallet first",
-    "trade.noBuyOrders":"No buy orders","mine.price":"Miner Price","common.all":"All","mine.purchaseHint":"Hold NNB to buy miner, no limit.",
-    "mine.currentValue":"Current Value","mine.estBase":"Est Base NNB","mine.estTotal":"Est Total Output","common.approve":"Approve",
-    "bind.title":"Bind Referrer","bind.desc":"Bind referrer before buying miner","bind.btn":"Confirm Bind",
-    "mine.title":"My Miner","mine.status":"Miner Status","mine.capacity":"Remaining","mine.rate":"Daily Rate","mine.claimable":"Claimable Today",
-    "claim.timer.loading":"Loading...","mine.claim":"Claim Today's Yield","mine.gasHint":"Needs tiny BNB for gas",
-    "node.title":"Become a Node, Unlock Team Rewards!","node.cost":"Activate node for 500 USDT","node.income":"Extra 9% of mining income",
-    "invite.title":"My Referral","invite.link":"My Referral Link","common.connectToShow":"Connect to show","invite.copy":"Copy",
-    "invite.id":"My Referral ID","common.notConnected":"Not Connected","invite.contract":"NNB Contract",
-    "invite.desc":"Share your Referral ID, earn when friends buy miner.","invite.count":"Total Invites",
-    "invite.list":"Invitee List","invite.empty":"No invitees yet, share your link!","node.btn":"Authorize & Activate Node","node.identity":"Role: Miner",
-    "node.website":"Website","invite.promoId":"Referral ID","mine.reinvest":"Reinvest","mine.reinvestDesc":"Reinvest for 3x capacity, min 2000 NNB (~20U).",
-    "mine.reinvestBtn":"Reinvest (min 2000 NNB)","node.status":"Node Status","profile.title":"My Earnings","node.revenue":"Node Income (9%)",
-    "nav.home":"Home","nav.trade":"Trade","nav.mining":"Miner","nav.invite":"Invite","nav.profile":"Me",
-    "trade.noOrders":"No orders","profile.direct":"Directs","profile.nodeIncome":"Node Income (9%)"
-  }
+// ===== NNB 语言系统 v2 (7语言, 下拉菜单) =====
+// 语言: 简体中文🇨🇳 / 繁體中文🇭🇰 / English🇺🇸 / 日本語🇯🇵 / 한국어🇰🇷 / Tiếng Việt🇻🇳 / Bahasa Melayu🇸🇬
+// 一次性完整切换所有界面文案
+var NNB_DICT = {};
+
+// ---------- 简体中文(基准,完整) ----------
+NNB_DICT["zh-CN"]={
+ back:"返回首页","wallet.connect":"连接钱包","price.market":"价格市场","price.origin":"原始价格:","price.total":"总涨幅:",
+ "subscribe.title":"一键认购","subscribe.desc":"原始 2100 万枚 · 认购即销毁 · 3 倍产能","subscribe.price":"认购价格","subscribe.triple":"3倍产出",
+ "mine.estReceive":"预计锁仓产能(3倍)","subscribe.btn":"立即认购","nav.tradeCenter":"交易中心","nav.buyMining":"购买矿机",
+ "nav.inviteShare":"邀请分享","nav.activateNode":"激活节点","banner.brand":"金牛聚财运 · 牛牛金币","banner.fengshui":"2024-2043 离火大运 · NNB生态",
+ "banner.reward":"NNB 挂单奖励","banner.rewardDesc":"参与挂单赢取丰厚奖励","banner.live":"上线","banner.title":"NNB 多空套利",
+ "banner.desc":"智能永续合约,锁定市场套利收益","banner.audit":"智能合约审计","banner.auditDesc":"安全高效的自动化链上执行协议","banner.audited":"已审计",
+ "home.advantage":"核心优势","home.lever":"动态杠杆","home.leverDesc":"根据市场情况动态调整挖矿杠杆,最大化收益潜力",
+ "home.transparent":"透明机制","home.transparentDesc":"所有合约和交易均可在链上公开验证,确保透明公平",
+ "home.referral":"推荐系统","home.referralDesc":"邀请好友加入,获得额外推荐奖励,共同分享挖矿成果",
+ "trade.title":"NNB/USDT 交易池","trade.buy":"买入 NNB","trade.sell":"卖出 NNB","trade.buyAmount":"支付 USDT","trade.receive":"收到 NNB (预计)",
+ "trade.price":"价格","trade.buyBtn":"确认买入(挂单)","trade.receiveUSDT":"收到 USDT (预计 90%)","trade.sellBtn":"确认卖出",
+ "trade.pool":"底池 USDT 总量","trade.poolClosed":"未开放","common.refresh":"刷新","common.connectFirst":"请先连接钱包",
+ "trade.noBuyOrders":"暂无购买挂单","mine.price":"矿机价格","common.all":"全部","mine.purchaseHint":"持NNB即可购买矿机,不限额度.",
+ "mine.currentValue":"当前价值","mine.estBase":"预计基础 NNB","mine.estTotal":"预计挖矿总量","common.approve":"授权",
+ "bind.title":"绑定上级地址","bind.desc":"购买矿机前需要绑定上级地址,绑定后无法更改","bind.btn":"确认绑定",
+ "mine.title":"我的矿机","mine.status":"矿机状态","mine.capacity":"剩余产能","mine.rate":"当前日化率","mine.claimable":"今日可领",
+ "claim.timer.loading":"加载中...","mine.claim":"领取今日收益","mine.gasHint":"领取需要极少量 BNB 作为 gas 费",
+ "node.title":"成为推广节点,解锁团队收益!","node.cost":"激活节点需支付 500 USDT","node.income":"额外获得推广矿机挖矿收益的 9%",
+ "invite.title":"我的推广","invite.link":"我的推广链接(一键绑定)","common.connectToShow":"连接钱包后显示","invite.copy":"复制",
+ "invite.id":"我的推广ID(钱包地址)","common.notConnected":"未连接","invite.contract":"NNB 合约地址",
+ "invite.desc":"分享此推广ID给好友,当好友使用您的地址绑定并购买矿机后,您将获得收益.","invite.count":"累计邀请",
+ "invite.list":"邀约用户列表","invite.empty":"暂无邀约用户开始分享推广链接吧!","node.btn":"授权激活节点","node.identity":"身份:矿工",
+ "node.website":"官网链接","invite.promoId":"推广ID","mine.reinvest":"复投","mine.reinvestDesc":"产能产完后复投重新获得3倍产能,最低2000 NNB(约20U).",
+ "mine.reinvestBtn":"复投 (最低2000 NNB)","node.status":"节点状态","profile.title":"我的收益","node.revenue":"推广节点收益(9%)",
+ "nav.home":"首页","nav.trade":"交易","nav.mining":"矿机","nav.invite":"邀请","nav.profile":"我的",
+ "trade.noOrders":"暂无挂单","profile.direct":"直推人数","profile.nodeIncome":"节点收益(9%)",
+ "lang.title":"选择语言"
 };
-var LANG_STORAGE='nnb_lang';
-function currentLang(){try{return localStorage.getItem(LANG_STORAGE)||'zh-CN'}catch(e){return 'zh-CN'}}
-function saveLang(l){try{localStorage.setItem(LANG_STORAGE,l)}catch(e){}}
+// ---------- 繁體中文 ----------
+NNB_DICT["zh-TW"]={
+ back:"返回首頁","wallet.connect":"連接錢包","price.market":"價格市場","price.origin":"原始價格:","price.total":"總漲幅:",
+ "subscribe.title":"一鍵認購","subscribe.desc":"原始 2100 萬枚 · 認購即銷毀 · 3 倍產能","subscribe.price":"認購價格","subscribe.triple":"3倍產出",
+ "mine.estReceive":"預計鎖倉產能(3倍)","subscribe.btn":"立即認購","nav.tradeCenter":"交易中心","nav.buyMining":"購買礦機",
+ "nav.inviteShare":"邀請分享","nav.activateNode":"啟動節點","banner.brand":"金牛聚財運 · 牛牛金幣","banner.fengshui":"2024-2043 離火大運 · NNB生態",
+ "banner.reward":"NNB 掛單獎勵","banner.rewardDesc":"參與掛單贏取豐厚獎勵","banner.live":"上線","banner.title":"NNB 多空套利",
+ "banner.desc":"智能永續合約,鎖定市場套利收益","banner.audit":"智能合約審計","banner.auditDesc":"安全高效的自動化鏈上執行協議","banner.audited":"已審計",
+ "home.advantage":"核心優勢","home.lever":"動態槓桿","home.leverDesc":"根據市場情況動態調整挖礦槓桿,最大化收益潛力",
+ "home.transparent":"透明機制","home.transparentDesc":"所有合約和交易均可在鏈上公開驗證,確保透明公平",
+ "home.referral":"推薦系統","home.referralDesc":"邀請好友加入,獲得額外推薦獎勵,共同分享挖礦成果",
+ "trade.title":"NNB/USDT 交易池","trade.buy":"買入 NNB","trade.sell":"賣出 NNB","trade.buyAmount":"支付 USDT","trade.receive":"收到 NNB (預計)",
+ "trade.price":"價格","trade.buyBtn":"確認買入(掛單)","trade.receiveUSDT":"收到 USDT (預計 90%)","trade.sellBtn":"確認賣出",
+ "trade.pool":"底池 USDT 總量","trade.poolClosed":"未開放","common.refresh":"刷新","common.connectFirst":"請先連接錢包",
+ "trade.noBuyOrders":"暫無購買掛單","mine.price":"礦機價格","common.all":"全部","mine.purchaseHint":"持NNB即可購買礦機,不限額度.",
+ "mine.currentValue":"當前價值","mine.estBase":"預計基礎 NNB","mine.estTotal":"預計挖礦總量","common.approve":"授權",
+ "bind.title":"綁定上級地址","bind.desc":"購買礦機前需要綁定上級地址,綁定後無法更改","bind.btn":"確認綁定",
+ "mine.title":"我的礦機","mine.status":"礦機狀態","mine.capacity":"剩餘產能","mine.rate":"當前日化率","mine.claimable":"今日可領",
+ "claim.timer.loading":"加載中...","mine.claim":"領取今日收益","mine.gasHint":"領取需要極少量 BNB 作為 gas 費",
+ "node.title":"成為推廣節點,解鎖團隊收益!","node.cost":"啟動節點需支付 500 USDT","node.income":"額外獲得推廣礦機挖礦收益的 9%",
+ "invite.title":"我的推廣","invite.link":"我的推廣連結(一鍵綁定)","common.connectToShow":"連接錢包後顯示","invite.copy":"複製",
+ "invite.id":"我的推廣ID(錢包地址)","common.notConnected":"未連接","invite.contract":"NNB 合約地址",
+ "invite.desc":"分享此推廣ID給好友,當好友使用您的地址綁定並購買礦機後,您將獲得收益.","invite.count":"累計邀請",
+ "invite.list":"邀約用戶列表","invite.empty":"暫無邀約用戶開始分享推廣連結吧!","node.btn":"授權啟動節點","node.identity":"身份:礦工",
+ "node.website":"官網連結","invite.promoId":"推廣ID","mine.reinvest":"復投","mine.reinvestDesc":"產能產完後復投重新獲得3倍產能,最低2000 NNB(約20U).",
+ "mine.reinvestBtn":"復投 (最低2000 NNB)","node.status":"節點狀態","profile.title":"我的收益","node.revenue":"推廣節點收益(9%)",
+ "nav.home":"首頁","nav.trade":"交易","nav.mining":"礦機","nav.invite":"邀請","nav.profile":"我的",
+ "trade.noOrders":"暫無掛單","profile.direct":"直推人數","profile.nodeIncome":"節點收益(9%)",
+ "lang.title":"選擇語言"
+};
+// ---------- English ----------
+NNB_DICT["en"]={
+ back:"Back","wallet.connect":"Connect Wallet","price.market":"Market Price","price.origin":"Original:","price.total":"Total Change:",
+ "subscribe.title":"Subscribe","subscribe.desc":"Orig 21M · Burn on sub · 3x capacity","subscribe.price":"Sub Price","subscribe.triple":"3x Output",
+ "mine.estReceive":"Est Locked Cap (3x)","subscribe.btn":"Subscribe Now","nav.tradeCenter":"Trade Center","nav.buyMining":"Buy Miner",
+ "nav.inviteShare":"Invite Share","nav.activateNode":"Activate Node","banner.brand":"Bull Gold · NNB Coin","banner.fengshui":"Fire Era 2024-2043 · NNB",
+ "banner.reward":"NNB Order Rewards","banner.rewardDesc":"Join orders for rewards","banner.live":"Live","banner.title":"NNB Long/Short",
+ "banner.desc":"Smart perpetual, lock arbitrage profit","banner.audit":"Smart Contract Audit","banner.auditDesc":"Safe automated on-chain protocol","banner.audited":"Audited",
+ "home.advantage":"Core Advantage","home.lever":"Dynamic Leverage","home.leverDesc":"Dynamic mining leverage to maximize profit",
+ "home.transparent":"Transparent","home.transparentDesc":"All contracts verifiable on-chain, fair","home.referral":"Referral System","home.referralDesc":"Invite friends, earn extra rewards",
+ "trade.title":"NNB/USDT Pool","trade.buy":"Buy NNB","trade.sell":"Sell NNB","trade.buyAmount":"Pay USDT","trade.receive":"Receive NNB (est)",
+ "trade.price":"Price","trade.buyBtn":"Confirm Buy","trade.receiveUSDT":"Receive USDT (est 90%)","trade.sellBtn":"Confirm Sell",
+ "trade.pool":"Pool USDT Total","trade.poolClosed":"Closed","common.refresh":"Refresh","common.connectFirst":"Connect wallet first",
+ "trade.noBuyOrders":"No buy orders","mine.price":"Miner Price","common.all":"All","mine.purchaseHint":"Hold NNB to buy miner, no limit",
+ "mine.currentValue":"Current Value","mine.estBase":"Est Base NNB","mine.estTotal":"Est Total Output","common.approve":"Approve",
+ "bind.title":"Bind Referrer","bind.desc":"Bind referrer before buying miner (fixed)","bind.btn":"Confirm Bind",
+ "mine.title":"My Miner","mine.status":"Miner Status","mine.capacity":"Remaining Cap","mine.rate":"Daily Rate","mine.claimable":"Claimable Today",
+ "claim.timer.loading":"Loading...","mine.claim":"Claim Today's Yield","mine.gasHint":"Needs tiny BNB for gas",
+ "node.title":"Become a Node & Unlock Team Rewards!","node.cost":"Activate node: 500 USDT","node.income":"Extra 9% of miner income",
+ "invite.title":"My Referral","invite.link":"My Referral Link (1-click)","common.connectToShow":"Show after connect","invite.copy":"Copy",
+ "invite.id":"My Referral ID","common.notConnected":"Not Connected","invite.contract":"NNB Contract Address",
+ "invite.desc":"Share your Referral ID; friends earn when buying miner.","invite.count":"Total Invites",
+ "invite.list":"Invitee List","invite.empty":"No invitees yet, share your link!","node.btn":"Authorize & Activate Node","node.identity":"Role: Miner",
+ "node.website":"Official Website","invite.promoId":"Referral ID","mine.reinvest":"Reinvest","mine.reinvestDesc":"Reinvest for 3x capacity, min 2000 NNB (~20U).",
+ "mine.reinvestBtn":"Reinvest (min 2000 NNB)","node.status":"Node Status","profile.title":"My Earnings","node.revenue":"Node Income (9%)",
+ "nav.home":"Home","nav.trade":"Trade","nav.mining":"Miner","nav.invite":"Invite","nav.profile":"Me",
+ "trade.noOrders":"No orders","profile.direct":"Direct Referrals","profile.nodeIncome":"Node Income (9%)",
+ "lang.title":"Select Language"
+};
+// ---------- 日本語 ----------
+NNB_DICT["ja"]={
+ back:"戻る","wallet.connect":"ウォレット接続","price.market":"市場価格","price.origin":"元値:","price.total":"総上昇率:",
+ "subscribe.title":"一括申込","subscribe.desc":"元2100万枚·申込で焼却·3倍産出","subscribe.price":"申込価格","subscribe.triple":"3倍産出",
+ "mine.estReceive":"予定ロック産能(3倍)","subscribe.btn":"今すぐ申込","nav.tradeCenter":"取引センター","nav.buyMining":"鉱機購入",
+ "nav.inviteShare":"招待共有","nav.activateNode":"ノード起動","banner.brand":"金牛聚財運 · 牛牛コイン","banner.fengshui":"2024-2043 離火大運 · NNB",
+ "banner.reward":"NNB 注文報酬","banner.rewardDesc":"注文に参加し報酬獲得","banner.live":"上場","banner.title":"NNB 両建て",
+ "banner.desc":"スマート永続契約,裁定利益をロック","banner.audit":"スマートコントラクト監査","banner.auditDesc":"安全な自動オンチェーン実行","banner.audited":"監査済み",
+ "home.advantage":"主要強み","home.lever":"動的レバレッジ","home.leverDesc":"市場に応じ採掘レバレッジを動的調整","home.transparent":"透明性","home.transparentDesc":"全てコントラクトはチェーン上で検証可能","home.referral":"紹介システム","home.referralDesc":"友人を招待し追加報酬を獲得",
+ "trade.title":"NNB/USDT 取引プール","trade.buy":"NNB購入","trade.sell":"NNB売却","trade.buyAmount":"USDT支払","trade.receive":"受取NNB(予定)","trade.price":"価格",
+ "trade.buyBtn":"購入確認(注文)","trade.receiveUSDT":"受取USDT(予定90%)","trade.sellBtn":"売却確認","trade.pool":"プールUSDT総量","trade.poolClosed":"未開放",
+ "common.refresh":"更新","common.connectFirst":"先にウォレット接続","trade.noBuyOrders":"購入注文なし","mine.price":"鉱機価格","common.all":"全て",
+ "mine.purchaseHint":"NNB保有で購入可能,上限なし","mine.currentValue":"現在価値","mine.estBase":"予定基本NNB","mine.estTotal":"予定総採掘量","common.approve":"認可",
+ "bind.title":"上級アドレス綁定","bind.desc":"鉱機購入前に上級を綁定(変更不可)","bind.btn":"綁定確認","mine.title":"私の鉱機","mine.status":"鉱機状態",
+ "mine.capacity":"残り産能","mine.rate":"現在日率","mine.claimable":"今日受取可能","claim.timer.loading":"読み込み中...","mine.claim":"今日の収益を受取",
+ "mine.gasHint":"受取に少量BNBガス必要","node.title":"ノードになりチーム報酬を得よう!","node.cost":"ノード起動: 500 USDT","node.income":"鉱機収益の9%追加",
+ "invite.title":"私の紹介","invite.link":"紹介リンク(一括綁定)","common.connectToShow":"接続後に表示","invite.copy":"コピー","invite.id":"紹介ID",
+ "common.notConnected":"未接続","invite.contract":"NNB契約アドレス","invite.desc":"紹介IDで友人を招待し、鉱機購入で収益獲得",
+ "invite.count":"累計招待","invite.list":"招待者リスト","invite.empty":"まだ招待者がいません","node.btn":"ノード起動を承認","node.identity":"役割:鉱工",
+ "node.website":"公式サイト","invite.promoId":"紹介ID","mine.reinvest":"再投資","mine.reinvestDesc":"再投資で3倍産能,最低2000NNB(約20U)",
+ "mine.reinvestBtn":"再投資(最低2000NNB)","node.status":"ノード状態","profile.title":"私の収益","node.revenue":"ノード収益(9%)",
+ "nav.home":"ホーム","nav.trade":"取引","nav.mining":"鉱機","nav.invite":"招待","nav.profile":"私",
+ "trade.noOrders":"注文なし","profile.direct":"直推人数","profile.nodeIncome":"ノード収益(9%)","lang.title":"言語選択"
+};
+// ---------- 한국어 ----------
+NNB_DICT["ko"]={
+ back:"돌아가기","wallet.connect":"지갑 연결","price.market":"시장가","price.origin":"원가:","price.total":"총등락:",
+ "subscribe.title":"원클릭 구독","subscribe.desc":"원 2,100만개·구독시 소각·3배 생산","subscribe.price":"구독가","subscribe.triple":"3배 생산",
+ "mine.estReceive":"예상 락 생산(3배)","subscribe.btn":"지금 구독","nav.tradeCenter":"거래센터","nav.buyMining":"광부 구매",
+ "nav.inviteShare":"초대 공유","nav.activateNode":"노드 활성화","banner.brand":"황소 재물 · NNB 코인","banner.fengshui":"2024-2043 이화대운 · NNB",
+ "banner.reward":"NNB 주문 보상","banner.rewardDesc":"주문 참여로 보상 획득","banner.live":"상장","banner.title":"NNB 공매 장세",
+ "banner.desc":"스마트 영구계약, 차익 잠금","banner.audit":"스마트계약 감사","banner.auditDesc":"안전한 자동 온체인 실행","banner.audited":"감사완료",
+ "home.advantage":"핵심 장점","home.lever":"동적 레버리지","home.leverDesc":"시장에 따라 채굴 레버리지 동적 조정","home.transparent":"투명성","home.transparentDesc":"모든 계약을 체인에서 검증 가능","home.referral":"추천 시스템","home.referralDesc":"친구 초대 및 추가 보상",
+ "trade.title":"NNB/USDT 풀","trade.buy":"NNB 매수","trade.sell":"NNB 매도","trade.buyAmount":"USDT 지불","trade.receive":"받을 NNB(예상)","trade.price":"가격",
+ "trade.buyBtn":"매수 확인(주문)","trade.receiveUSDT":"받을 USDT(예상90%)","trade.sellBtn":"매도 확인","trade.pool":"풀 USDT 총량","trade.poolClosed":"미개방",
+ "common.refresh":"새로고침","common.connectFirst":"지갑 먼저 연결","trade.noBuyOrders":"구매 주문 없음","mine.price":"광부 가격","common.all":"전체",
+ "mine.purchaseHint":"NNB 보유로 구매 가능, 무제한","mine.currentValue":"현재 가치","mine.estBase":"예상 기본 NNB","mine.estTotal":"예상 총 채굴량","common.approve":"승인",
+ "bind.title":"상위 주소 바인딩","bind.desc":"광부 구매 전 상위 바인딩(변경 불가)","bind.btn":"바인딩 확인","mine.title":"내 광부","mine.status":"광부 상태",
+ "mine.capacity":"잔여 생산","mine.rate":"현재 일일율","mine.claimable":"오늘 받기 가능","claim.timer.loading":"로딩중...","mine.claim":"오늘 수익 받기",
+ "mine.gasHint":"받기에 소량 BNB 가스 필요","node.title":"노드가 되고 팀 보상 잠금해제!","node.cost":"노드 활성화: 500 USDT","node.income":"채굴 수익의 9% 추가",
+ "invite.title":"내 추천","invite.link":"추천 링크(원클릭 바인딩)","common.connectToShow":"연결 후 표시","invite.copy":"복사","invite.id":"추천 ID",
+ "common.notConnected":"미연결","invite.contract":"NNB 계약 주소","invite.desc":"추천 ID 공유, 친구가 광부 구매 시 보상",
+ "invite.count":"총 초대","invite.list":"초대자 목록","invite.empty":"아직 초대자가 없습니다","node.btn":"노드 활성화 승인","node.identity":"역할: 광부",
+ "node.website":"공식 사이트","invite.promoId":"추천 ID","mine.reinvest":"재투자","mine.reinvestDesc":"재투자로 3배 생산, 최소 2000 NNB(약20U)",
+ "mine.reinvestBtn":"재투자(최소2000NNB)","node.status":"노드 상태","profile.title":"내 수익","node.revenue":"노드 수익(9%)",
+ "nav.home":"홈","nav.trade":"거래","nav.mining":"광부","nav.invite":"초대","nav.profile":"내",
+ "trade.noOrders":"주문 없음","profile.direct":"직추천 수","profile.nodeIncome":"노드 수익(9%)","lang.title":"언어 선택"
+};
+// ---------- Tiếng Việt ----------
+NNB_DICT["vi"]={
+ back:"Quay lại","wallet.connect":"Kết nối ví","price.market":"Giá thị trường","price.origin":"Giá gốc:","price.total":"Tổng tăng:",
+ "subscribe.title":"Đăng ký nhanh","subscribe.desc":"Gốc 21tr · Đốt khi đăng ký · Sản xuất x3","subscribe.price":"Giá đăng ký","subscribe.triple":"Sản xuất x3",
+ "mine.estReceive":"Sản lượng khóa dự kiến (x3)","subscribe.btn":"Đăng ký ngay","nav.tradeCenter":"Trung tâm giao dịch","nav.buyMining":"Mua Miner",
+ "nav.inviteShare":"Mời chia sẻ","nav.activateNode":"Kích hoạt Node","banner.brand":"Vàng Bò · Coin NNB","banner.fengshui":"Hỏa Vận 2024-2043 · NNB",
+ "banner.reward":"Thưởng lệnh NNB","banner.rewardDesc":"Tham gia lệnh nhận thưởng","banner.live":"Ra mắt","banner.title":"NNB Mua/Bán",
+ "banner.desc":"Hợp đồng thông minh, khóa chênh lệch","banner.audit":"Kiểm toán hợp đồng","banner.auditDesc":"Thực thi tự động an toàn","banner.audited":"Đã kiểm toán",
+ "home.advantage":"Ưu điểm chính","home.lever":"Đòn bẩy động","home.leverDesc":"Tự điều chỉnh đòn bẩy khai thác","home.transparent":"Minh bạch","home.transparentDesc":"Hợp đồng xác minh trên chuỗi","home.referral":"Hệ thống giới thiệu","home.referralDesc":"Mời bạn bè nhận thưởng thêm",
+ "trade.title":"Pool NNB/USDT","trade.buy":"Mua NNB","trade.sell":"Bán NNB","trade.buyAmount":"Trả USDT","trade.receive":"Nhận NNB (dự kiến)","trade.price":"Giá",
+ "trade.buyBtn":"Xác nhận mua","trade.receiveUSDT":"Nhận USDT (dự kiến 90%)","trade.sellBtn":"Xác nhận bán","trade.pool":"Tổng USDT pool","trade.poolClosed":"Chưa mở",
+ "common.refresh":"Làm mới","common.connectFirst":"Kết nối ví trước","trade.noBuyOrders":"Chưa có lệnh mua","mine.price":"Giá Miner","common.all":"Tất cả",
+ "mine.purchaseHint":"Giữ NNB để mua miner, không giới hạn","mine.currentValue":"Giá trị hiện tại","mine.estBase":"NNB cơ bản dự kiến","mine.estTotal":"Tổng khai thác dự kiến","common.approve":"Phê duyệt",
+ "bind.title":"Liên kết cấp trên","bind.desc":"Liên kết cấp trên trước khi mua miner","bind.btn":"Xác nhận liên kết","mine.title":"Miner của tôi","mine.status":"Trạng thái miner",
+ "mine.capacity":"Sản lượng còn lại","mine.rate":"Lãi ngày hiện tại","mine.claimable":"Nhận hôm nay","claim.timer.loading":"Đang tải...","mine.claim":"Nhận lợi nhuận hôm nay",
+ "mine.gasHint":"Cần chút BNB làm gas","node.title":"Thành Node & mở khóa thưởng!","node.cost":"Kích hoạt node: 500 USDT","node.income":"Thêm 9% thu nhập miner",
+ "invite.title":"Giới thiệu của tôi","invite.link":"Link giới thiệu (liên kết nhanh)","common.connectToShow":"Hiện sau khi kết nối","invite.copy":"Sao chép","invite.id":"Mã giới thiệu",
+ "common.notConnected":"Chưa kết nối","invite.contract":"Địa chỉ hợp đồng NNB","invite.desc":"Chia sẻ mã, bạn bè mua miner bạn nhận thưởng",
+ "invite.count":"Tổng mời","invite.list":"Danh sách đã mời","invite.empty":"Chưa có người được mời","node.btn":"Phê duyệt kích hoạt Node","node.identity":"Vai trò: Thợ mỏ",
+ "node.website":"Website chính thức","invite.promoId":"Mã giới thiệu","mine.reinvest":"Tái đầu tư","mine.reinvestDesc":"Tái đầu tư để sản xuất x3, tối thiểu 2000 NNB",
+ "mine.reinvestBtn":"Tái đầu tư (tối thiểu 2000 NNB)","node.status":"Trạng thái Node","profile.title":"Thu nhập của tôi","node.revenue":"Thu nhập Node (9%)",
+ "nav.home":"Trang chủ","nav.trade":"Giao dịch","nav.mining":"Miner","nav.invite":"Mời","nav.profile":"Tôi",
+ "trade.noOrders":"Chưa có lệnh","profile.direct":"Số giới thiệu trực tiếp","profile.nodeIncome":"Thu nhập Node (9%)","lang.title":"Chọn ngôn ngữ"
+};
+// ---------- Bahasa Melayu ----------
+NNB_DICT["ms"]={
+ back:"Kembali","wallet.connect":"Sambung Dompet","price.market":"Harga Pasaran","price.origin":"Harga Asal:","price.total":"Jumlah Naik:",
+ "subscribe.title":"Langgan Sekali Klik","subscribe.desc":"Asal 21j · Burn bila langgan · Produksi x3","subscribe.price":"Harga Langgan","subscribe.triple":"Produksi x3",
+ "mine.estReceive":"Kapasiti terkunci (x3)","subscribe.btn":"Langgan Sekarang","nav.tradeCenter":"Pusat Dagangan","nav.buyMining":"Beli Miner",
+ "nav.inviteShare":"Kongsi Jemptuan","nav.activateNode":"Aktifkan Node","banner.brand":"Lembu Emas · Syiling NNB","banner.fengshui":"Era Api 2024-2043 · NNB",
+ "banner.reward":"Ganjaran Pesanan NNB","banner.rewardDesc":"Sertai pesanan dapat ganjaran","banner.live":"Live","banner.title":"NNB Long/Short",
+ "banner.desc":"Kontrak pintar, kunci untung arbitraj","banner.audit":"Audit Kontrak Pintar","banner.auditDesc":"Protokol pada rangkaian automatik","banner.audited":"Diaudit",
+ "home.advantage":"Kelebihan Utama","home.lever":"Leveraj Dinamik","home.leverDesc":"Laraskan leveraj perlombongan dinamik","home.transparent":"Telus","home.transparentDesc":"Semua kontrak boleh disahkan","home.referral":"Sistem Rujukan","home.referralDesc":"Jemput rakan, dapat ganjaran tambahan",
+ "trade.title":"Kolam NNB/USDT","trade.buy":"Beli NNB","trade.sell":"Jual NNB","trade.buyAmount":"Bayar USDT","trade.receive":"Terima NNB (est)","trade.price":"Harga",
+ "trade.buyBtn":"Sahkan Beli","trade.receiveUSDT":"Terima USDT (est 90%)","trade.sellBtn":"Sahkan Jual","trade.pool":"Jumlah USDT kolam","trade.poolClosed":"Tutup",
+ "common.refresh":"Muat Semula","common.connectFirst":"Sambung dompet dulu","trade.noBuyOrders":"Tiada pesanan beli","mine.price":"Harga Miner","common.all":"Semua",
+ "mine.purchaseHint":"Pegang NNB untuk beli miner, tanpa had","mine.currentValue":"Nilai Semasa","mine.estBase":"NNB asas est","mine.estTotal":"Jumlah perlombongan est","common.approve":"Lulus",
+ "bind.title":"Ikat Rujukan Atas","bind.desc":"Ikat rujukan sebelum beli miner","bind.btn":"Sahkan Ikat","mine.title":"Miner Saya","mine.status":"Status Miner",
+ "mine.capacity":"Kapasiti Baki","mine.rate":"Kadar Harian","mine.claimable":"Boleh Tuntut Hari Ini","claim.timer.loading":"Muat...","mine.claim":"Tuntut Hasil Hari Ini",
+ "mine.gasHint":"Perlu sedikit BNB untuk gas","node.title":"Jadi Node & Buka Kunci Ganjaran!","node.cost":"Aktifkan node: 500 USDT","node.income":"Tambahan 9% hasil miner",
+ "invite.title":"Rujukan Saya","invite.link":"Pautan Rujukan (1-klik)","common.connectToShow":"Tunjuk selepas sambung","invite.copy":"Salin","invite.id":"ID Rujukan",
+ "common.notConnected":"Belum Disambung","invite.contract":"Alamat Kontrak NNB","invite.desc":"Kongsi ID, rakan beli miner anda dapat hasil",
+ "invite.count":"Jumlah Jemputan","invite.list":"Senarai Jemputan","invite.empty":"Belum ada jemputan","node.btn":"Lulus Aktifkan Node","node.identity":"Peranan: Pelombong",
+ "node.website":"Laman Web Rasmi","invite.promoId":"ID Rujukan","mine.reinvest":"Pelaburan Semula","mine.reinvestDesc":"Pelaburan semula untuk kapasiti x3, min 2000 NNB",
+ "mine.reinvestBtn":"Pelaburan Semula (min 2000 NNB)","node.status":"Status Node","profile.title":"Hasil Saya","node.revenue":"Hasil Node (9%)",
+ "nav.home":"Utama","nav.trade":"Dagang","nav.mining":"Miner","nav.invite":"Jemput","nav.profile":"Saya",
+ "trade.noOrders":"Tiada pesanan","profile.direct":"Bilangan Rujukan Langsung","profile.nodeIncome":"Hasil Node (9%)","lang.title":"Pilih Bahasa"
+};
+
+// ===== 语言列表(国旗+原生语言名) =====
+var NNB_LANGS=[
+ {code:'zh-CN',flag:'🇨🇳',label:'简体中文'},
+ {code:'zh-TW',flag:'🇭🇰',label:'繁體中文'},
+ {code:'en',   flag:'🇺🇸',label:'English'},
+ {code:'ja',   flag:'🇯🇵',label:'日本語'},
+ {code:'ko',   flag:'🇰🇷',label:'한국어'},
+ {code:'vi',   flag:'🇻🇳',label:'Tiếng Việt'},
+ {code:'ms',   flag:'🇸🇬',label:'Bahasa Melayu'}
+];
+var LANG_KEY='nnb_lang2';
+function currentLang(){try{return localStorage.getItem(LANG_KEY)||(navigator.language||'zh-CN').slice(0,2)==='zh'? 
+  ((navigator.language||'').indexOf('TW')>-1?'zh-TW':'zh-CN') : mapNavigator(navigator.language)}
+  catch(e){return 'zh-CN'}}
+function mapNavigator(lang){
+  var l=(lang||'').toLowerCase();
+  if(l.indexOf('en')>-1)return 'en';if(l.indexOf('ja')>-1)return'ja';
+  if(l.indexOf('ko')>-1)return'ko';if(l.indexOf('vi')>-1)return'vi';
+  if(l.indexOf('ms')>-1||l.indexOf('id')>-1)return'ms';if(l.indexOf('zh')>-1)return'zh-TW';
+  return 'zh-CN';
+}
+function saveLang(l){try{localStorage.setItem(LANG_KEY,l)}catch(e){}}
+
+// ===== 一次到位: 应用语言到所有 data-i18n 元素 =====
 function nnbApplyLang(){
   var lang=currentLang();
-  var dict=NNB_LANG[lang]||NNB_LANG['zh-CN'];
+  var dict=NNB_DICT[lang]||NNB_DICT['zh-CN'];
   document.querySelectorAll('[data-i18n]').forEach(function(el){
     var k=el.getAttribute('data-i18n');
-    if(dict[k]!=null){
-      // 保留内部span等子元素: 只替换首层文本节点 if only text
-      el.dataset._orig=el.innerHTML;
-      el.innerHTML=dict[k];
-    }
+    if(dict[k]!=null&&dict[k]!==''){el.innerHTML=dict[k];}
   });
+  // 更新 lang 属性
+  document.documentElement.lang=(lang==='zh-CN'?'zh-CN':lang==='zh-TW'?'zh-TW':lang);
+  // 触发可选的回调(某些动态内容重新渲染)
+  if(typeof nnbAfterLang==='function'){try{nnbAfterLang(lang)}catch(e){}}
 }
+
+// ===== 下拉菜单语言面板(国旗+原生名) =====
 function nnbToggleLangPanel(){
-  var panel=document.getElementById('langPanel');
-  if(panel){panel.style.display=panel.style.display==='block'?'none':'block';return;}
-  // 动态创建语言面板
-  panel=document.createElement('div');
-  panel.id='langPanel';
-  panel.style.cssText='position:fixed;top:14px;right:14px;background:#151a2e;border:1px solid #2a3150;border-radius:12px;padding:12px;z-index:9999;box-shadow:0 8px 30px rgba(0,0,0,.5)';
-  var langs=[['zh-CN','简体中文'],['zh-TW','繁體中文'],['en','English']];
-  var html='';
-  langs.forEach(function(it){html+='<div onclick="nnbSetLang(\''+it[0]+'\')" style="padding:8px 16px;cursor:pointer;color:#e8ecf5;border-radius:8px">'+it[1]+'</div>';});
-  panel.innerHTML=html+'<div style="text-align:center;font-size:11px;color:#8b93a8;margin-top:6px">选择语言</div>';
+  var old=document.getElementById('nnbLangPanel');
+  if(old){old.style.display=old.style.display==='none'?'block':'none';return;}
+  var panel=document.createElement('div');
+  panel.id='nnbLangPanel';
+  panel.style.cssText='position:fixed;top:12px;right:12px;background:rgba(20,26,45,0.97);border:1px solid #3a4666;border-radius:14px;padding:8px 6px;z-index:99999;box-shadow:0 12px 40px rgba(0,0,0,.6);min-width:190px;backdrop-filter:blur(8px)';
+  var cur=currentLang();
+  var html='<div style="padding:10px 16px 6px;color:#8b93a8;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,.08)">'+ (NNB_DICT[cur]?NNB_DICT[cur]['lang.title']:'选择语言') +'</div>';
+  NNB_LANGS.forEach(function(l){
+    html+='<div onclick="nnbSetLang(\''+l.code+'\')" style="display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;border-radius:9px;color:#e8ecf5;font-size:14px;margin:1px 0;'+(l.code===cur?'background:rgba(212,175,55,.18);color:#f0d568;':'')+'">'
+      +'<span style="font-size:17px">'+l.flag+'</span><span style="font-weight:'+(l.code===cur?'800':'500')+'">'+l.label+'</span>'
+      +'</div>';
+  });
+  panel.innerHTML=html;
+  panel.onmouseleave=function(){setTimeout(function(){if(panel)panel.style.display='none'},400)};
   document.body.appendChild(panel);
 }
-function nnbSetLang(l){saveLang(l);nnbApplyLang();var p=document.getElementById('langPanel');if(p)p.style.display='none';window.nnbApplyLang&&nnbApplyLang();location.reload&&(typeof nnbAfterLang==='function'?nnbAfterLang():0)}
-// 页面加载应用语言
-if(typeof document!=='undefined'){if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',nnbApplyLang)}else{nnbApplyLang()}}
+function nnbSetLang(l){saveLang(l);nnbApplyLang();var p=document.getElementById('nnbLangPanel');if(p)p.style.display='none';window.scrollTo&&(typeof nnbAfterLang==='function'?null:0)}
+
+// 页面加载时应用语言
+(function(){
+  if(typeof document!=='undefined'){
+    if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',nnbApplyLang)}
+    else{setTimeout(nnbApplyLang,0)}
+  }
+})();
