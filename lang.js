@@ -200,6 +200,39 @@ var NNB_LANGS=[
  {code:'ms',   flag:'🇸🇬',label:'Bahasa Melayu'}
 ];
 var LANG_KEY='nnb_lang2';
+
+// ===== 扩充key的英文/其他语言翻译(避免切换后残留中文) =====
+// brand品牌名保持原样不翻译; 其余用英文
+var NNB_EXTRA_EN={
+ "trade.amountUsdt":"Enter USDT amount (min 200)","trade.amountNnb":"Enter NNB amount",
+ "mine.amountBuy":"Enter buy amount","bind.inputAddr":"Enter referrer wallet address",
+ "trans.toAddr":"Receiver wallet address (0x...)","trans.nnbAmt":"Enter NNB amount to transfer",
+ "trade.myOrders":"My Orders","trade.buyOrders":"Buy Orders","trans.estPerf":"Est. Performance",
+ "trans.approveHint":"Please approve NNB to the contract first",
+ "invite.unlockTitle":"Performance Unlock Tiers","invite.unlockDesc":"Unlock referral tiers by direct performance (U)","invite.tiers":"Unlock Ladder","invite.progress":"Current Progress","invite.nextTier":"Next Tier","invite.diamond":"Diamond",
+ "node.dividend":"Node Dividend (avg)","node.claimableDiv":"Claimable:","node.divHint":"Accumulated, claim anytime","common.claim":"Claim","node.divDesc":"10% of each claim goes to node dividend pool; claim all at once anytime.","lang.title":"Select Language"
+};
+// 各语言扩充key(除中文外的语言用到) - 简化: 非zh用EN, 品牌名保持
+var NNB_EXTRA_LANG={
+ 'zh-TW':{"trade.amountUsdt":"輸入 USDT 金額(最低 200)","invite.unlockTitle":"業績解鎖代數","trade.myOrders":"我的掛單列表","node.dividend":"節點分紅(平均)","common.claim":"領取"},
+ 'ja':{"trade.amountUsdt":"USDT金額入力(最低200)","trade.amountNnb":"NNB数量入力","mine.amountBuy":"購入数量入力","bind.inputAddr":"上級ウォレットアドレス入力","trans.toAddr":"受取ウォレットアドレス","trans.nnbAmt":"送金NNB数" ,"trade.myOrders":"私の注文","invite.unlockTitle":"実績解除代数"},
+ 'ko':{"trade.amountUsdt":"USDT 금액 입력(최소 200)","trade.amountNnb":"NNB 수량 입력","mine.amountBuy":"구매 수량 입력","bind.inputAddr":"상위 지갑 주소 입력","trans.toAddr":"수신 지갑 주소","trans.nnbAmt":"보낼 NNB 수량","trade.myOrders":"내 주문","invite.unlockTitle":"실적 해제대수"},
+ 'vi':{"trade.amountUsdt":"Nhập USDT (tối thiểu 200)","trade.amountNnb":"Nhập số NNB","mine.amountBuy":"Nhập số mua","bind.inputAddr":"Nhập địa chỉ cấp trên","trans.toAddr":"Địa chỉ ví nhận","trans.nnbAmt":"Số NNB chuyển","trade.myOrders":"Lệnh của tôi","invite.unlockTitle":"Mở khóa hệ số"},
+ 'ms':{"trade.amountUsdt":"Masukkan USDT (min 200)","trade.amountNnb":"Masukkan NNB","mine.amountBuy":"Masukkan kuantiti","bind.inputAddr":"Masukkan alamat rujukan","trans.toAddr":"Alamat dompet penerima","trans.nnbAmt":"Nilai NNB hantar","trade.myOrders":"Pesanan Saya","invite.unlockTitle":"Buka Kunci Peruntukan"}
+};
+function __EXTRA_DICT(lang){
+  var d={};
+  if(lang==='en'||lang==='ja'||lang==='ko'||lang==='vi'||lang==='ms'){Object.assign(d,NNB_EXTRA_EN);}
+  if(NNB_EXTRA_LANG[lang]){Object.assign(d,NNB_EXTRA_LANG[lang]);}
+  return d;
+}
+function __mergeDict(lang){
+  var base=NNB_DICT[lang]||NNB_DICT['zh-CN'];
+  var ex=__EXTRA_DICT(lang);
+  var out={};for(var k in base)out[k]=base[k];for(var k in ex)out[k]=ex[k];
+  return out;
+}
+
 function currentLang(){try{return localStorage.getItem(LANG_KEY)||(navigator.language||'zh-CN').slice(0,2)==='zh'? 
   ((navigator.language||'').indexOf('TW')>-1?'zh-TW':'zh-CN') : mapNavigator(navigator.language)}
   catch(e){return 'zh-CN'}}
@@ -215,10 +248,14 @@ function saveLang(l){try{localStorage.setItem(LANG_KEY,l)}catch(e){}}
 // ===== 一次到位: 应用语言到所有 data-i18n 元素 =====
 function nnbApplyLang(){
   var lang=currentLang();
-  var dict=NNB_DICT[lang]||NNB_DICT['zh-CN'];
+  var dict=__mergeDict(lang);
   document.querySelectorAll('[data-i18n]').forEach(function(el){
     var k=el.getAttribute('data-i18n');
     if(dict[k]!=null&&dict[k]!==''){el.innerHTML=dict[k];}
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el){
+    var k=el.getAttribute('data-i18n-placeholder');
+    if(dict[k]!=null&&dict[k]!==''){el.setAttribute('placeholder',dict[k]);}
   });
   // 更新 lang 属性
   document.documentElement.lang=(lang==='zh-CN'?'zh-CN':lang==='zh-TW'?'zh-TW':lang);
@@ -252,4 +289,8 @@ function nnbSetLang(l){saveLang(l);nnbApplyLang();var p=document.getElementById(
     if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',nnbApplyLang)}
     else{setTimeout(nnbApplyLang,0)}
   }
-})();
+})()
+
+
+
+;

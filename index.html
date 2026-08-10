@@ -227,8 +227,8 @@ button{cursor:pointer;font-family:inherit}
   <div class="brand">
     <div class="logo-wrap"><div class="brand-logo"><img src="logo.jpg?v=20260805" alt="NNB"></div></div>
     <div class="brand-center">
-      <div class="brand-name">牛牛金币 <span>NNB</span></div>
-      <div class="brand-sub">金 牛 聚 财 运</div>
+      <div class="brand-name"><span data-i18n="brand.name">牛牛金币</span> <span>NNB</span></div>
+      <div class="brand-sub" data-i18n="brand.sub">金 牛 聚 财 运</div>
     </div>
     <div class="logo-wrap"><div class="brand-logo"><img src="logo.jpg?v=20260805" alt="NNB"></div></div>
   </div>
@@ -264,7 +264,7 @@ button{cursor:pointer;font-family:inherit}
       <span style="color:var(--muted)" data-i18n="subscribe.triple">3倍产出</span>
       <span style="font-weight:700;color:var(--green)">200U → 20000 NNB → 3倍锁仓60000</span>
     </div>
-    <input class="input" id="subscribeAmount" type="number" data-i18n-ph="subscribe.min" placeholder="输入 USDT 金额(最低 200)" inputmode="decimal" style="margin-bottom:12px;font-size:16px">
+    <input class="input" id="subscribeAmount" type="number" data-i18n-ph="subscribe.min" data-i18n-placeholder="trade.amountUsdt" placeholder="输入 USDT 金额(最低 200)" inputmode="decimal" style="margin-bottom:12px;font-size:16px">
     <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:14px">
       <span style="color:var(--muted)" data-i18n="mine.estReceive">预计锁仓产能(3倍)</span>
       <span id="subscribeEstimate" style="color:var(--gold);font-weight:700">0 NNB</span>
@@ -332,7 +332,7 @@ button{cursor:pointer;font-family:inherit}
     <div class="card">
       
       <div class="trade-label"><span data-i18n="trade.sell">卖出 NNB</span><span id="sellBalance">余额: 0</span></div>
-      <div class="trade-input-row"><input class="input" id="sellAmount" type="number" data-i18n-ph="trade.sellPlaceholder" placeholder="输入 NNB 数量" inputmode="decimal"></div>
+      <div class="trade-input-row"><input class="input" id="sellAmount" type="number" data-i18n-ph="trade.sellPlaceholder" data-i18n-placeholder="trade.amountNnb" placeholder="输入 NNB 数量" inputmode="decimal"></div>
       <div class="swap-arrow"><i class="ph ph-arrow-down"></i></div>
       <div class="trade-label"><span data-i18n="trade.receiveUSDT">收到 USDT (预计 90%)</span></div>
       <div style="font-size:22px;font-weight:700;color:var(--gold)" id="sellEstimate">0.00</div>
@@ -361,7 +361,7 @@ button{cursor:pointer;font-family:inherit}
       <span style="color:var(--muted);font-size:13px">余额: <span id="mineBalance">0.0000</span> NNB</span>
     </div>
     <div style="position:relative;margin-bottom:10px">
-      <input class="input" id="mineAmount" type="number" placeholder="输入购买数量" inputmode="decimal" style="background:linear-gradient(135deg,rgba(245,200,66,0.08),rgba(180,77,255,0.08));border:1px solid rgba(180,77,255,0.3);padding-right:70px;font-size:16px">
+      <input class="input" id="mineAmount" type="number" data-i18n-placeholder="mine.amountBuy" placeholder="输入购买数量" inputmode="decimal" style="background:linear-gradient(135deg,rgba(245,200,66,0.08),rgba(180,77,255,0.08));border:1px solid rgba(180,77,255,0.3);padding-right:70px;font-size:16px">
       <button onclick="fillAllNNB()" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);padding:8px 14px;border:none;border-radius:8px;background:var(--bg);color:var(--text);font-size:13px;font-weight:600" data-i18n="common.all">全部</button>
     </div>
     <div class="muted" style="margin-bottom:14px;font-size:12px"><span data-i18n="mine.purchaseHint">持NNB即可购买矿机,不限额度.</span></div>
@@ -383,7 +383,7 @@ button{cursor:pointer;font-family:inherit}
   <div class="card">
     <div class="row" style="margin-bottom:8px"><div class="g-icon" style="width:36px;height:36px;background:rgba(245,200,66,0.15);color:var(--gold);font-size:16px"><i class="ph ph-link"></i></div><div style="font-weight:700;font-size:15px" data-i18n="bind.title">绑定上级地址</div></div>
     <div class="muted" style="margin-bottom:12px" data-i18n="bind.desc">购买矿机前需要绑定上级地址,绑定后无法更改</div>
-    <input class="input" id="referrerInput" data-i18n-ph="bind.placeholder" placeholder="请输入上级钱包地址" style="margin-bottom:12px">
+    <input class="input" id="referrerInput" data-i18n-ph="bind.placeholder" data-i18n-placeholder="bind.inputAddr" placeholder="请输入上级钱包地址" style="margin-bottom:12px">
     <button class="btn btn-purple" onclick="bindReferrer()" data-i18n="bind.btn">确认绑定</button>
   </div>
 
@@ -391,9 +391,9 @@ button{cursor:pointer;font-family:inherit}
     <div class="section-title" style="color:var(--fire)">NNB 互转（DApp 内）</div>
     <div class="muted" style="margin-bottom:10px;font-size:12px">在 DApp 内互转 NNB：填写接收方钱包地址与转出数量，链上真实划转，自动按当前价折算 USDT 业绩（解锁代数/档位）。业绩额度 = 实际转出量，不可造假。</div>
     <div style="margin-bottom:8px">
-      <input class="input" id="transRecv" type="text" placeholder="接收方钱包地址 (0x...)" style="margin-bottom:8px">
+      <input class="input" id="transRecv" type="text" data-i18n-placeholder="trans.toAddr" placeholder="接收方钱包地址 (0x...)" style="margin-bottom:8px">
       <div style="display:flex;gap:8px">
-        <input class="input" id="transAmt" type="number" placeholder="转出 NNB 数量" style="flex:1" oninput="updTransPerf()">
+        <input class="input" id="transAmt" type="number" data-i18n-placeholder="trans.nnbAmt" placeholder="转出 NNB 数量" style="flex:1" oninput="updTransPerf()">
         <button class="btn btn-fire" style="width:auto;padding:12px 20px;margin:0" onclick="doNNBTransfer()">互转并计业绩</button>
       </div>
     </div>
