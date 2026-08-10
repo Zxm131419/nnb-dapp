@@ -217,7 +217,7 @@ button{cursor:pointer;font-family:inherit}
   color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;z-index:999;display:none;box-shadow:0 4px 16px rgba(16,185,129,0.35)}
 .toast.show{display:block}
 </style>
-<script src="lang.js?v=17012"></script>
+<script src="lang.js?v=17013"></script>
 </head>
 <body>
 <div class="toast" id="toast"></div>
@@ -388,19 +388,19 @@ button{cursor:pointer;font-family:inherit}
   </div>
 
   <div class="card" style="background:linear-gradient(135deg,rgba(255,87,34,0.14),rgba(180,77,255,0.12))">
-    <div class="section-title" style="color:var(--fire)">NNB 互转（DApp 内）</div>
-    <div class="muted" style="margin-bottom:10px;font-size:12px">在 DApp 内互转 NNB：填写接收方钱包地址与转出数量，链上真实划转，自动按当前价折算 USDT 业绩（解锁代数/档位）。业绩额度 = 实际转出量，不可造假。</div>
+    <div class="section-title" style="color:var(--fire)" data-i18n="trans.title">NNB 互转（DApp 内）</div>
+    <div class="muted" style="margin-bottom:10px;font-size:12px" data-i18n="trans.desc">在 DApp 内互转 NNB：填写接收方钱包地址与转出数量，链上真实划转，自动按当前价折算 USDT 业绩（解锁代数/档位）。业绩额度 = 实际转出量，不可造假。</div>
     <div style="margin-bottom:8px">
       <input class="input" id="transRecv" type="text" data-i18n-placeholder="trans.toAddr" placeholder="接收方钱包地址 (0x...)" style="margin-bottom:8px">
       <div style="display:flex;gap:8px">
         <input class="input" id="transAmt" type="number" data-i18n-placeholder="trans.nnbAmt" placeholder="转出 NNB 数量" style="flex:1" oninput="updTransPerf()">
-        <button class="btn btn-fire" style="width:auto;padding:12px 20px;margin:0" onclick="doNNBTransfer()">互转并计业绩</button>
+        <button class="btn btn-fire" style="width:auto;padding:12px 20px;margin:0" onclick="doNNBTransfer()" data-i18n="trans.btn">互转并计业绩</button>
       </div>
     </div>
     <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,87,34,0.15);font-size:13px">
       <span style="color:var(--muted)">预计业绩</span><span style="font-weight:600" id="transPerfPreview">0 USDT</span>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:6px">需您在钱包内先授权 NNB 给 DApp 合约（approve），一次授权可多次互转。</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px" data-i18n="trans.approveHint">需您在钱包内先授权 NNB 给 DApp 合约（approve），一次授权可多次互转。</div>
   </div>
 
   <div class="card">
@@ -420,7 +420,7 @@ button{cursor:pointer;font-family:inherit}
       <div style="background:rgba(20,10,40,0.6);border-radius:10px;padding:12px;text-align:center">
         <div style="color:var(--muted);font-size:11px" data-i18n="mine.claimable">今日可领</div>
         <div style="font-weight:700;font-size:16px;color:var(--gold);margin-top:4px" id="minerClaimable">0.00 NNB</div>
-        <div style="font-size:11px;color:var(--green);margin-top:3px" id="minerAccelShow" style="display:none">19代加速 <span id="minerAccelAmt">0.00</span> NNB</div>
+        <div style="font-size:11px;color:var(--green);margin-top:3px" id="minerAccelShow" style="display:none"><span data-i18n="mine.accel19">19代加速</span> <span id="minerAccelAmt">0.00</span> NNB</div>
       </div>
     </div>
     <div style="background:rgba(245,200,66,0.08);border-radius:10px;padding:10px;margin-top:10px;text-align:center">
@@ -428,7 +428,7 @@ button{cursor:pointer;font-family:inherit}
     </div>
     <button class="btn btn-gold" style="margin-top:10px" id="claimBtn" onclick="claimReward()" disabled style="opacity:0.5" data-i18n="mine.claim">领取今日收益</button>
     <div class="muted" style="text-align:center;margin-top:8px;font-size:11px"><span data-i18n="mine.gasHint">领取需要极少量 BNB 作为 gas 费</span></div>
-    <div style="text-align:center;margin-top:4px;font-size:10px;color:var(--muted)" id="accelHint" style="display:none">19代加速 = 伞下用户领取时从剩余产能加速释放的部分（递减释放，需复投补充）</div>
+    <div style="text-align:center;margin-top:4px;font-size:10px;color:var(--muted)" id="accelHint" style="display:none">nnbT('mine.accel19')+' '+ = 伞下用户领取时从剩余产能加速释放的部分（递减释放，需复投补充）</div>
   </div>
 
   <div id="minersList"></div>
@@ -916,7 +916,7 @@ async function loadMiners(){
         const todayClaimable=claimableNum;
         const mc=document.getElementById('minerClaimable');
         if(mc)mc.textContent=todayClaimable.toLocaleString(undefined,{maximumFractionDigits:2})+' NNB';
-        // 19代加速显示：读 acceleratedAmount（含在今日可领里，从产能加速释放）
+        // nnbT('mine.accel19')+' '+显示：读 acceleratedAmount（含在今日可领里，从产能加速释放）
         try{
           const accelRef = new ethers.Contract(C.contracts.referral,['function acceleratedAmount(address) view returns(uint256)'],provider);
           const accelWei = await accelRef.acceleratedAmount(addr);
@@ -1032,7 +1032,7 @@ function updateClaimTimer(burned,boostExpire,todayClaimable){
   // 24小时冷却：以链上 lastClaimTime 为准（避免显示可领却链上冷却中）
   refreshClaimCooldown(todayClaimable);  // 异步刷新，若冷却中会禁用按钮
   // 先按可领显示，refreshClaimCooldown 会覆盖为冷却状态
-  timerEl.textContent='可领取!立即点击领取';
+  timerEl.textContent=nnbT('mine.clickClaim')+' ';
   timerEl.style.color='var(--green)';
   btn.disabled=false;
   btn.style.opacity='1';
@@ -1289,7 +1289,7 @@ async function loadUserInfo(){
     let bm=1;try{bm=Number(await ref.getBoostMultiplier(addr))}catch(e){}
     let be=0;try{be=Number(await ref.getBoostExpireTime(addr))}catch(e){}
     let burned=false;try{burned=await ref.getUserBurned(addr)}catch(e){}
-    const ms=document.getElementById('minerStatus');if(ms)ms.textContent=(_globalMyBalance>0||isActive)?'已激活':'未购买';
+    const ms=document.getElementById('minerStatus');if(ms)ms.textContent=(_globalMyBalance>0||isActive)?nnbT('mine.active'):'未购买';
     const mc=document.getElementById('minerCapacity');if(mc)mc.textContent=_globalMyBalance.toLocaleString(undefined,{maximumFractionDigits:2});
     const mb=document.getElementById('mineEstBase');if(mb)mb.textContent=_globalMyBalance.toLocaleString(undefined,{maximumFractionDigits:2})+' NNB';
     const mt=document.getElementById('mineEstTotal');if(mt)mt.textContent=_globalMyBalance.toLocaleString(undefined,{maximumFractionDigits:2})+' NNB (3倍杠杆)';
@@ -1377,9 +1377,9 @@ async function loadNodeInfo(){
     const isN=parseInt((userHex||'0x').slice(66,130),16)===1;
     const dc=parseInt(dcHex||'0x0',16)||0;
     const el1=document.getElementById('nodeStatusContent');
-    if(el1)el1.innerHTML='<div class="profile-row"><span class="profile-label" data-i18n="node.status">节点状态</span><span class="profile-val" style="color:'+(isN?'var(--green)':'var(--red)')+'">'+(isN?'已激活':'未激活')+'</span></div>';
+    if(el1)el1.innerHTML='<div class="profile-row"><span class="profile-label" data-i18n="node.status">节点状态</span><span class="profile-val" style="color:'+(isN?'var(--green)':'var(--red)')+'">'+(isN?nnbT('mine.active'):nnbT('mine.inactive'))+'</span></div>';
     const el2=document.getElementById('nodeRevenue');
-    if(el2)el2.innerHTML='<div class="profile-row"><span class="profile-label" data-i18n="profile.direct">直推人数</span><span class="profile-val">'+dc+'</span></div><div class="profile-row"><span class="profile-label" data-i18n="profile.nodeIncome">节点收益(9%)</span><span class="profile-val">'+(isN?'计算中...':'未激活')+'</span></div>';
+    if(el2)el2.innerHTML='<div class="profile-row"><span class="profile-label" data-i18n="profile.direct">直推人数</span><span class="profile-val">'+dc+'</span></div><div class="profile-row"><span class="profile-label" data-i18n="profile.nodeIncome">节点收益(9%)</span><span class="profile-val">'+(isN?'计算中...':nnbT('mine.inactive'))+'</span></div>';
   }catch(e){
     const el=document.getElementById('nodeStatusContent');
     if(el)el.innerHTML='<div class="muted" style="text-align:center;padding:12px">加载失败</div>';
