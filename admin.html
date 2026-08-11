@@ -93,6 +93,8 @@
       <div class="stat gold"><div class="v" id="stOwner">-</div><div class="k">Owner</div></div>
       <div class="stat water"><div class="v" id="stUsers">-</div><div class="k">用户总数</div></div>
       <div class="stat wood"><div class="v" id="stNodes">-</div><div class="k">节点数</div></div>
+      <div class="stat gold"><div class="v" id="stMint">-</div><div class="k">全网总增发</div></div>
+      <div class="stat fire"><div class="v" id="stBurn">-</div><div class="k">全网总销毁</div></div>
       <div class="stat fire"><div class="v" id="stProxy">-</div><div class="k">实现版本</div></div>
     </div>
   </div>
@@ -209,6 +211,15 @@
       $('stUsers').textContent=String((await c.getAllUsersCount()));
       $('stNodes').textContent=String((await c.nodeCount()));
       $('stProxy').textContent='V18';
+      // 全网总增发 = NNB totalSupply
+      try{
+        const nnb=new ethers.Contract('0xb9200aE34c94090EbCc84D7323f911dE60BA3202',['function totalSupply() view returns(uint256)','function balanceOf(address) view returns(uint256)'],signer||provider);
+        const ts=await nnb.totalSupply();
+        $('stMint').textContent=ethers.utils.formatEther(ts).slice(0,10);
+        // 全网总销毁 = 黑洞地址余额
+        const burn=await nnb.balanceOf('0x000000000000000000000000000000000000dEaD');
+        $('stBurn').textContent=ethers.utils.formatEther(burn).slice(0,10);
+      }catch(ee){}
     }catch(e){}
   }
   async function queryUser(){
