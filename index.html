@@ -217,7 +217,7 @@ button{cursor:pointer;font-family:inherit}
   color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;z-index:999;display:none;box-shadow:0 4px 16px rgba(16,185,129,0.35)}
 .toast.show{display:block}
 </style>
-<script src="lang.js?v=17015"></script>
+<script src="lang.js?v=17016"></script>
 </head>
 <body>
 <div class="toast" id="toast"></div>
@@ -1642,9 +1642,11 @@ function loadSubscribedProgress(){
     }catch(e){return 0}
   }
   Promise.all([bal(USDT,W1),bal(USDT,W2),bal(NNB,DEAD)]).then(function(vals){
-    const total=vals[0]+vals[1];
+    const total=vals[0]+vals[1];            // 已认购 USDT
     const count=Math.round(total/200);
-    const pct=(total/210000*100);   // 进度 = 已认购USDT / 210000目标
+    const subNNB=total*100;                 // 已认购 USDT -> NNB(1U=100NNB,0.01)
+    const burned=vals[2];                   // 黑洞销毁 NNB
+    const pct=((subNNB+burned)/21000000*100); // 进度=(认购NNB+销毁NNB)/2100万*100
     const e1=document.getElementById('subscribedUSDT');
     if(e1)e1.textContent=total.toLocaleString(undefined,{maximumFractionDigits:0})+' USDT';
     const e2=document.getElementById('subscribedCount');
