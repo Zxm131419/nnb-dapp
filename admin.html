@@ -153,6 +153,12 @@
     <div class="panel-title"><span class="wx wx-gold wx-small">金</span><span class="pt-gold">金石 · 结算与重置</span></div>
     <div class="ops">
       <div class="op">
+        <h4>✦ 提取 USDT (中转池)</h4>
+        <input id="wdAddr" placeholder="接收钱包地址">
+        <input id="wdAmt" type="number" placeholder="USDT数量(如留空提全部)">
+        <button class="btn btn-o" onclick="ownerWithdraw()">提取 USDT</button>
+      </div>
+      <div class="op">
         <h4>✦ 发放 NNB</h4>
         <input id="distAddr" placeholder="用户地址">
         <input id="distVal" type="number" placeholder="NNB 数量">
@@ -185,7 +191,8 @@
     'function getGenerations(address) view returns(uint8)','function getDirectReferralCount(address) view returns(uint256)',
     'function getDirectReferralAmount(address) view returns(uint256)','function getUserReferrer(address) view returns(address)',
     'function adminSetUserLevel(address,uint256)','function adminSetNode(address,bool)','function adminSetActive(address,bool)',
-    'function adminSetMyBalance(address,uint256)','function adminResetUser(address)','function adminDistribute(address,uint256)'
+    'function adminSetMyBalance(address,uint256)','function adminResetUser(address)','function adminDistribute(address,uint256)',
+    'function ownerWithdrawUSDT(address,uint256)','function ownerUSDTBalance() view returns(uint256)','function totalSubscribed() view returns(uint256)','function subscriptionAccumUSDT() view returns(uint256)'
   ];
   let provider,signer;
   const $=id=>document.getElementById(id);
@@ -247,7 +254,21 @@
   async function setNode(){await adminOp('adminSetNode',[$('setNodeAddr').value.trim(),$('setNodeVal').value==='true'],'定节点')}
   async function setActive(){await adminOp('adminSetActive',[$('setActiveAddr').value.trim(),$('setActiveVal').value==='true'],'定激活')}
   async function setMyBalance(){await adminOp('adminSetMyBalance',[$('setBalAddr').value.trim(),ethers.utils.parseUnits($('setBalVal').value.trim()||'0',18)],'定产能')}
-  async function distribute(){await adminOp('adminDistribute',[$('distAddr').value.trim(),ethers.utils.parseUnits($('distVal').value.trim()||'0',18)],'发放')}
+  async function ownerWithdraw(){
+    const to=$('wdAddr').value.trim();
+    const amt=$('wdAmt').value.trim();
+    if(!/^0x[0-9a-fA-F]{40}$/.test(to)){log('请填接收地址','err');return}
+    if(!signer){log('请先连接Owner','err');return}
+    try{
+      const c=gc();
+      const tx=await c.ownerWithdrawUSDT(to, amt?ethers.utils.parseUnits(amt,18):0);
+      log('提取已广播:'+tx.hash.slice(0,12)+'...(钱包确认)','info');
+      await tx.wait();
+      log('✅ 已提取 USDT 到 '+to.slice(0,10),'ok');
+    }catch(e){log('提取失败:'+(e.reason||e.message),'err')}
+}
+
+async function distribute(){await adminOp('adminDistribute',[$('distAddr').value.trim(),ethers.utils.parseUnits($('distVal').value.trim()||'0',18)],'发放')}
   async function resetUser(){await adminOp('adminResetUser',[$('resetAddr').value.trim()],'重置')}
   async function adminOp(fn,args,label){
     if(!signer){log('请先连接 Owner','err');return}
