@@ -963,17 +963,14 @@ async function loadMiners(){
 }
 
 
-// 读取链上 lastClaimTime(24h冷却)，与链上强制一致
+// V25: 读取链上 lastClaimDay(天号)，每日限领一次
 async function getChainCooldown(a){
   try{
-    const ref=new ethers.Contract(C.contracts.referral,['function lastClaimTime(address) view returns(uint256)'],provider||signer);
-    const lt=await ref.lastClaimTime(a);
-    const ltNum=Number(lt);
-    if(ltNum<=0) return 0; // 未领过,可领
-    const now=Math.floor(Date.now()/1000);
-    const passed=now-ltNum;
-    if(passed>=86400) return 0; // 已满24h,可领
-    return 86400-passed; // 剩余冷却秒
+    const ref=new ethers.Contract(C.contracts.referral,['function lastClaimDay(address) view returns(uint256)'],provider||signer);
+    const ld=await ref.lastClaimDay(a);
+    const today=Math.floor(Date.now()/1000/86400);
+    if(Number(ld)<today) return 0; // 今天还没领,可领
+    return -1; // 今天已领过
   }catch(e){ return 0; }
 }
 // 更新冷却 UI（链上为准，显示剩余时间）
@@ -983,6 +980,15 @@ async function refreshClaimCooldown(todayClaimable){
   if(!timerEl||!btn)return;
   if(!addr){return;}
   const remain=await getChainCooldown(addr);
+  if(remain===-1){
+    // V25: 今天已领取，明天再领
+    timerEl.textContent='今日已领取，明天8点后可再领';
+    timerEl.style.color='var(--muted)';
+    btn.disabled=true;
+    btn.style.opacity='0.5';
+    btn.textContent='今日已领取';
+    return;
+  }
   if(remain>0){
     const h=Math.floor(remain/3600);
     const m=Math.floor((remain%3600)/60);
