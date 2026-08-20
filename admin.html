@@ -177,6 +177,41 @@
     <div class="log" id="logBox">· 天机待启 · 连接 Owner 后开始布道 ...</div>
   </div>
 
+
+  <!-- 水·系统配置: 手续费 / 启动市场 / 停止收益 / 初始价 -->
+  <div class="panel">
+    <div class="panel-title"><span class="wx wx-water wx-small">水</span><span class="pt-water">水镜 · 系统配置</span></div>
+    <div class="ops">
+      <div class="op">
+        <h4>✦ 交易手续费 (千分制)</h4>
+        <div class="hint">当前: <span id="curFee" style="color:var(--gold)">加载中...</span></div>
+        <input id="setFeeVal" type="number" placeholder="130 = 13%" min="0" max="999">
+        <button class="btn btn-b" onclick="setTradeFee()">设置手续费</button>
+        <div class="hint">130=13%, 50=5%, 0=免手续费</div>
+      </div>
+      <div class="op">
+        <h4>✦ 启动 / 关闭市场</h4>
+        <div class="hint">当前: <span id="curMarket" style="color:var(--gold)">加载中...</span></div>
+        <select id="setMarketVal"><option value="true">启动市场</option><option value="false">关闭市场</option></select>
+        <button class="btn btn-g" onclick="setMarket()">执行</button>
+      </div>
+      <div class="op">
+        <h4>✦ 停止/恢复用户收益</h4>
+        <input id="stopAddr" placeholder="用户钱包地址 0x...">
+        <select id="stopVal"><option value="false">停止收益(不可领取)</option><option value="true">恢复收益(正常领取)</option></select>
+        <button class="btn btn-r" onclick="stopUser()">执行</button>
+        <div class="hint">停止后用户 DApp 无法领取任何收益</div>
+      </div>
+      <div class="op">
+        <h4>✦ 调整初始价格</h4>
+        <div class="hint">当前: <span id="curPrice" style="color:var(--gold)">加载中...</span></div>
+        <input id="setPriceVal" type="number" placeholder="如 0.01 = 1e16" step="0.001">
+        <button class="btn btn-o" onclick="setPrice()">设置价格</button>
+        <div class="hint">单位 USDT, 如 0.01 对应 1e16, 0.02 对应 2e16</div>
+      </div>
+    </div>
+  </div>
+
   <footer>金水木火土 · 五行相生 · 数据皆在链上 · 透明不昧</footer>
 </div>
 
@@ -192,7 +227,8 @@
     'function getDirectReferralAmount(address) view returns(uint256)','function getUserReferrer(address) view returns(address)',
     'function adminSetUserLevel(address,uint256)','function adminSetNode(address,bool)','function adminSetActive(address,bool)',
     'function adminSetMyBalance(address,uint256)','function adminResetUser(address)','function adminDistribute(address,uint256)',
-    'function ownerWithdrawUSDT(address,uint256)','function ownerUSDTBalance() view returns(uint256)','function totalSubscribed() view returns(uint256)','function subscriptionAccumUSDT() view returns(uint256)'
+    'function ownerWithdrawUSDT(address,uint256)','function ownerUSDTBalance() view returns(uint256)','function totalSubscribed() view returns(uint256)','function subscriptionAccumUSDT() view returns(uint256)',
+    'function setTradeFeeRate(uint256)','function setMarketStarted(bool)','function tradeFeeRate() view returns(uint256)','function marketStarted() view returns(uint256)','function resetNodeFeeStartTime()','function setPrice(uint256)'
   ];
   let provider,signer;
   const $=id=>document.getElementById(id);
@@ -280,6 +316,37 @@ async function distribute(){await adminOp('adminDistribute',[$('distAddr').value
       await tx.wait();
       log('☯ '+label+'成功','ok');
     }catch(e){log(label+'失败:'+(e.reason||e.message),'err')}
+  }
+
+  // ===== 系统配置函数 =====
+  async function setTradeFee(){
+    if(!signer){log('请先连接 Owner','err');return}
+    const val=parseInt($('setFeeVal').value);
+    if(isNaN(val)||val<0||val>=1000){log('手续费须0-999千分','err');return}
+    try{const c=gc();const tx=await c.setTradeFeeRate(val);log('设置手续费 '+val+' → 广播中...','info');await tx.wait();log('☯ 手续费已设为 '+(val/10).toFixed(1)+'%','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function setMarket(){
+    if(!signer){log('请先连接 Owner','err');return}
+    const val=$('setMarketVal').value==='true';
+    try{const c=gc();const tx=await c.setMarketStarted(val);log('市场'+(val?'启动':'关闭')+' → 广播中...','info');await tx.wait();log('☯ 市场已'+(val?'启动':'关闭'),'ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function stopUser(){
+    if(!signer){log('请先连接 Owner','err');return}
+    const addr=$('stopAddr').value.trim();
+    const val=$('stopVal').value==='true';
+    if(!/^0x[0-9a-fA-F]{40}$/.test(addr)){log('地址格式不符','err');return}
+    try{const c=gc();const tx=await c.adminSetActive(addr,val);log('用户收益'+(val?'恢复':'停止')+' → 广播中...','info');await tx.wait();log('☯ '+addr.slice(0,10)+'.. 收益已'+(val?'恢复':'停止'),'ok')}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function setPrice(){
+    if(!signer){log('请先连接 Owner','err');return}
+    const usd=parseFloat($('setPriceVal').value);
+    if(isNaN(usd)||usd<=0){log('价格须大于0','err');return}
+    const price18=ethers.utils.parseUnits(usd.toString(),18);
+    try{const c=gc();const tx=await c.setPrice(price18);log('价格设置为 '+usd+' USDT → 广播中...','info');await tx.wait();log('☯ 初始价已设为 '+usd+' USDT','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function resetNodeFeeTime(){
+    if(!signer){log('请先连接 Owner','err');return}
+    try{const c=gc();const tx=await c.resetNodeFeeStartTime();log('重置节点费起始时间 → 广播中...','info');await tx.wait();log('☯ 节点费重置成功，从500U重新计费','ok')}catch(e){log('失败:'+(e.reason||e.message),'err')}
   }
 </script>
 </body>
