@@ -216,6 +216,15 @@
         <button class="btn btn-b" onclick="setDailyRate()">设置涨幅</button>
         <div class="hint">5=0.5%/天, 10=1%/天, 0=不涨(仅市场启动后生效)</div>
       </div>
+      <div class="op">
+        <h4>✦ 领取分账比例 (千分制)</h4>
+        <div class="hint">当前: 用户 <span id="curU" style="color:var(--gold)">-</span> / 节点 <span id="curN" style="color:var(--gold)">-</span> / 项目 <span id="curP" style="color:var(--gold)">-</span> / 池 <span id="curB" style="color:var(--gold)">-</span></div>
+        <input id="setUserRate" type="number" placeholder="用户 % (如80)" min="0" max="100">
+        <input id="setNodeRate" type="number" placeholder="节点 % (如9)" min="0" max="100">
+        <input id="setProjRate" type="number" placeholder="项目 % (如6)" min="0" max="100">
+        <button class="btn btn-o" onclick="setClaimSplit()">设置 用户/节点/项目</button>
+        <div class="hint">三个合计≤100%，余数=节点分红池(如80+9+6=95→池5%)</div>
+      </div>
     </div>
   </div>
 
@@ -236,7 +245,8 @@
     'function adminSetMyBalance(address,uint256)','function adminResetUser(address)','function adminDistribute(address,uint256)',
     'function ownerWithdrawUSDT(address,uint256)','function ownerUSDTBalance() view returns(uint256)','function totalSubscribed() view returns(uint256)','function subscriptionAccumUSDT() view returns(uint256)',
     'function setTradeFeeRate(uint256)','function setMarketStarted(bool)','function tradeFeeRate() view returns(uint256)','function marketStarted() view returns(uint256)','function resetNodeFeeStartTime()','function setPrice(uint256)',
-    'function setDailyRate(uint256)','function dailyRate() view returns(uint256)','function currentPrice() view returns(uint256)'
+    'function setDailyRate(uint256)','function dailyRate() view returns(uint256)','function currentPrice() view returns(uint256)',
+    'function setClaimRates(uint256,uint256,uint256)','function setClaimUserRate(uint256)','function setClaimNodeRate(uint256)','function setClaimProjectRate(uint256)','function setClaimBurnRate(uint256)'
   ];
   let provider,signer;
   const $=id=>document.getElementById(id);
@@ -276,6 +286,11 @@
         try{$('curMarket').textContent=(await c.marketStarted())?'✅ 已启动':'❌ 已关闭';}catch(e){}
         try{$('curPrice').textContent=(Number(await c.currentPrice())/1e18).toFixed(4)+' USDT';}catch(e){}
         try{$('curDailyRate').textContent=(Number(await c.dailyRate())/10).toFixed(1)+'%/天 ('+(await c.dailyRate()).toString()+'基点)';}catch(e){}
+        try{if($('curU')&&$('curN')&&$('curP')&&$('curB')){
+          const ur=Number(await c.claimUserRate()), nr=Number(await c.claimNodeRate()), pr=Number(await c.claimProjectRate());
+          $('curU').textContent=(ur/10)+'%'; $('curN').textContent=(nr/10)+'%'; $('curP').textContent=(pr/10)+'%';
+          $('curB').textContent=((1000-ur-nr-pr)/10)+'%';
+        }}catch(e){}
     }catch(e){}
   }
   async function queryUser(){
@@ -366,6 +381,21 @@ async function distribute(){await adminOp('adminDistribute',[$('distAddr').value
     const val=parseInt($('setDailyRateVal').value);
     if(isNaN(val)||val<0){log('涨幅须≥0','err');return}
     try{const c=gc();const tx=await c.setDailyRate(val);log('每日涨幅设为 '+val+'基点 → 广播中...','info');await tx.wait();log('☯ 每日涨幅已设为 '+(val/10).toFixed(1)+'%/天','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function setClaimSplit(){
+    if(!signer){log('请先连接 Owner','err');return}
+    const u=parseInt($('setUserRate').value), n=parseInt($('setNodeRate').value), p=parseInt($('setProjRate').value);
+    if(isNaN(u)||isNaN(n)||isNaN(p)){log('请填三个比例(%)','err');return}
+    if(u+n+p>100){log('三个比例合计不能超100%','err');return}
+    const ur=u*10, nr=n*10, pr=p*10;
+    try{
+      const c=gc();
+      log('设置 用户'+u+'% + 节点'+n+'% + 项目'+p+'% → 广播中...','info');
+      const tx=await c.setClaimRates(ur,nr,pr);
+      await tx.wait();
+      log('☯ 分账比例已设: 用户'+u+'% 节点'+n+'% 项目'+p+'% 池'+((100-u-n-p))+'%','ok');
+      await loadStats();
+    }catch(e){log('失败:'+(e.reason||e.message),'err')}
   }
 </script>
 </body>
