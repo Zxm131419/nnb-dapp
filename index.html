@@ -847,18 +847,26 @@ async function doSell(){
   if(userXlyBal<amt){toast('NNB余额不足');return}
   try{
     const nnbAmt=ethers.utils.parseUnits(amt.toFixed(6),18);
-    // 1. 检查和授权 NNB（双保险：同时授权给 Proxy 和 poolWallet，确保 sellNNB 无论 spender 是谁都能成功）
+    // 1. 检查和授权 NNB (sellNNB 通过代理 delegatecall，spender 可能是 Proxy 或实现合约)
     const token=new ethers.Contract(C.tokens.NNB,['function allowance(address,address) view returns (uint256)','function approve(address,uint256)'],signer);
-    // 先查 poolWallet 是否需要授权（sellNNB 实际用 poolWallet 做 spender 转运到池子）
-    const SPENDERS=[C.contracts.pool, C.contracts.referral];
+    const SPENDERS=[];
+    if(C.contracts.referral) SPENDERS.push(C.contracts.referral); // Proxy
+    try{
+      const px=new ethers.Contract(C.contracts.referral,['function implementation() view returns(address)'],provider||signer);
+      const impl=await px.implementation();
+      if(impl&&impl!=='0x'+'0'.repeat(40)) SPENDERS.push(impl); // 实现合约
+    }catch(e){}
+    const MAX_UINT=ethers.constants?ethers.constants.MaxUint256:ethers.utils.parseUnits('1000000000000000000',18);
     const BIGAMT=ethers.utils.parseUnits('1000000000',18);
-    for(const sp of SPENDERS){
-      const curAllow=await token.allowance(addr,sp);
-      if(curAllow.lt(nnbAmt)){
-        toast('请先授权NNB给底池/合约...');
-        const ap=await token.approve(sp,BIGAMT);
-        await ap.wait();
-      }
+    for(const sp of [...new Set(SPENDERS.filter(Boolean))]){
+      try{
+        const curAllow=await token.allowance(addr,sp);
+        if(curAllow.lt(nnbAmt)){
+          toast('请授权NNB给合约...');
+          const ap=await token.approve(sp,BIGAMT);
+          await ap.wait();
+        }
+      }catch(e){}
     }
     // 2. 调用 sellNNB（NNB进底池 + 扣13%手续费 + 底池USDT付给用户）
     toast('卖出中...');
