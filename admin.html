@@ -153,9 +153,10 @@
     <div class="panel-title"><span class="wx wx-gold wx-small">金</span><span class="pt-gold">金石 · 结算与重置</span></div>
     <div class="ops">
       <div class="op">
-        <h4>✦ 提取 USDT (中转池)</h4>
+        <h4>✦ 提取 USDT (合约池)</h4>
+        <div class="hint">合约USDT余额: <span id="curUsdtBal" style="color:var(--gold)">加载中...</span></div>
         <input id="wdAddr" placeholder="接收钱包地址">
-        <input id="wdAmt" type="number" placeholder="USDT数量(如留空提全部)">
+        <input id="wdAmt" type="number" placeholder="USDT数量(留空=提全部轮机)">
         <button class="btn btn-o" onclick="ownerWithdraw()">提取 USDT</button>
       </div>
       <div class="op">
@@ -292,6 +293,7 @@
           $('curB').textContent=((1000-ur-nr-pr)/10)+'%';
         }}catch(e){}
     }catch(e){}
+      try{const c3=gc();const ub=await c3.ownerUSDTBalance();if($('curUsdtBal'))$('curUsdtBal').textContent=(Number(ub)/1e18).toFixed(2)+' USDT';}catch(e){}
   }
   async function queryUser(){
     const a=$('qAddr').value.trim();
