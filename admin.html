@@ -300,7 +300,7 @@
         try{$('curMarket').textContent=(await c.marketStarted())?'✅ 已启动':'❌ 已关闭';}catch(e){}
         try{$('curPrice').textContent=(Number(await c.currentPrice())/1e18).toFixed(4)+' USDT';}catch(e){}
         try{$('curDailyRate').textContent=(Number(await c.dailyRate())/10).toFixed(1)+'%/天 ('+(await c.dailyRate()).toString()+'基点)';}catch(e){}
-        try{if($('curBaseFee')){const c9=gc();$('curBaseFee').textContent=(Number(await c9.baseFeeRate())/10).toFixed(1)+'%';$('curEffFee').textContent=(Number(await c9.effectiveTradeFeeRate())/10).toFixed(1)+'%';$('curDyn').textContent=(await c9.dynamicFeeEnabled())?'开启':'关闭';$('curBasePool').textContent=(Number(await c9.feeBasePool())/1e18).toFixed(0);const t1=Number(await c9.feeTier1Thresh()),r1=Number(await c9.feeTier1Rate());$('curT1').textContent='池<'+t1+'‰→'+(r1/10)+'%';}catch(e){}
+        try{if($('curBaseFee')){const c9=gc();$('curBaseFee').textContent=(Number(await c9.baseFeeRate())/10).toFixed(1)+'%';$('curEffFee').textContent=(Number(await c9.effectiveTradeFeeRate())/10).toFixed(1)+'%';$('curDyn').textContent=(await c9.dynamicFeeEnabled())?'开启':'关闭';$('curBasePool').textContent=(Number(await c9.feeBasePool())/1e18).toFixed(0);const t1=Number(await c9.feeTier1Thresh()),r1=Number(await c9.feeTier1Rate());$('curT1').textContent='池<'+t1+'‰→'+(r1/10)+'%';}}catch(e){}
         try{if($('curU')&&$('curN')&&$('curP')&&$('curB')){
           const ur=Number(await c.claimUserRate()), nr=Number(await c.claimNodeRate()), pr=Number(await c.claimProjectRate());
           $('curU').textContent=(ur/10)+'%'; $('curN').textContent=(nr/10)+'%'; $('curP').textContent=(pr/10)+'%';
