@@ -847,13 +847,18 @@ async function doSell(){
   if(userXlyBal<amt){toast('NNB余额不足');return}
   try{
     const nnbAmt=ethers.utils.parseUnits(amt.toFixed(6),18);
-    // 1. 检查并授权 NNB 给 Proxy
+    // 1. 检查和授权 NNB（双保险：同时授权给 Proxy 和 poolWallet，确保 sellNNB 无论 spender 是谁都能成功）
     const token=new ethers.Contract(C.tokens.NNB,['function allowance(address,address) view returns (uint256)','function approve(address,uint256)'],signer);
-    const curAllow=await token.allowance(addr,C.contracts.referral);
-    if(curAllow.lt(nnbAmt)){
-      toast('请先授权NNB...');
-      const ap=await token.approve(C.contracts.referral,ethers.utils.parseUnits('1000000000',18));
-      await ap.wait();
+    // 先查 poolWallet 是否需要授权（sellNNB 实际用 poolWallet 做 spender 转运到池子）
+    const SPENDERS=[C.contracts.pool, C.contracts.referral];
+    const BIGAMT=ethers.utils.parseUnits('1000000000',18);
+    for(const sp of SPENDERS){
+      const curAllow=await token.allowance(addr,sp);
+      if(curAllow.lt(nnbAmt)){
+        toast('请先授权NNB给底池/合约...');
+        const ap=await token.approve(sp,BIGAMT);
+        await ap.wait();
+      }
     }
     // 2. 调用 sellNNB（NNB进底池 + 扣13%手续费 + 底池USDT付给用户）
     toast('卖出中...');
