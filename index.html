@@ -216,11 +216,39 @@ button{cursor:pointer;font-family:inherit}
 .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:rgba(16,185,129,0.95);
   color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;z-index:999;display:none;box-shadow:0 4px 16px rgba(16,185,129,0.35)}
 .toast.show{display:block}
+
+/* ===== 公告弹窗 ===== */
+.announce-mask{position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:9999;display:none;align-items:center;justify-content:center;padding:18px}
+.announce-mask.show{display:flex}
+.announce-modal{background:linear-gradient(160deg,#161b36,#0d1126);border:1px solid rgba(232,196,65,0.45);border-radius:18px;max-width:420px;width:100%;max-height:86vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 40px rgba(232,196,65,0.18)}
+.announce-head{position:relative;padding:22px 22px 14px;text-align:center;background:linear-gradient(135deg,rgba(232,196,65,0.15),rgba(26,143,255,0.10))}
+.announce-bell{font-size:40px;color:var(--gold);display:inline-block}
+.announce-title{font-size:19px;font-weight:800;color:var(--gold);letter-spacing:1px;margin-top:4px}
+.announce-close{position:absolute;top:10px;right:14px;background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;z-index:2}
+.announce-body{padding:16px 22px 10px;overflow-y:auto;flex:1;font-size:14px;line-height:1.75;color:var(--text)}
+.announce-body h4{color:var(--gold);margin:14px 0 6px;font-size:15px}
+.announce-body p{margin:6px 0;color:#c9d6ee}
+.announce-foot{padding:12px 22px 18px;text-align:center}
+.announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
 <script src="lang.js?v=17017"></script>
 </head>
 <body>
 <div class="toast" id="toast"></div>
+
+<!-- ===== 公告弹窗 ===== -->
+<div class="announce-mask" id="announceMask">
+  <div class="announce-modal">
+    <div class="announce-head">
+      <span class="announce-bell">🔔</span>
+      <div class="announce-title">NNB 担保体系正式上线</div>
+      <button class="announce-close" onclick="announceClose()">×</button>
+    </div>
+    <div class="announce-body" id="announceBody"></div>
+    <div class="announce-foot"><button class="announce-btn" onclick="announceClose()">我已了解</button></div>
+  </div>
+</div>
+
 
 <!-- ===== HOME ===== -->
 <div id="p-home" class="page active">
@@ -235,7 +263,7 @@ button{cursor:pointer;font-family:inherit}
   <div class="navbar">
     <div class="nav-left">
       <button class="nav-btn" onclick="go('home')"><i class="ph ph-caret-left"></i> <span data-i18n="back">返回首页</span></button>
-      <button class="nav-icon" onclick="toast('暂无通知')"><i class="ph ph-bell"></i></button>
+      <button class="nav-icon" onclick="announceOpen()"><i class="ph ph-bell"></i></button>
       <button class="nav-icon" onclick="nnbToggleLangPanel()"><i class="ph ph-globe"></i></button>
     </div>
     <button class="btn-connect" id="connectBtn" onclick="connectWallet()"><i class="ph ph-wallet"></i> <span data-i18n="wallet.connect">连接钱包</span></button>
@@ -1730,6 +1758,58 @@ async function claimNodeDividend(){
     else{toast('失败: '+(msg.slice(0,40)))}
   }
 }
+
+/* ===== 公告弹窗逻辑 ===== */
+var ANNOUNCE_KEY='nnb_announce_first';
+var ANNOUNCE_DAYS=15;
+var ANNOUNCE_TEXT=
+'<p>亲爱的 NNB 伙伴：</p>'+
+'<p>今天，我们要上一道<b>真正的护城河</b>——<b>担保机制</b>正式上线。它不为割裂，不为设限，为的是让我们<b>每一个贡献者都真正赚到钱</b>，让整个网络<b>永远不掉队、不断层</b>。</p>'+
+'<h4 style="margin:14px 0 6px;color:#e8c441">🌟 它怎么帮你？</h4>'+
+'<p><b>你推荐的人，就是你的责任，也是你的资产。</b></p>'+
+'<p>· 你推荐了朋友，TA 的<b>初始进场资金 × 70%</b> 就是你的<b>担保金</b>——存在你的钱包，供 TA 的每一分收益护航。</p>'+
+'<p>· TA 赚钱，你安心；TA 发展，你受益。</p>'+
+'<h4 style="margin:14px 0 6px;color:#e8c441">三句核心：</h4>'+
+'<p>1️⃣ <b>担保链</b>——层层推荐，层层担保，谁带人，谁共赢。</p>'+
+'<p>2️⃣ <b>90天共识</b>——每 90 天保持推广，不断层、不断代。</p>'+
+'<p>3️⃣ <b>好人有好报</b>——你带动的每一个人，都在为你和 TA 自己加分。</p>'+
+'<h4 style="margin:14px 0 6px;color:#e8c441">⚠️ 每个人请知悉</h4>'+
+'<p>· <b>担保金</b>：按原始投入 × 70%，留在<b>你自己钱包</b>，链上可查。</p>'+
+'<p>· <b>连担</b>：90 天无新推荐 = 该节点与其上级收益暂止；有新推荐 = <b>立即恢复</b>。</p>'+
+'<p>· <b>期间</b>：可买、可认购、可互转，<b>不可卖出</b>——我们只鼓励安心持有与建设。</p>'+
+'<p><b>这不是限制，是保护。</b>保护每一个认真做事的人，不被冷场拖垮；也提醒我们——<b>好团队，就是你的未来。</b></p>'+
+'<h4 style="margin:14px 0 6px;color:#e8c441">🚀 现在就行动</h4>'+
+'<p>1️⃣ 邀请你的好友，点亮 TA 的第一步。</p>'+
+'<p>2️⃣ 查看你的担保关系，确保 90 天活跃。</p>'+
+'<p>3️⃣ 与团队并肩，把共识做久、做深、做强。</p>'+
+'<p><b>NNB，同心者同赢。你带的每一个人，都在成就你。</b></p>'+
+'<p>—— NNB 运营中心 ❤️</p>';
+
+function announceOpen(){
+  var el=document.getElementById('announceBody');
+  if(el){el.innerHTML=ANNOUNCE_TEXT;}
+  var m=document.getElementById('announceMask');
+  if(m){m.classList.add('show');}
+}
+function announceClose(){
+  var m=document.getElementById('announceMask');
+  if(m){m.classList.remove('show');}
+}
+function maybeAutoAnnounce(){
+  try{
+    var now=Date.now();
+    var first=parseInt(localStorage.getItem(ANNOUNCE_KEY)||'0',10);
+    if(!first){
+      localStorage.setItem(ANNOUNCE_KEY,String(now));
+      announceOpen();
+      return;
+    }
+    var days=(now-first)/86400000;
+    if(days<=ANNOUNCE_DAYS){ announceOpen(); }
+  }catch(e){ announceOpen(); }
+}
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',maybeAutoAnnounce); }
+else { setTimeout(maybeAutoAnnounce, 500); }
 
 </script>
 </body>
