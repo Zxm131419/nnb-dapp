@@ -1795,21 +1795,10 @@ function announceClose(){
   var m=document.getElementById('announceMask');
   if(m){m.classList.remove('show');}
 }
-function maybeAutoAnnounce(){
-  try{
-    var now=Date.now();
-    var first=parseInt(localStorage.getItem(ANNOUNCE_KEY)||'0',10);
-    if(!first){
-      localStorage.setItem(ANNOUNCE_KEY,String(now));
-      announceOpen();
-      return;
-    }
-    var days=(now-first)/86400000;
-    if(days<=ANNOUNCE_DAYS){ announceOpen(); }
-  }catch(e){ announceOpen(); }
-}
-if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',maybeAutoAnnounce); }
-else { setTimeout(maybeAutoAnnounce, 500); }
+// 公告弹窗已由运营决定关闭(2026-08-25): 自动弹窗逻辑停用, announceOpen/announceClose 保留仅供手动调用
+function maybeAutoAnnounce(){ /* 已停用自动弹窗 */ }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',function(){}); }
+else { void 0; }
 
 </script>
 </body>
