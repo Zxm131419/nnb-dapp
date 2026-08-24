@@ -224,7 +224,7 @@
         <div class="hint">规则: 池每低于基准 <span id="curStepPct" style="color:var(--gold)">-</span> 就加 <span id="curStepAdd" style="color:var(--gold)">-</span>% | 封顶 <span id="curCap" style="color:var(--gold)">-</span>%</div>
         <input id="setBaseFee" type="number" placeholder="基础费率 千分 (130=13%)" min="0" max="999">
         <input id="setBasePoolU" type="number" placeholder="基准池 USDT (用于算动态比例)">
-        <input id="setStepPct" type="number" placeholder="步幅(少%触发): 10 = 少10%" min="1" max="100">
+        <input id="setStepPct" type="number" placeholder="步幅(少%触发): 填10 = 每少10%" min="1" max="100">
         <input id="setStepAdd" type="number" placeholder="每步加百分点: 20 = +20%" min="1" max="99">
         <input id="setCap" type="number" placeholder="封顶千分: 900=90% / 1000=100%" min="1" max="1000">
         <button class="btn btn-o" onclick="setBaseFee()">设基础费率</button>
@@ -398,7 +398,7 @@ async function distribute(){await adminOp('adminDistribute',[$('distAddr').value
     try{const c=gc();const tx=await c.resetNodeFeeStartTime();log('重置节点费起始时间 → 广播中...','info');await tx.wait();log('☯ 节点费重置成功，从500U重新计费','ok')}catch(e){log('失败:'+(e.reason||e.message),'err')}
   }
   async function setBaseFee(){if(!signer){log('请先连接Owner','err');return}const v=parseInt($('setBaseFee').value);if(isNaN(v)||v<0||v>=1000){log('费率须0-999千分','err');return}try{const c=gc();const tx=await c.setBaseFeeRate(v);await tx.wait();log('☯ 基础费率已设为 '+(v/10).toFixed(1)+'%','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
-  async function setFeeStep(){if(!signer){log('请先连接Owner','err');return}const sp=parseInt($('setStepPct').value),sa=parseInt($('setStepAdd').value);if(isNaN(sp)||sp<1||sp>1000||isNaN(sa)||sa<1||sa>99){log('步幅1-1000千分 / 加幅1-99%','err');return}try{const c=gc();const tx=await c.setFeeStep(sp,sa);await tx.wait();log('☯ 步幅已设='+(sp/10)+'% 加幅='+sa+'%','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
+  async function setFeeStep(){if(!signer){log('请先连接Owner','err');return}const sp=parseInt($('setStepPct').value),sa=parseInt($('setStepAdd').value);if(isNaN(sp)||sp<1||sp>100||isNaN(sa)||sa<1||sa>99){log('步幅1-100(%) / 加幅1-99%','err');return}try{const c=gc();const tx=await c.setFeeStep(sp*10,sa);await tx.wait();log('☯ 步幅已设='+sp+'%(=每少'+sp+'%加'+sa+'%) 封顶按设置','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
   async function setFeeCap(){if(!signer){log('请先连接Owner','err');return}const v=parseInt($('setCap').value);if(isNaN(v)||v<1||v>1000){log('封顶须1-1000千分(≤100%)','err');return}try{const c=gc();const tx=await c.setFeeCapRate(v);await tx.wait();log('☯ 封顶已设为 '+(v/10).toFixed(1)+'%','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
   async function setBasePool(){if(!signer){log('请先连接Owner','err');return}const u=parseFloat($('setBasePoolU').value);if(isNaN(u)||u<=0){log('请输入基准池USDT','err');return}try{const c=gc();const tx=await c.setFeeBasePool(ethers.utils.parseUnits(u.toString(),18));await tx.wait();log('☯ 基准池已设为 '+u+' USDT','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
   async function toggleDynamic(){if(!signer){log('请先连接Owner','err');return}try{const c=gc();const cur=await c.dynamicFeeEnabled();const tx=await c.setDynamicFeeEnabled(!cur);await tx.wait();log('☯ 动态手续费已'+(cur?'关闭':'开启'),'ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
