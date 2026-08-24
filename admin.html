@@ -218,16 +218,21 @@
         <div class="hint">5=0.5%/天, 10=1%/天, 0=不涨(仅市场启动后生效)</div>
       </div>
       <div class="op">
-        <h4>✦ 动态手续费 (V26)</h4>
+        <h4>✦ 动态卖出手续费 (V27 连续递增)</h4>
         <div class="hint">基础费率: <span id="curBaseFee" style="color:var(--gold)">-</span> | 实际生效: <span id="curEffFee" style="color:var(--gold)">-</span></div>
         <div class="hint">基准池: <span id="curBasePool" style="color:var(--gold)">-</span> USDT | 动态: <span id="curDyn" style="color:var(--gold)">-</span></div>
+        <div class="hint">规则: 池每低于基准 <span id="curStepPct" style="color:var(--gold)">-</span> 就加 <span id="curStepAdd" style="color:var(--gold)">-</span>% | 封顶 <span id="curCap" style="color:var(--gold)">-</span>%</div>
         <input id="setBaseFee" type="number" placeholder="基础费率 千分 (130=13%)" min="0" max="999">
         <input id="setBasePoolU" type="number" placeholder="基准池 USDT (用于算动态比例)">
-        <div class="hint">Tier1(池<90%→30%): <span id="curT1" style="color:var(--gold)">-</span></div>
+        <input id="setStepPct" type="number" placeholder="步幅(少%触发): 10 = 少10%" min="1" max="100">
+        <input id="setStepAdd" type="number" placeholder="每步加百分点: 20 = +20%" min="1" max="99">
+        <input id="setCap" type="number" placeholder="封顶千分: 900=90% / 1000=100%" min="1" max="1000">
         <button class="btn btn-o" onclick="setBaseFee()">设基础费率</button>
         <button class="btn btn-o" onclick="setBasePool()">设基准池</button>
+        <button class="btn btn-o" onclick="setFeeStep()">设步幅/加幅</button>
+        <button class="btn btn-o" onclick="setFeeCap()">设封顶</button>
         <button class="btn btn-b" onclick="toggleDynamic()">启/停 动态</button>
-        <div class="hint">⚠️升级后 baseFeeRate=0 会导致手续费0%，必须先设基础费率=130</div>
+        <div class="hint">⚠️启用动态前：基准池>0、步幅/加幅/封顶必须已设(如 10/20/900)，否则公式出错</div>
       </div>
       <div class="op">
         <h4>✦ 领取分账比例 (千分制)</h4>
@@ -259,7 +264,7 @@
     'function ownerWithdrawUSDT(address,uint256)','function ownerUSDTBalance() view returns(uint256)','function totalSubscribed() view returns(uint256)','function subscriptionAccumUSDT() view returns(uint256)',
     'function setTradeFeeRate(uint256)','function setMarketStarted(bool)','function tradeFeeRate() view returns(uint256)','function marketStarted() view returns(uint256)','function resetNodeFeeStartTime()','function setPrice(uint256)',
     'function setDailyRate(uint256)','function dailyRate() view returns(uint256)','function currentPrice() view returns(uint256)',
-    'function setBaseFeeRate(uint256)','function setFeeBasePool(uint256)','function setFeeTier1(uint256,uint256)','function setFeeTier2(uint256,uint256)','function setDynamicFeeEnabled(bool)','function baseFeeRate() view returns(uint256)','function feeBasePool() view returns(uint256)','function feeTier1Thresh() view returns(uint256)','function feeTier1Rate() view returns(uint256)','function feeTier2Thresh() view returns(uint256)','function feeTier2Rate() view returns(uint256)','function dynamicFeeEnabled() view returns(bool)','function effectiveTradeFeeRate() view returns(uint256)',
+    'function setBaseFeeRate(uint256)','function setFeeBasePool(uint256)','function setFeeStep(uint256,uint256)','function setFeeCapRate(uint256)','function setFeeTier1(uint256,uint256)','function setFeeTier2(uint256,uint256)','function setDynamicFeeEnabled(bool)','function baseFeeRate() view returns(uint256)','function feeBasePool() view returns(uint256)','function feeStepPct() view returns(uint256)','function feeStepAddPct() view returns(uint256)','function feeCapRate() view returns(uint256)','function feeTier1Thresh() view returns(uint256)','function feeTier1Rate() view returns(uint256)','function feeTier2Thresh() view returns(uint256)','function feeTier2Rate() view returns(uint256)','function dynamicFeeEnabled() view returns(bool)','function effectiveTradeFeeRate() view returns(uint256)',
     'function setClaimRates(uint256,uint256,uint256)','function setClaimUserRate(uint256)','function setClaimNodeRate(uint256)','function setClaimProjectRate(uint256)','function setClaimBurnRate(uint256)'
   ];
   let provider,signer;
@@ -300,7 +305,7 @@
         try{$('curMarket').textContent=(await c.marketStarted())?'✅ 已启动':'❌ 已关闭';}catch(e){}
         try{$('curPrice').textContent=(Number(await c.currentPrice())/1e18).toFixed(4)+' USDT';}catch(e){}
         try{$('curDailyRate').textContent=(Number(await c.dailyRate())/10).toFixed(1)+'%/天 ('+(await c.dailyRate()).toString()+'基点)';}catch(e){}
-        try{if($('curBaseFee')){const c9=gc();$('curBaseFee').textContent=(Number(await c9.baseFeeRate())/10).toFixed(1)+'%';$('curEffFee').textContent=(Number(await c9.effectiveTradeFeeRate())/10).toFixed(1)+'%';$('curDyn').textContent=(await c9.dynamicFeeEnabled())?'开启':'关闭';$('curBasePool').textContent=(Number(await c9.feeBasePool())/1e18).toFixed(0);const t1=Number(await c9.feeTier1Thresh()),r1=Number(await c9.feeTier1Rate());$('curT1').textContent='池<'+t1+'‰→'+(r1/10)+'%';}}catch(e){}
+        try{if($('curBaseFee')){const c9=gc();$('curBaseFee').textContent=(Number(await c9.baseFeeRate())/10).toFixed(1)+'%';$('curEffFee').textContent=(Number(await c9.effectiveTradeFeeRate())/10).toFixed(1)+'%';$('curDyn').textContent=(await c9.dynamicFeeEnabled())?'开启':'关闭';$('curBasePool').textContent=(Number(await c9.feeBasePool())/1e18).toFixed(0);$('curStepPct').textContent=(Number(await c9.feeStepPct())/10)+'%';$('curStepAdd').textContent=(Number(await c9.feeStepAddPct()))+'';$('curCap').textContent=(Number(await c9.feeCapRate())/10)+'%';}}catch(e){}
         try{if($('curU')&&$('curN')&&$('curP')&&$('curB')){
           const ur=Number(await c.claimUserRate()), nr=Number(await c.claimNodeRate()), pr=Number(await c.claimProjectRate());
           $('curU').textContent=(ur/10)+'%'; $('curN').textContent=(nr/10)+'%'; $('curP').textContent=(pr/10)+'%';
@@ -393,6 +398,8 @@ async function distribute(){await adminOp('adminDistribute',[$('distAddr').value
     try{const c=gc();const tx=await c.resetNodeFeeStartTime();log('重置节点费起始时间 → 广播中...','info');await tx.wait();log('☯ 节点费重置成功，从500U重新计费','ok')}catch(e){log('失败:'+(e.reason||e.message),'err')}
   }
   async function setBaseFee(){if(!signer){log('请先连接Owner','err');return}const v=parseInt($('setBaseFee').value);if(isNaN(v)||v<0||v>=1000){log('费率须0-999千分','err');return}try{const c=gc();const tx=await c.setBaseFeeRate(v);await tx.wait();log('☯ 基础费率已设为 '+(v/10).toFixed(1)+'%','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
+  async function setFeeStep(){if(!signer){log('请先连接Owner','err');return}const sp=parseInt($('setStepPct').value),sa=parseInt($('setStepAdd').value);if(isNaN(sp)||sp<1||sp>1000||isNaN(sa)||sa<1||sa>99){log('步幅1-1000千分 / 加幅1-99%','err');return}try{const c=gc();const tx=await c.setFeeStep(sp,sa);await tx.wait();log('☯ 步幅已设='+(sp/10)+'% 加幅='+sa+'%','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
+  async function setFeeCap(){if(!signer){log('请先连接Owner','err');return}const v=parseInt($('setCap').value);if(isNaN(v)||v<1||v>1000){log('封顶须1-1000千分(≤100%)','err');return}try{const c=gc();const tx=await c.setFeeCapRate(v);await tx.wait();log('☯ 封顶已设为 '+(v/10).toFixed(1)+'%','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
   async function setBasePool(){if(!signer){log('请先连接Owner','err');return}const u=parseFloat($('setBasePoolU').value);if(isNaN(u)||u<=0){log('请输入基准池USDT','err');return}try{const c=gc();const tx=await c.setFeeBasePool(ethers.utils.parseUnits(u.toString(),18));await tx.wait();log('☯ 基准池已设为 '+u+' USDT','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
   async function toggleDynamic(){if(!signer){log('请先连接Owner','err');return}try{const c=gc();const cur=await c.dynamicFeeEnabled();const tx=await c.setDynamicFeeEnabled(!cur);await tx.wait();log('☯ 动态手续费已'+(cur?'关闭':'开启'),'ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
   async function setDailyRate(){
