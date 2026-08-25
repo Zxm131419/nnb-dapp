@@ -242,10 +242,10 @@ button{cursor:pointer;font-family:inherit}
     <div class="announce-head">
       <span class="announce-bell">🔔</span>
       <div class="announce-title">交易中心买卖 8月28日 正式开通上线</div>
-      <button class="announce-close" onclick="announceCloseWithRemember()">×</button>
+      <button class="announce-close" onclick="announceClose()">×</button>
     </div>
     <div class="announce-body" id="announceBody"></div>
-    <div class="announce-foot"><button class="announce-btn" onclick="announceCloseWithRemember()">我已了解</button></div>
+    <div class="announce-foot"><button class="announce-btn" onclick="announceClose()">我已了解</button></div>
   </div>
 </div>
 
@@ -1789,21 +1789,13 @@ function announceClose(){
   var m=document.getElementById('announceMask');
   if(m){m.classList.remove('show');}
 }
-// 公告弹窗：2026-08-25~08-28 自动弹窗3天（交易中心开通买卖公告）
-function announceCloseWithRemember(){
-  var m=document.getElementById('announceMask');
-  if(m)m.classList.remove('show');
-  try{ localStorage.setItem('nnb_announce_seen_0825', String(new Date().getDate())); }catch(e){}
-}
+// 公告弹窗：2026-08-25~08-28 自动弹窗3天（交易中心开通买卖公告），区间内每次进入都弹
 function maybeAutoAnnounce(){
   try{
     var now=new Date();
     var y=now.getFullYear(),mo=now.getMonth()+1,d=now.getDate();
-    // 弹窗区间：2026-08-25 00:00 ~ 2026-08-28 23:59
+    // 未禁用；弹窗区间内每次进入都弹（8/25~8/28 三天）
     if(!(y===2026&&mo===8&&d>=25&&d<=28))return;
-    // 当天已关闭过则不再自动弹
-    var seen=localStorage.getItem('nnb_announce_seen_0825');
-    if(seen===String(d))return;
     announceOpen();
   }catch(e){}
 }
