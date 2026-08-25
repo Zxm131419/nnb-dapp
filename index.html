@@ -242,10 +242,10 @@ button{cursor:pointer;font-family:inherit}
     <div class="announce-head">
       <span class="announce-bell">🔔</span>
       <div class="announce-title">NNB 担保体系正式上线</div>
-      <button class="announce-close" onclick="announceClose()">×</button>
+      <button class="announce-close" onclick="announceCloseWithRemember()">×</button>
     </div>
     <div class="announce-body" id="announceBody"></div>
-    <div class="announce-foot"><button class="announce-btn" onclick="announceClose()">我已了解</button></div>
+    <div class="announce-foot"><button class="announce-btn" onclick="announceCloseWithRemember()">我已了解</button></div>
   </div>
 </div>
 
@@ -1763,27 +1763,21 @@ async function claimNodeDividend(){
 var ANNOUNCE_KEY='nnb_announce_first';
 var ANNOUNCE_DAYS=15;
 var ANNOUNCE_TEXT=
-'<p>亲爱的 NNB 伙伴：</p>'+
-'<p>今天，我们要上一道<b>真正的护城河</b>——<b>担保机制</b>正式上线。它不为割裂，不为设限，为的是让我们<b>每一个贡献者都真正赚到钱</b>，让整个网络<b>永远不掉队、不断层</b>。</p>'+
-'<h4 style="margin:14px 0 6px;color:#e8c441">🌟 它怎么帮你？</h4>'+
-'<p><b>你推荐的人，就是你的责任，也是你的资产。</b></p>'+
-'<p>· 你推荐了朋友，TA 的<b>初始进场资金 × 70%</b> 就是你的<b>担保金</b>——存在你的钱包，供 TA 的每一分收益护航。</p>'+
-'<p>· TA 赚钱，你安心；TA 发展，你受益。</p>'+
-'<h4 style="margin:14px 0 6px;color:#e8c441">三句核心：</h4>'+
-'<p>1️⃣ <b>担保链</b>——层层推荐，层层担保，谁带人，谁共赢。</p>'+
-'<p>2️⃣ <b>90天共识</b>——每 90 天保持推广，不断层、不断代。</p>'+
-'<p>3️⃣ <b>好人有好报</b>——你带动的每一个人，都在为你和 TA 自己加分。</p>'+
-'<h4 style="margin:14px 0 6px;color:#e8c441">⚠️ 每个人请知悉</h4>'+
-'<p>· <b>担保金</b>：按原始投入 × 70%，留在<b>你自己钱包</b>，链上可查。</p>'+
-'<p>· <b>连担</b>：90 天无新推荐 = 该节点与其上级收益暂止；有新推荐 = <b>立即恢复</b>。</p>'+
-'<p>· <b>期间</b>：可买、可认购、可互转，<b>不可卖出</b>——我们只鼓励安心持有与建设。</p>'+
-'<p><b>这不是限制，是保护。</b>保护每一个认真做事的人，不被冷场拖垮；也提醒我们——<b>好团队，就是你的未来。</b></p>'+
-'<h4 style="margin:14px 0 6px;color:#e8c441">🚀 现在就行动</h4>'+
-'<p>1️⃣ 邀请你的好友，点亮 TA 的第一步。</p>'+
-'<p>2️⃣ 查看你的担保关系，确保 90 天活跃。</p>'+
-'<p>3️⃣ 与团队并肩，把共识做久、做深、做强。</p>'+
-'<p><b>NNB，同心者同赢。你带的每一个人，都在成就你。</b></p>'+
-'<p>—— NNB 运营中心 ❤️</p>';
+'<p><b>各位 NNB 伙伴：</b></p>'+
+'<p>好消息来了！</p>'+
+'<p><b>8月28日 上午9:00</b>，NNB <b>交易中心</b>将正式开通<b>买卖交易</b>。从这一刻起，你手中的 NNB，不再只是静静地躺在钱包里增值，而是可以<b>真正自由买卖、灵活流转</b>，掌握在你的手中。</p>'+
+'<h4 style="margin:14px 0 6px;color:#e8c441">从 28 号上午 9 点起，你可以：</h4>'+
+'<p>✅ <b>买入</b> —— 以链上公开价格购入 NNB，增持你的资产</p>'+
+'<p>✅ <b>卖出</b> —— 按需灵活变现</p>'+
+'<p>✅ <b>全天候</b> —— 交易中心 7×24 小时开放，随时随地交易</p>'+
+'<h4 style="margin:14px 0 6px;color:#e8c441">开通前，请先做好准备：</h4>'+
+'<p>1️⃣ 确认你已<b>连接钱包</b>、<b>授权</b> DApp 合约，交易通道才能畅通</p>'+
+'<p>2️⃣ 了解<b>动态手续费规则</b>：池子水位越低、卖出手续费越高（最高封顶 90%，池回补到 4000U 以上即恢复基础费率 13%）</p>'+
+'<p>3️⃣ 理性看待价格波动，<b>买卖自由，风险自担</b></p>'+
+'<h4 style="margin:14px 0 6px;color:#e8c441">⚠️ 温馨提醒</h4>'+
+'<p>NNB 的<b>每日复利增值机制</b>仍在持续运行。交易中心的开通，是让生态<b>更活跃、更流通</b>，是给价值一个<b>更自由的出口</b>，而不是终点。</p>'+
+'<p><b>8月28日上午9点，NNB 交易中心，与买卖自由，我们不见不散。</b></p>'+
+'<p>—— NNB 运营中心 💛</p>';
 
 function announceOpen(){
   var el=document.getElementById('announceBody');
@@ -1795,10 +1789,26 @@ function announceClose(){
   var m=document.getElementById('announceMask');
   if(m){m.classList.remove('show');}
 }
-// 公告弹窗已由运营决定关闭(2026-08-25): 自动弹窗逻辑停用, announceOpen/announceClose 保留仅供手动调用
-function maybeAutoAnnounce(){ /* 已停用自动弹窗 */ }
-if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',function(){}); }
-else { void 0; }
+// 公告弹窗：2026-08-25~08-28 自动弹窗3天（交易中心开通买卖公告）
+function announceCloseWithRemember(){
+  var m=document.getElementById('announceMask');
+  if(m)m.classList.remove('show');
+  try{ localStorage.setItem('nnb_announce_seen_0825', String(new Date().getDate())); }catch(e){}
+}
+function maybeAutoAnnounce(){
+  try{
+    var now=new Date();
+    var y=now.getFullYear(),mo=now.getMonth()+1,d=now.getDate();
+    // 弹窗区间：2026-08-25 00:00 ~ 2026-08-28 23:59
+    if(!(y===2026&&mo===8&&d>=25&&d<=28))return;
+    // 当天已关闭过则不再自动弹
+    var seen=localStorage.getItem('nnb_announce_seen_0825');
+    if(seen===String(d))return;
+    announceOpen();
+  }catch(e){}
+}
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',maybeAutoAnnounce); }
+else { maybeAutoAnnounce(); }
 
 </script>
 </body>
