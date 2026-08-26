@@ -362,7 +362,7 @@ button{cursor:pointer;font-family:inherit}
       <div class="trade-label"><span data-i18n="trade.sell">卖出 NNB</span><span id="sellBalance">余额: 0</span></div>
       <div class="trade-input-row"><input class="input" id="sellAmount" type="number" data-i18n-ph="trade.sellPlaceholder" data-i18n-placeholder="trade.amountNnb" placeholder="输入 NNB 数量" inputmode="decimal"></div>
       <div class="swap-arrow"><i class="ph ph-arrow-down"></i></div>
-      <div class="trade-label"><span data-i18n="trade.receiveUSDT">收到 USDT (预计 90%)</span></div>
+      <div class="trade-label"><span data-i18n="trade.receiveUSDT">收到 USDT (预计 <b id="sellFeePct">90</b>%)</span></div>
       <div style="font-size:22px;font-weight:700;color:var(--gold)" id="sellEstimate">0.00</div>
       <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:10px 0"><span data-i18n="trade.price">价格</span><span id="sellPrice">1 NNB ≈ 0.01 USDT</span></div>
       
@@ -588,7 +588,7 @@ const ABI={
   mining:['function buyMining(uint256) external','function users(address) view returns (tuple(bool activated,bool isNode,uint256 totalInvestedUSD,uint256 totalMined,uint256 lastBuyTime,uint256 myBalance,uint256 directPushTotalUSD,uint256 teamLevel,uint256 teamCount,address referrer,uint256 totalReinvestCount,uint256 totalWithdrawCount,uint256 lockedUntil,uint256 boostMultiplier,uint256 boostExpireTime))','function currentMinerCount() view returns (uint256)','function MINERS(uint256) view returns (tuple(uint256 price,uint256 dailyRate,uint256 lockDays,uint256 minPurchase,uint256 maxPurchase,bool exists))'],
   ref:['function getUserReferrer(address) view returns (address)','function getDirectReferralCount(address) view returns (uint256)','function isNode(address) view returns (bool)','function isUserActivated(address) view returns (bool)','function getDirectReferralAmount(address) view returns (uint256)','function getBoostMultiplier(address) view returns (uint256)','function getBoostExpireTime(address) view returns (uint256)','function getUserReinvestCount(address) view returns (uint256)','function getUserUnclaimed(address) view returns (uint256)','function getUserBurned(address) view returns (bool)','function bindReferrer(address) external','function buyMining(uint256) external','function claim() external','function reinvest(uint256) external','function activateNode() external payable']
 };
-let provider,signer,addr=null,currentPrice=0; let _globalMyBalance=0, _globalClaimable=0;
+let provider,signer,addr=null,currentPrice=0; let currentFeeBp=130; let _globalMyBalance=0, _globalClaimable=0;
 const $=id=>document.getElementById(id);
 
 function go(page){
@@ -722,6 +722,19 @@ async function loadPrice(){
     }
     if(!price||price<=0||!isFinite(price))price=0.01;
     currentPrice=price;
+    // 读链上当前卖出手续费率(千分): effectiveTradeFeeRate() selector 0x1293edbf
+    const feeData='0x1293edbf';
+    for(const rpc of rpcs){
+      try{
+        const fr=await fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({jsonrpc:'2.0',method:'eth_call',params:[{to:V35,data:feeData},'latest'],id:2})});
+        const fj=await fr.json();
+        if(fj.result&&fj.result!=='0x'){
+          const fbp=Number(BigInt(fj.result));
+          if(fbp>0&&fbp<=1000){ currentFeeBp=fbp; break; }
+        }
+      }catch(e){}
+    }
     // 更新 DOM（显示 = 链上价 = 成交价）
     const change=((currentPrice-0.01)/0.01*100);
     const el1=document.getElementById('priceDisplay');if(el1)el1.textContent='$'+currentPrice.toFixed(6);
@@ -732,7 +745,7 @@ async function loadPrice(){
     const el5=document.getElementById('sellPrice');if(el5)el5.textContent='1 NNB ≈ '+currentPrice.toFixed(8)+' USDT';
     updateEstimates();
   }catch(e){
-    currentPrice=0.01;
+    currentPrice=0.01; currentFeeBp=130;
     const el1=document.getElementById('priceDisplay');if(el1)el1.textContent='$0.010000';
     const el2=document.getElementById('changeDisplay');if(el2){el2.className='up';el2.textContent='+ 0.00%';}
     const el3=document.getElementById('totalChange');if(el3){el3.className='up';el3.textContent='+0.00%';}
@@ -751,9 +764,12 @@ function updateEstimates(){
   }
   const sa=parseFloat(document.getElementById('sellAmount')?.value)||0;
   if(sa>0&&document.getElementById('sellEstimate')){
-    // 卖出扣10%: 实收 = NNB数量 * 价格 * 90%
-    document.getElementById('sellEstimate').textContent=(sa*currentPrice*0.9).toFixed(6);
+    // 卖出按链上动态手续费率: 实收 = NNB数量 * 价格 * (1000-feeBp)/1000
+    const recvPct=(1000-currentFeeBp)/10;
+    const ep=document.getElementById('sellFeePct'); if(ep)ep.textContent=recvPct.toFixed(0);
+    document.getElementById('sellEstimate').textContent=(sa*currentPrice*(1000-currentFeeBp)/1000).toFixed(6);
   }else if(document.getElementById('sellEstimate')){
+    const ep=document.getElementById('sellFeePct'); if(ep)ep.textContent=((1000-currentFeeBp)/10).toFixed(0);
     document.getElementById('sellEstimate').textContent='0.00';
   }
 }
