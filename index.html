@@ -804,25 +804,33 @@ async function loadPoolInfo(){
     return;
   }
   
-  // 市场已启动:读取真实链上数据
+  // 市场已启动：读取业务合约(0xB94cD1)自身的 USDT 底池余额（决定手续费的那个底池）
   try{
-    const PAIR='0xCAaF3c41a40103a23Eeaa4BbA468AF3cF5b0e0D8';
-    const rpcBody={jsonrpc:'2.0',method:'eth_call',params:[{to:PAIR,data:'0x0902f1ac'},'latest'],id:1};
-    const rpcs=['https://bsc-dataseed1.binance.org:443','https://rpc.ankr.com/bsc','https://bsc.publicnode.com'];
-    let json=null;
-    for(const rpc of rpcs){
+    const CUSDT='0x55d398326f99059fF775485246999027B3197955';
+    const bpool=C.contracts.referral; // 业务合约 Proxy
+    // balanceOf(bpool) selector + 地址参数
+    const padded=bpool.toLowerCase().replace('0x','').padStart(64,'0');
+    const rpcBody={jsonrpc:'2.0',method:'eth_call',params:[{to:CUSDT,data:'0x70a08231'+padded},'latest'],id:1};
+    let poolUsdt=0;
+    // 方式1: 钱包 eth_call（无跨域）
+    if(window.ethereum&&window.ethereum.request){
       try{
-        const resp=await fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(rpcBody)});
-        json=await resp.json();
-        if(json.result)break;
-      }catch(e){continue}
+        const rr=await window.ethereum.request({method:'eth_call',params:[{to:CUSDT,data:'0x70a08231'+padded},'latest']});
+        if(rr&&rr!=='0x'){ poolUsdt=Number(BigInt(rr)); }
+      }catch(e){}
     }
-    if(!json||!json.result||json.result==='0x'){return}
-    const hex=json.result;
-    const r0=parseInt(hex.slice(2,66),16);
-    const r1=parseInt(hex.slice(66,130),16);
-    const el1=document.getElementById('poolUSDT');if(el1)el1.textContent=(r1/1e18).toLocaleString(undefined,{maximumFractionDigits:2});
-    // NNB 底池不显示(内部)
+    if(poolUsdt===0){
+      const rpcs=['https://bsc-dataseed1.binance.org:443','https://rpc.ankr.com/bsc','https://bsc.publicnode.com'];
+      for(const rpc of rpcs){
+        try{
+          const resp=await fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(rpcBody)});
+          const rj=await resp.json();
+          if(rj.result&&rj.result!=='0x'){ poolUsdt=Number(BigInt(rj.result)); break; }
+        }catch(e){continue}
+      }
+    }
+    const el1=document.getElementById('poolUSDT');if(el1)el1.textContent=(poolUsdt/1e18).toLocaleString(undefined,{maximumFractionDigits:2});
+    const el2=document.getElementById('poolNNB');if(el2)el2.textContent=(poolUsdt/1e18).toLocaleString(undefined,{maximumFractionDigits:2});
     if(addr){
       const nnbBal=await getBalance(C.tokens.NNB,addr);
       const usdtBal=await getBalance(C.tokens.USDT,addr);
