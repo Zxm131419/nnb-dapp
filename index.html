@@ -787,8 +787,8 @@ let tradeTab='buy';
 function switchTab(el,tab){tradeTab=tab;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const eb=document.getElementById('trade-buy');if(eb)eb.style.display=tab==='buy'?'':'none';const es=document.getElementById('trade-sell');if(es)es.style.display=tab==='sell'?'':'none';}
 let userXlyBal=0,userUsdtBal=0;
 async function loadPoolInfo(){
-  // 市场未启动开关:false=未启动(显示"未开放"),true=已启动(显示真实数据)
-  const MARKET_STARTED=false;
+  // 市场已启动：显示真实链上底池数据（不再显示“未开放”)
+  const MARKET_STARTED=true;
   
   if(!MARKET_STARTED){
     const el1=document.getElementById('poolUSDT');if(el1)el1.textContent='未开放';
