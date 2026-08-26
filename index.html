@@ -698,43 +698,55 @@ async function connectWallet(){
 }
 
 async function loadPrice(){
-  // 读链上价格（不依赖 ethers，纯 RPC）：调用业务合约 currentEffectivePrice(uint256)
-  // selector 0xe4b137bc；显示价格 = 成交价格，全局一致、零误差
+  // 读链上价格/费率（优先走钱包 eth_call，无跨域；fallback fetch）
   try{
-    const V35 = C.contracts.referral; // 业务合约入口
+    const V35 = C.contracts.referral; // 业务合约入口（Proxy）
     const now = Math.floor(Date.now()/1000);
-    // 构造 calldata: selector + uint256(now) 32字节
     const arg = BigInt(now).toString(16).padStart(64,'0');
-    const data = '0xe4b137bc' + arg;
-    const rpcs=['https://bsc-dataseed1.binance.org:443','https://bsc-dataseed.binance.org/','https://rpc.ankr.com/bsc','https://bsc-dataseed3.ninicoin.io'];
-    let price=0.01;
-    for(const rpc of rpcs){
-      try{
-        const resp=await fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({jsonrpc:'2.0',method:'eth_call',params:[{to:V35,data:data},'latest'],id:1})});
-        const json=await resp.json();
-        if(json.result&&json.result!=='0x'){
-          const bn=BigInt(json.result);
-          const val=Number(bn)/1e18; // 18位 wei -> USDT
-          if(val>0&&isFinite(val)){ price=val; break; }
-        }
-      }catch(e){/* try next RPC */ }
+    const priceData = '0xe4b137bc' + arg;      // currentEffectivePrice(now)
+    const feeData   = '0x1293edbf';            // effectiveTradeFeeRate()
+
+    // 读取 helper：优先 window.ethereum eth_call（钱包内无跨域问题），否则 fetch RPC
+    async function ethRead(calldata){
+      // 方式1: 钱包 eth_call（可靠）
+      if(window.ethereum&&window.ethereum.request){
+        try{
+          const r=await window.ethereum.request({method:'eth_call',params:[{to:V35,data:calldata},'latest']});
+          if(r&&r!=='0x')return r;
+        }catch(e){}
+      }
+      // 方式2: fetch 多 RPC
+      const rpcs=['https://bsc-dataseed1.binance.org:443','https://bsc-dataseed.binance.org/','https://rpc.ankr.com/bsc','https://bsc-dataseed3.ninicoin.io'];
+      for(const rpc of rpcs){
+        try{
+          const resp=await fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({jsonrpc:'2.0',method:'eth_call',params:[{to:V35,data:calldata},'latest'],id:1})});
+          const json=await resp.json();
+          if(json.result&&json.result!=='0x')return json.result;
+        }catch(e){}
+      }
+      return '0x';
     }
+
+    let price=0.01;
+    try{
+      const pr=await ethRead(priceData);
+      const bn=BigInt(pr);
+      if(bn>0n){
+        const val=Number(bn)/1e18;
+        if(val>0&&isFinite(val))price=val;
+      }
+    }catch(e){}
     if(!price||price<=0||!isFinite(price))price=0.01;
     currentPrice=price;
-    // 读链上当前卖出手续费率(千分): effectiveTradeFeeRate() selector 0x1293edbf
-    const feeData='0x1293edbf';
-    for(const rpc of rpcs){
-      try{
-        const fr=await fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({jsonrpc:'2.0',method:'eth_call',params:[{to:V35,data:feeData},'latest'],id:2})});
-        const fj=await fr.json();
-        if(fj.result&&fj.result!=='0x'){
-          const fbp=Number(BigInt(fj.result));
-          if(fbp>0&&fbp<=1000){ currentFeeBp=fbp; break; }
-        }
-      }catch(e){}
-    }
+
+    // 读链上卖出手续费率（千分）
+    try{
+      const fr=await ethRead(feeData);
+      const fbp=Number(BigInt(fr));
+      if(fbp>0&&fbp<=1000){ currentFeeBp=fbp; }
+    }catch(e){}
+
     // 更新 DOM（显示 = 链上价 = 成交价）
     const change=((currentPrice-0.01)/0.01*100);
     const el1=document.getElementById('priceDisplay');if(el1)el1.textContent='$'+currentPrice.toFixed(6);
