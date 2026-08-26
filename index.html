@@ -362,7 +362,7 @@ button{cursor:pointer;font-family:inherit}
       <div class="trade-label"><span data-i18n="trade.sell">卖出 NNB</span><span id="sellBalance">余额: 0</span></div>
       <div class="trade-input-row"><input class="input" id="sellAmount" type="number" data-i18n-ph="trade.sellPlaceholder" data-i18n-placeholder="trade.amountNnb" placeholder="输入 NNB 数量" inputmode="decimal"></div>
       <div class="swap-arrow"><i class="ph ph-arrow-down"></i></div>
-      <div class="trade-label"><span data-i18n="trade.receiveUSDT">收到 USDT</span><span> (预计 <b id="sellFeePct">90</b>%)</span></div>
+      <div class="trade-label"><span data-i18n="trade.receiveUSDT">收到 USDT</span></div>
       <div style="font-size:22px;font-weight:700;color:var(--gold)" id="sellEstimate">0.00</div>
       <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:10px 0"><span data-i18n="trade.price">价格</span><span id="sellPrice">1 NNB ≈ 0.01 USDT</span></div>
       
@@ -765,11 +765,8 @@ function updateEstimates(){
   const sa=parseFloat(document.getElementById('sellAmount')?.value)||0;
   if(sa>0&&document.getElementById('sellEstimate')){
     // 卖出按链上动态手续费率: 实收 = NNB数量 * 价格 * (1000-feeBp)/1000
-    const recvPct=(1000-currentFeeBp)/10;
-    const ep=document.getElementById('sellFeePct'); if(ep)ep.textContent=recvPct.toFixed(0);
     document.getElementById('sellEstimate').textContent=(sa*currentPrice*(1000-currentFeeBp)/1000).toFixed(6);
   }else if(document.getElementById('sellEstimate')){
-    const ep=document.getElementById('sellFeePct'); if(ep)ep.textContent=((1000-currentFeeBp)/10).toFixed(0);
     document.getElementById('sellEstimate').textContent='0.00';
   }
 }
