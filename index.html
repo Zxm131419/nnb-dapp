@@ -241,7 +241,7 @@ button{cursor:pointer;font-family:inherit}
   <div class="announce-modal">
     <div class="announce-head">
       <span class="announce-bell">🔔</span>
-      <div class="announce-title">交易中心买卖 8月28日 正式开通上线</div>
+      <div class="announce-title">🚀 启航 · NNB 8.28 交易正式上线</div>
       <button class="announce-close" onclick="announceClose()">×</button>
     </div>
     <div class="announce-body" id="announceBody"></div>
@@ -1798,21 +1798,14 @@ async function claimNodeDividend(){
 var ANNOUNCE_KEY='nnb_announce_first';
 var ANNOUNCE_DAYS=15;
 var ANNOUNCE_TEXT=
-'<p><b>各位 NNB 伙伴：</b></p>'+
-'<p>好消息来了！</p>'+
-'<p><b>8月28日 上午9:00</b>，NNB <b>交易中心</b>将正式开通<b>买卖交易</b>。从这一刻起，你手中的 NNB，不再只是静静地躺在钱包里增值，而是可以<b>真正自由买卖、灵活流转</b>，掌握在你的手中。</p>'+
-'<h4 style="margin:14px 0 6px;color:#e8c441">从 28 号上午 9 点起，你可以：</h4>'+
-'<p>✅ <b>买入</b> —— 以链上公开价格购入 NNB，增持你的资产</p>'+
-'<p>✅ <b>卖出</b> —— 按需灵活变现</p>'+
-'<p>✅ <b>全天候</b> —— 交易中心 7×24 小时开放，随时随地交易</p>'+
-'<h4 style="margin:14px 0 6px;color:#e8c441">开通前，请先做好准备：</h4>'+
-'<p>1️⃣ 确认你已<b>连接钱包</b>、<b>授权</b> DApp 合约，交易通道才能畅通</p>'+
-'<p>2️⃣ 了解<b>动态手续费规则</b>：池子水位越低、卖出手续费越高（最高封顶 90%，池回补到 4000U 以上即恢复基础费率 13%）</p>'+
-'<p>3️⃣ 理性看待价格波动，<b>买卖自由，风险自担</b></p>'+
-'<h4 style="margin:14px 0 6px;color:#e8c441">⚠️ 温馨提醒</h4>'+
-'<p>NNB 的<b>每日复利增值机制</b>仍在持续运行。交易中心的开通，是让生态<b>更活跃、更流通</b>，是给价值一个<b>更自由的出口</b>，而不是终点。</p>'+
-'<p><b>8月28日上午9点，NNB 交易中心，与买卖自由，我们不见不散。</b></p>'+
-'<p>—— NNB 运营中心 💛</p>';
+'<p style="text-align:center;font-weight:800;font-size:17px;color:#e8c441">🚀 启航 · NNB 8.28 交易正式上线</p>'+
+'<p>各位 NNB 家人们：</p>'+
+'<p><b>8月28日，NNB 正式开启交易时代！</b></p>'+
+'<p>今日起，NNB 交易中心全线开通，<b>买卖自由，实时交易</b>。</p>'+
+'<p>回望征程，感恩有你；</p>'+
+'<p>展望未来，NNB 与你同行。</p>'+
+'<p style="text-align:center;font-weight:800;color:#e8c441;margin-top:10px">28 启航 · 28 聚财 · 一路长虹！</p>'+
+'<p style="text-align:right;color:#8b93a8">—— NNB 运营团队</p>';
 
 function announceOpen(){
   var el=document.getElementById('announceBody');
@@ -1830,7 +1823,7 @@ function maybeAutoAnnounce(){
     var now=new Date();
     var y=now.getFullYear(),mo=now.getMonth()+1,d=now.getDate();
     // 未禁用；弹窗区间内每次进入都弹（8/25~8/28 三天）
-    if(!(y===2026&&mo===8&&d>=25&&d<=28))return;
+    if(!(y===2026&&mo===8&&d===28))return;  // 仅 8/28 当天弹窗
     announceOpen();
   }catch(e){}
 }
