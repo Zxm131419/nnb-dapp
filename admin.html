@@ -120,6 +120,13 @@
         <button class="btn btn-b" onclick="setUserLevel()">定 级 别</button>
       </div>
       <div class="op">
+        <h4>✦ 节点解锁代数</h4>
+        <input id="setNodeGenAddr" placeholder="用户地址">
+        <input id="setNodeGenVal" type="number" placeholder="0~10 (0=按直推解锁)" min="0" max="10" value="0">
+        <button class="btn btn-b" onclick="setNodeGenLevel()">设节点代数</button>
+        <div class="hint">与DDB一致: 直推1/2/3/5节点→解锁1/3/6/10代, 0=按直推</div>
+      </div>
+      <div class="op">
         <h4>✦ 节点天象 (isNode)</h4>
         <input id="setNodeAddr" placeholder="用户地址">
         <select id="setNodeVal"><option value="true">设为节点</option><option value="false">取消节点</option></select>
@@ -336,6 +343,7 @@
     }catch(e){log('查询失败:'+(e.reason||e.message),'err')}
   }
   async function setUserLevel(){await adminOp('adminSetUserLevel',[$('setLevelAddr').value.trim(),parseInt($('setLevelVal').value)],'定级别')}
+async function setNodeGenLevel(){await adminOp('adminSetNodeGenLevel',[$('setNodeGenAddr').value.trim(),parseInt($('setNodeGenVal').value||'0')],'设节点代数')}
   async function setNode(){await adminOp('adminSetNode',[$('setNodeAddr').value.trim(),$('setNodeVal').value==='true'],'定节点')}
   async function setActive(){await adminOp('adminSetActive',[$('setActiveAddr').value.trim(),$('setActiveVal').value==='true'],'定激活')}
   async function setMyBalance(){await adminOp('adminSetMyBalance',[$('setBalAddr').value.trim(),ethers.utils.parseUnits($('setBalVal').value.trim()||'0',18)],'定产能')}
