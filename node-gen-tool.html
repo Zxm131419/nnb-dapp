@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NNB 节点解锁代数工具</title>
+<style>
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#0b0e1a;color:#e8ecf5;max-width:520px;margin:0 auto;padding:20px}
+h1{color:#e8c441;font-size:20px;text-align:center;margin-bottom:6px}
+.sub{color:#8b93a8;font-size:12px;text-align:center;margin-bottom:20px}
+.card{background:#11152a;border:1px solid #2a3560;border-radius:14px;padding:16px;margin-bottom:14px}
+h2{color:#00c896;font-size:15px;margin:0 0 12px}
+.btn-connect{background:linear-gradient(135deg,#e8c441,#ff8a3d);color:#1a0828;border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer}
+.input{width:100%;background:rgba(255,255,255,0.06);border:1px solid #2a3560;border-radius:10px;padding:12px;color:#e8ecf5;font-size:14px;outline:none;box-sizing:border-box;margin-bottom:10px}
+.btn-go{background:linear-gradient(135deg,#7c3aed,#c084fc);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;width:100%;margin-top:10px}
+.btn:disabled{opacity:0.5}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a3560;font-size:13px}
+.row:last-child{border-bottom:none}
+.l{color:#8b93a8}.v{color:#e8c441;font-weight:600}
+.res{background:#0d1524;border-radius:10px;padding:12px;margin-top:12px;font-size:12px;white-space:pre-wrap;max-height:180px;overflow-y:auto}
+#status{position:fixed;top:18%;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);color:#0a0e1a;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;opacity:0;z-index:9999;transition:opacity .3s}
+#status.show{opacity:1}#status.ok{background:#00c896;color:#fff}#status.err{background:#e83a4d;color:#fff}
+</style>
+</head>
+<body>
+<h1>🧩 NNB 节点解锁代数工具</h1>
+<div class="sub">连接 owner 钱包，设置用户节点解锁代数</div>
+
+<div class="card">
+  <h2>1. 连接 owner</h2>
+  <button class="btn-connect" onclick="connect()">连接 Owner 钱包</button>
+  <div id="acct" style="margin-top:8px;font-size:12px;color:#8b93a8">未连接</div>
+</div>
+
+<div class="card">
+  <h2>2. 设置节点解锁代数</h2>
+  <div style="font-size:12px;color:var(--sub,#8b93a8);margin-bottom:8px">用户地址</div>
+  <input class="input" id="gnAddr" placeholder="0x...">
+  <div style="font-size:12px;color:var(--sub,#8b93a8);margin-bottom:8px">解锁代数 (0~10, 0=按直推)</div>
+  <input class="input" id="gnVal" type="number" placeholder="0~10" value="10" min="0" max="10">
+  <button class="btn-go" id="goBtn" onclick="doSet()" disabled>🔧 设置节点解锁代数</button>
+  <div style="margin-top:10px;font-size:11px;color:#8b93a8">与DDB一致: 直推1/2/3/5节点→解锁1/3/6/10代; 0=按直推解锁</div>
+</div>
+
+<div class="card">
+  <h2>3. 查询用户当前解锁代数</h2>
+  <input class="input" id="qAddr" placeholder="0x...">
+  <button class="btn-go" onclick="query()">🔍 查询</button>
+  <div id="qResult" style="margin-top:10px"></div>
+</div>
+
+<div class="card"><h2>执行日志</h2><div class="res" id="res">连接 owner 后操作</div></div>
+<div id="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script>
+const PROXY='0xB94cD1E6f6D73022FFb8C813864411405d706125';
+const OWNER='0xc9521A8dd88535cb4606aeE005D50f5b9ccA5C09';
+const ABI=['function adminSetNodeGenLevel(address,uint256)','function nodeGenLevel(address) view returns(uint256)'];
+let provider,signer,addr=null;
+const $=id=>document.getElementById(id);
+function toast(m,t){const s=$('status');s.textContent=m;s.className='show '+(t||'');setTimeout(()=>s.className='',3000)}
+function log(m){const r=$('res');r.textContent=new Date().toLocaleTimeString()+'  '+m+'\n'+r.textContent}
+async function connect(){
+  if(!window.ethereum){toast('请在钱包浏览器打开','err');return}
+  try{
+    provider=new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send('eth_requestAccounts',[]);
+    signer=provider.getSigner();addr=await signer.getAddress();
+    $('acct').textContent='已连接: '+addr;
+    if(addr.toLowerCase()===OWNER.toLowerCase()){toast('✅ owner已连接','ok');log('✅ owner已连接');$('goBtn').disabled=false;}
+    else{toast('⚠️ 需用owner连接','err');log('当前非owner');$('goBtn').disabled=true;}
+  }catch(e){toast('连接失败','err');log(e.message)}
+}
+async function doSet(){
+  if(!signer||addr.toLowerCase()!==OWNER.toLowerCase()){toast('请用owner连接','err');return}
+  const a=$('gnAddr').value.trim();const lv=parseInt($('gnVal').value||'0');
+  if(!/^0x[0-9a-fA-F]{40}$/.test(a)){toast('地址格式不符','err');return}
+  if(isNaN(lv)||lv<0||lv>10){toast('代数须0~10','err');return}
+  const btn=$('goBtn');btn.disabled=true;
+  try{
+    log('执行 adminSetNodeGenLevel('+a.slice(0,8)+'...,'+lv+')...');
+    const c=new ethers.Contract(PROXY,ABI,signer);
+    const tx=await c.adminSetNodeGenLevel(a,lv);
+    log('交易提交: '+tx.hash.slice(0,16)+'...');toast('请在钱包确认','');
+    const r=await tx.wait();
+    if(r.status===1){toast('✅ 节点解锁代数已设 '+lv,'ok');log('✅ 已设 '+lv);}
+    else{toast('❌ 失败','err');log('交易失败');}
+  }catch(e){log('失败:'+(e.reason||e.message));toast('失败:'+(e.reason||e.message).slice(0,50),'err');}
+  finally{btn.disabled=false;}
+}
+async function query(){
+  const a=$('qAddr').value.trim();
+  if(!/^0x[0-9a-fA-F]{40}$/.test(a)){toast('地址格式不符','err');return}
+  try{
+    if(!provider)provider=new ethers.providers.JsonRpcProvider('https://bsc-dataseed1.binance.org:443');
+    const c=new ethers.Contract(PROXY,ABI,provider);
+    const v=await c.nodeGenLevel(a);
+    $('qResult').innerHTML='<div class="row"><span class="l">当前节点解锁代数</span><span class="v">'+v+' 代'+(Number(v)===0?' (按直推)':'')+'</span></div>';
+    log('查询: '+a.slice(0,8)+'... 解锁代数='+v);
+  }catch(e){toast('查询失败:'+e.message.slice(0,40),'err')}
+}
+</script>
+</body>
+</html>
