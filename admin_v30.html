@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NNB 五行后台 · 天机阁</title>
+<style>
+  :root{
+    --bg:#0a0d1a;--ink:#e9edf5;--sub:#90a0c0;--line:#274060;
+    /* 五行 */
+    --gold:#f2c14e; --wood:#35d0a0; --water:#3aa6ff; --fire:#ff6b6b; --earth:#e0a83c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:radial-gradient(1200px 800px at 50% -10%,#1b2b4a 0%,#0a0d1a 55%);color:var(--ink);font-family:'Noto Serif SC','Songti SC','SimSun',serif;min-height:100vh;padding:20px 14px}
+  .wrap{max-width:760px;margin:0 auto}
+  /* 顶部 */
+  header{text-align:center;margin-bottom:20px;position:relative;padding:20px 0 8px}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(circle,rgba(242,193,78,.12),transparent 70%);border-radius:20px}
+  .logo{font-size:32px;font-weight:900;letter-spacing:6px;background:linear-gradient(135deg,#f2c14e,#e0a83c,#f7d679);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .logo small{display:block;font-size:13px;letter-spacing:8px;color:var(--sub);margin-top:6px;-webkit-text-fill-color:var(--sub)}
+  .tagline{color:var(--sub);font-size:12px;margin-top:8px;letter-spacing:2px}
+  /* 五行五行环 */
+  .wuxing{display:flex;justify-content:space-around;align-items:center;margin:8px auto 0;max-width:420px}
+  .wx{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;border:2px solid;background:rgba(0,0,0,.3)}
+  .wx-small{width:34px;height:34px;font-size:11px}
+  .wx-gold{color:var(--gold);border-color:var(--gold)}
+  .wx-wood{color:var(--wood);border-color:var(--wood)}
+  .wx-water{color:var(--water);border-color:var(--water)}
+  .wx-fire{color:var(--fire);border-color:var(--fire)}
+  .wx-earth{color:var(--earth);border-color:var(--earth)}
+  /* 连接栏 */
+  .connect{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:rgba(30,48,80,.5);border:1px solid var(--gold);border-radius:14px;padding:14px 16px;margin-bottom:16px}
+  .conn-id{font-size:13px;color:var(--gold);font-weight:700;letter-spacing:1px}
+  .connect .btn{background:linear-gradient(135deg,var(--gold),#f7d679);color:#1a1500;border:none;border-radius:9px;padding:10px 18px;font-weight:800;cursor:pointer;font-size:14px}
+  /* 数据全景(土·中央) */
+  .panel{background:linear-gradient(160deg,rgba(26,38,64,.7),rgba(12,15,28,.9));border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+  .panel-title{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800;letter-spacing:2px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+  .pt-earth{color:var(--earth)}.pt-gold{color:var(--gold)}.pt-water{color:var(--water)}.pt-wood{color:var(--wood)}.pt-fire{color:var(--fire)}
+  /* 仪表盘 */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:6px}
+  .stat{background:rgba(20,30,52,.6);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+  .stat .v{font-size:22px;font-weight:900;color:#fff}
+  .stat .k{font-size:11px;color:var(--sub);margin-top:4px;letter-spacing:1px}
+  .stat.gold .v{color:var(--gold)}.stat.water .v{color:var(--water)}.stat.wood .v{color:var(--wood)}.stat.fire .v{color:var(--fire)}
+  /* 操作卡 */
+  .ops{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .op{background:rgba(18,26,46,.6);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .op h4{font-size:14px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .op input, .op select{width:100%;background:#0c1226;border:1px solid var(--line);color:var(--ink);padding:10px 10px;border-radius:8px;margin:4px 0;font-size:13px}
+  .op .btn{width:100%;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;margin-top:6px}
+  .btn-b{background:linear-gradient(135deg,#2a4a9a,#1f3b7a);color:#fff}
+  .btn-g{background:linear-gradient(135deg,#1f8f6f,#145a4a);color:#fff}
+  .btn-r{background:linear-gradient(135deg,#b03a3a,#7a2626);color:#fff}
+  .btn-o{background:linear-gradient(135deg,#c28a2c,#8a5f1a);color:#fff}
+  .op .hint{font-size:11px;color:var(--sub);margin-top:6px}
+  /* 查询结果 */
+  .query-result{background:rgba(10,14,28,.8);border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px;font-size:13px}
+  .qr{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(39,64,96,.4)}
+  .qr .k{color:var(--sub)}.qr .v{font-weight:600;word-break:break-all}
+  /* 日志 */
+  .logbox{margin-top:14px}
+  .log{background:rgba(8,10,20,.9);border:1px solid var(--line);border-radius:12px;padding:12px;max-height:220px;overflow:auto;font-family:monospace;font-size:12px;white-space:pre-wrap}
+  .log .ok{color:var(--wood)}.log .err{color:var(--fire)}.log .info{color:var(--sub)}
+  /* footer 风水注 */
+  footer{text-align:center;color:var(--sub);font-size:11px;margin-top:8px;letter-spacing:2px;opacity:.7}
+  @media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}
+  .ops{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">NNB<small>五行 · 天机后台</small></div>
+    <div class="wuxing">
+      <div class="wx wx-gold">金</div><div class="wx wx-wood">木</div><div class="wx wx-earth">土</div><div class="wx wx-fire">火</div><div class="wx wx-water">水</div>
+    </div>
+    <div class="tagline">五行生克 · 气运守恒 · 一目了然</div>
+  </header>
+
+  <!-- 金 · 连接 -->
+  <div class="connect">
+    <div>
+      <div class="conn-id">● Owner 玄鉴</div>
+      <div style="font-size:13px;color:var(--sub)" id="ownerVal">未连接 · 请以 Owner 账户登录</div>
+    </div>
+    <button class="btn" onclick="connectOwner()">连接 Owner</button>
+  </div>
+
+  <!-- 土 · 数据全景 -->
+  <div class="panel">
+    <div class="panel-title"><span class="wx wx-earth wx-small">土</span><span class="pt-earth">气运总览 · 平台数据</span></div>
+    <div class="stats">
+      <div class="stat gold"><div class="v" id="stOwner">-</div><div class="k">Owner</div></div>
+      <div class="stat water"><div class="v" id="stUsers">-</div><div class="k">用户总数</div></div>
+      <div class="stat wood"><div class="v" id="stNodes">-</div><div class="k">节点数</div></div>
+      <div class="stat gold"><div class="v" id="stMint">-</div><div class="k">全网总增发</div></div>
+      <div class="stat fire"><div class="v" id="stBurn">-</div><div class="k">全网总销毁</div></div>
+      <div class="stat fire"><div class="v" id="stProxy">-</div><div class="k">实现版本</div></div>
+    </div>
+  </div>
+
+  <!-- 水 · 查询 -->
+  <div class="panel">
+    <div class="panel-title"><span class="wx wx-water wx-small">水</span><span class="pt-water">窥一斑 · 用户查询</span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input style="flex:1;min-width:220px;background:#0c1226;border:1px solid var(--line);color:var(--ink);padding:11px;border-radius:9px" id="qAddr" placeholder="输入用户钱包地址 0x...">
+      <button class="btn" style="background:linear-gradient(135deg,#3aa6ff,#1f6ab0);color:#fff;border:none;border-radius:9px;padding:11px 20px;font-weight:800" onclick="queryUser()">点卜查询</button>
+    </div>
+    <div class="query-result" id="qResult" style="display:none"></div>
+  </div>
+
+  <!-- 木 · 级别/代数 -->
+  <div class="panel">
+    <div class="panel-title"><span class="wx wx-wood wx-small">木</span><span class="pt-wood">生发 · 级别与代数</span></div>
+    <div class="ops">
+      <div class="op">
+        <h4>✦ 设置用户级别</h4>
+        <input id="setLevelAddr" placeholder="用户地址">
+        <input id="setLevelVal" type="number" placeholder="级别 (0-19)" min="0" max="19">
+        <button class="btn btn-b" onclick="setUserLevel()">定 级 别</button>
+      </div>
+      <div class="op">
+        <h4>✦ 节点解锁代数</h4>
+        <input id="setNodeGenAddr" placeholder="用户地址">
+        <input id="setNodeGenVal" type="number" placeholder="0~10 (0=按直推)" min="0" max="10" value="0">
+        <button class="btn btn-b" onclick="setNodeGenLevel()">设节点代数</button>
+        <div class="hint">与DDB一致: 直推1/2/3/5节点→解锁1/3/6/10代, 0=按直推</div>
+      </div>
+      <div class="op">
+        <h4>✦ 节点天象 (isNode)</h4>
+        <input id="setNodeAddr" placeholder="用户地址">
+        <select id="setNodeVal"><option value="true">设为节点</option><option value="false">取消节点</option></select>
+        <button class="btn btn-o" onclick="setNode()">定 节 点</button>
+        <div class="hint">节点须 500U 激活 或 后台设置，其余不算</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 火 · 激活/能量 -->
+  <div class="panel">
+    <div class="panel-title"><span class="wx wx-fire wx-small">火</span><span class="pt-fire">离火 · 激活与产能</span></div>
+    <div class="ops">
+      <div class="op">
+        <h4>✦ 设激活状态</h4>
+        <input id="setActiveAddr" placeholder="用户地址">
+        <select id="setActiveVal"><option value="true">激活</option><option value="false">取消激活</option></select>
+        <button class="btn btn-g" onclick="setActive()">定 激活</button>
+      </div>
+      <div class="op">
+        <h4>✦ 定产能 myBalance</h4>
+        <input id="setBalAddr" placeholder="用户地址">
+        <input id="setBalVal" type="number" placeholder="产能 NNB">
+        <button class="btn btn-g" onclick="setMyBalance()">定 产能</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 水·金·重置/发放 -->
+  <div class="panel">
+    <div class="panel-title"><span class="wx wx-gold wx-small">金</span><span class="pt-gold">金石 · 结算与重置</span></div>
+    <div class="ops">
+      <div class="op">
+        <h4>✦ 提取 USDT (合约池)</h4>
+        <div class="hint">合约USDT余额: <span id="curUsdtBal" style="color:var(--gold)">加载中...</span></div>
+        <input id="wdAddr" placeholder="接收钱包地址">
+        <input id="wdAmt" type="number" placeholder="USDT数量(留空=提全部轮机)">
+        <button class="btn btn-o" onclick="ownerWithdraw()">提取 USDT</button>
+      </div>
+      <div class="op">
+        <h4>✦ 发放 NNB</h4>
+        <input id="distAddr" placeholder="用户地址">
+        <input id="distVal" type="number" placeholder="NNB 数量">
+        <button class="btn btn-o" onclick="distribute()">发 放</button>
+      </div>
+      <div class="op">
+        <h4>✦ 重置用户</h4>
+        <input id="resetAddr" placeholder="用户地址">
+        <button class="btn btn-r" onclick="resetUser()">重 置</button>
+        <div class="hint" style="color:var(--fire)">谨慎：清空用户产能/次数/时间</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="logbox">
+    <div class="log" id="logBox">· 天机待启 · 连接 Owner 后开始布道 ...</div>
+  </div>
+
+
+  <!-- 水·系统配置: 手续费 / 启动市场 / 停止收益 / 初始价 -->
+  <div class="panel">
+    <div class="panel-title"><span class="wx wx-water wx-small">水</span><span class="pt-water">水镜 · 系统配置</span></div>
+    <div class="ops">
+      <div class="op">
+        <h4>✦ 交易手续费 (千分制)</h4>
+        <div class="hint">当前: <span id="curFee" style="color:var(--gold)">加载中...</span></div>
+        <input id="setFeeVal" type="number" placeholder="130 = 13%" min="0" max="999">
+        <button class="btn btn-b" onclick="setTradeFee()">设置手续费</button>
+        <div class="hint">130=13%, 50=5%, 0=免手续费</div>
+      </div>
+      <div class="op">
+        <h4>✦ 启动 / 关闭市场</h4>
+        <div class="hint">当前: <span id="curMarket" style="color:var(--gold)">加载中...</span></div>
+        <select id="setMarketVal"><option value="true">启动市场</option><option value="false">关闭市场</option></select>
+        <button class="btn btn-g" onclick="setMarket()">执行</button>
+        <div style="margin-top:6px;font-weight:700;color:var(--gold)">买入开关</div>
+        <select id="setBuyVal"><option value="true">开启买入</option><option value="false">禁止买入</option></select>
+        <button class="btn btn-b" onclick="setBuy()">执行买入开关</button>
+        <div style="margin-top:6px;font-weight:700;color:var(--red,#e83a4d)">销毁底池 NNB</div>
+        <div style="font-size:11px;color:var(--sub,#8b93a8)">当前底池 NNB: <span id="poolNnbBal">--</span></div>
+        <button class="btn btn-r" onclick="burnNNB()">🔥 全销毁底池 NNB (转黑洞)</button>
+      </div>
+      <div class="op">
+        <h4>✦ 停止/恢复用户收益</h4>
+        <input id="stopAddr" placeholder="用户钱包地址 0x...">
+        <select id="stopVal"><option value="false">停止收益(不可领取)</option><option value="true">恢复收益(正常领取)</option></select>
+        <button class="btn btn-r" onclick="stopUser()">执行</button>
+        <div class="hint">停止后用户 DApp 无法领取任何收益</div>
+      </div>
+      <div class="op">
+        <h4>✦ 调整初始价格</h4>
+        <div class="hint">当前: <span id="curPrice" style="color:var(--gold)">加载中...</span></div>
+        <input id="setPriceVal" type="number" placeholder="如 0.01 = 1e16" step="0.001">
+        <button class="btn btn-o" onclick="setPrice()">设置价格</button>
+        <div class="hint">单位 USDT, 如 0.01 对应 1e16, 0.02 对应 2e16</div>
+      </div>
+      <div class="op">
+        <h4>✦ 每日涨幅 (基点)</h4>
+        <div class="hint">当前: <span id="curDailyRate" style="color:var(--gold)">加载中...</span></div>
+        <input id="setDailyRateVal" type="number" placeholder="如 5 = 0.5%/天" min="0">
+        <button class="btn btn-b" onclick="setDailyRate()">设置涨幅</button>
+        <div class="hint">5=0.5%/天, 10=1%/天, 0=不涨(仅市场启动后生效)</div>
+      </div>
+      <div class="op">
+        <h4>✦ 动态卖出手续费 (V27 连续递增)</h4>
+        <div class="hint">基础费率: <span id="curBaseFee" style="color:var(--gold)">-</span> | 实际生效: <span id="curEffFee" style="color:var(--gold)">-</span></div>
+        <div class="hint">基准池: <span id="curBasePool" style="color:var(--gold)">-</span> USDT | 动态: <span id="curDyn" style="color:var(--gold)">-</span></div>
+        <div class="hint">规则: 池每低于基准 <span id="curStepPct" style="color:var(--gold)">-</span> 就加 <span id="curStepAdd" style="color:var(--gold)">-</span>% | 封顶 <span id="curCap" style="color:var(--gold)">-</span>%</div>
+        <input id="setBaseFee" type="number" placeholder="基础费率 千分 (130=13%)" min="0" max="999">
+        <input id="setBasePoolU" type="number" placeholder="基准池 USDT (用于算动态比例)">
+        <input id="setStepPct" type="number" placeholder="步幅(少%触发): 填10 = 每少10%" min="1" max="100">
+        <input id="setStepAdd" type="number" placeholder="每步加百分点: 20 = +20%" min="1" max="99">
+        <input id="setCap" type="number" placeholder="封顶千分: 900=90% / 1000=100%" min="1" max="1000">
+        <button class="btn btn-o" onclick="setBaseFee()">设基础费率</button>
+        <button class="btn btn-o" onclick="setBasePool()">设基准池</button>
+        <button class="btn btn-o" onclick="setFeeStep()">设步幅/加幅</button>
+        <button class="btn btn-o" onclick="setFeeCap()">设封顶</button>
+        <button class="btn btn-b" onclick="toggleDynamic()">启/停 动态</button>
+        <div class="hint">⚠️启用动态前：基准池>0、步幅/加幅/封顶必须已设(如 10/20/900)，否则公式出错</div>
+      </div>
+      <div class="op">
+        <h4>✦ 领取分账比例 (千分制)</h4>
+        <div class="hint">当前: 用户 <span id="curU" style="color:var(--gold)">-</span> / 节点 <span id="curN" style="color:var(--gold)">-</span> / 项目 <span id="curP" style="color:var(--gold)">-</span> / 池 <span id="curB" style="color:var(--gold)">-</span></div>
+        <input id="setUserRate" type="number" placeholder="用户 % (如80)" min="0" max="100">
+        <input id="setNodeRate" type="number" placeholder="节点 % (如9)" min="0" max="100">
+        <input id="setProjRate" type="number" placeholder="项目 % (如6)" min="0" max="100">
+        <button class="btn btn-o" onclick="setClaimSplit()">设置 用户/节点/项目</button>
+        <div class="hint">三个合计≤100%，余数=节点分红池(如80+9+6=95→池5%)</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>金水木火土 · 五行相生 · 数据皆在链上 · 透明不昧</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script>
+  const V35='0xB94cD1E6f6D73022FFb8C813864411405d706125';
+  const ABI=[
+    'function owner() view returns(address)',
+    'function getAllUsersCount() view returns(uint256)',
+    'function nodeCount() view returns(uint256)',
+    'function users(address) view returns(tuple(bool,bool,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,uint256,uint256))',
+    'function getGenerations(address) view returns(uint8)','function getDirectReferralCount(address) view returns(uint256)',
+    'function getDirectReferralAmount(address) view returns(uint256)','function getUserReferrer(address) view returns(address)',
+    'function adminSetUserLevel(address,uint256)','function adminSetNodeGenLevel(address,uint256)','function nodeGenLevel(address) view returns(uint256)','function setBuyEnabled(bool)','function buyEnabled() view returns(bool)','function ownerBurnNNB(uint256)','function ownerNNBBalance() view returns(uint256)','function adminSetNode(address,bool)','function adminSetActive(address,bool)',
+    'function adminSetMyBalance(address,uint256)','function adminResetUser(address)','function adminDistribute(address,uint256)',
+    'function ownerWithdrawUSDT(address,uint256)','function ownerUSDTBalance() view returns(uint256)','function totalSubscribed() view returns(uint256)','function subscriptionAccumUSDT() view returns(uint256)',
+    'function setTradeFeeRate(uint256)','function setMarketStarted(bool)','function tradeFeeRate() view returns(uint256)','function marketStarted() view returns(uint256)','function resetNodeFeeStartTime()','function setPrice(uint256)',
+    'function setDailyRate(uint256)','function dailyRate() view returns(uint256)','function currentPrice() view returns(uint256)',
+    'function setBaseFeeRate(uint256)','function setFeeBasePool(uint256)','function setFeeStep(uint256,uint256)','function setFeeCapRate(uint256)','function setFeeTier1(uint256,uint256)','function setFeeTier2(uint256,uint256)','function setDynamicFeeEnabled(bool)','function baseFeeRate() view returns(uint256)','function feeBasePool() view returns(uint256)','function feeStepPct() view returns(uint256)','function feeStepAddPct() view returns(uint256)','function feeCapRate() view returns(uint256)','function feeTier1Thresh() view returns(uint256)','function feeTier1Rate() view returns(uint256)','function feeTier2Thresh() view returns(uint256)','function feeTier2Rate() view returns(uint256)','function dynamicFeeEnabled() view returns(bool)','function effectiveTradeFeeRate() view returns(uint256)',
+    'function setClaimRates(uint256,uint256,uint256)','function setClaimUserRate(uint256)','function setClaimNodeRate(uint256)','function setClaimProjectRate(uint256)','function setClaimBurnRate(uint256)'
+  ];
+  let provider,signer;
+  const $=id=>document.getElementById(id);
+  function log(m,c){const b=$('logBox');b.textContent='';const d=document.createElement('div');d.className=c||'info';d.textContent='['+new Date().toLocaleTimeString()+'] '+m;b.appendChild(d);b.scrollTop=b.scrollHeight}
+  function gc(){return new ethers.Contract(V35,ABI,signer||provider)}
+  async function connectOwner(){
+    if(!window.ethereum){log('未检测到钱包，请在 TP 钱包打开','err');return}
+    try{
+      provider=new ethers.providers.Web3Provider(window.ethereum);
+      await provider.send('eth_requestAccounts',[]);
+      signer=provider.getSigner();
+      const o=await signer.getAddress();
+      $('ownerVal').textContent=o.slice(0,8)+'...'+o.slice(-6)+' · 已连接';
+      loadStats();
+      const po=await gc().owner();
+      log(po.toLowerCase()===o.toLowerCase()?'☯ Owner 权限确认 · 可布道':'⚠ 非 Owner，仅查看','ok');
+    }catch(e){log('连接失败:'+(e.message||e.code),'err')}
+  }
+  async function loadStats(){
+    try{
+      const c=gc();
+      $('stOwner').textContent=(await c.owner()).slice(0,6);
+      $('stUsers').textContent=String((await c.getAllUsersCount()));
+      $('stNodes').textContent=String((await c.nodeCount()));
+      $('stProxy').textContent='V18';
+      // 全网总增发 = NNB totalSupply
+      try{
+        const nnb=new ethers.Contract('0xb9200aE34c94090EbCc84D7323f911dE60BA3202',['function totalSupply() view returns(uint256)','function balanceOf(address) view returns(uint256)'],signer||provider);
+        const ts=await nnb.totalSupply();
+        $('stMint').textContent=ethers.utils.formatEther(ts).slice(0,10);
+        // 全网总销毁 = 黑洞地址余额
+        const burn=await nnb.balanceOf('0x000000000000000000000000000000000000dEaD');
+        $('stBurn').textContent=ethers.utils.formatEther(burn).slice(0,10);
+      }catch(ee){}
+        // 加载系统配置当前值
+        try{$('curFee').textContent=(Number(await c.tradeFeeRate())/10).toFixed(1)+'%';}catch(e){}
+        try{$('curMarket').textContent=(await c.marketStarted())?'✅ 已启动':'❌ 已关闭';}catch(e){}
+        try{$('curPrice').textContent=(Number(await c.currentPrice())/1e18).toFixed(4)+' USDT';}catch(e){}
+        try{$('curDailyRate').textContent=(Number(await c.dailyRate())/10).toFixed(1)+'%/天 ('+(await c.dailyRate()).toString()+'基点)';}catch(e){}
+        try{if($('curBaseFee')){const c9=gc();$('curBaseFee').textContent=(Number(await c9.baseFeeRate())/10).toFixed(1)+'%';$('curEffFee').textContent=(Number(await c9.effectiveTradeFeeRate())/10).toFixed(1)+'%';$('curDyn').textContent=(await c9.dynamicFeeEnabled())?'开启':'关闭';$('curBasePool').textContent=(Number(await c9.feeBasePool())/1e18).toFixed(0);$('curStepPct').textContent=(Number(await c9.feeStepPct())/10)+'%';$('curStepAdd').textContent=(Number(await c9.feeStepAddPct()))+'';$('curCap').textContent=(Number(await c9.feeCapRate())/10)+'%';}}catch(e){}
+        try{if($('curU')&&$('curN')&&$('curP')&&$('curB')){
+          const ur=Number(await c.claimUserRate()), nr=Number(await c.claimNodeRate()), pr=Number(await c.claimProjectRate());
+          $('curU').textContent=(ur/10)+'%'; $('curN').textContent=(nr/10)+'%'; $('curP').textContent=(pr/10)+'%';
+          $('curB').textContent=((1000-ur-nr-pr)/10)+'%';
+        }}catch(e){}
+    }catch(e){}
+      try{const c3=gc();const ub=await c3.ownerUSDTBalance();if($('curUsdtBal'))$('curUsdtBal').textContent=(Number(ub)/1e18).toFixed(2)+' USDT';}catch(e){}
+  }
+  async function queryUser(){
+    const a=$('qAddr').value.trim();
+    if(!/^0x[0-9a-fA-F]{40}$/.test(a)){log('地址格式不符 (需 0x+40 位)','err');return}
+    try{
+      const c=gc();const u=await c.users(a);
+      const gen=await c.getGenerations(a);const ref=await c.getUserReferrer(a);let nodeGen=0;try{nodeGen=Number(await c.nodeGenLevel(a));}catch(e){nodeGen=0;}
+      const dp=await c.getDirectReferralAmount(a);const dc=await c.getDirectReferralCount(a);
+      const el=$('qResult');el.style.display='block';
+      el.innerHTML=
+        '<div class="qr"><span class="k">激活</span><span class="v">'+(u[0]?'是':'否')+'</span></div>'+
+        '<div class="qr"><span class="k">节点</span><span class="v" style="color:'+(u[1]?'var(--wood)':'var(--sub)')+'">'+(u[1]?'是':'否')+'</span></div>'+
+        '<div class="qr"><span class="k">teamLevel</span><span class="v">'+u[7].toString()+'</span></div>'+
+        '<div class="qr"><span class="k">生效代数</span><span class="v" style="color:var(--gold)">'+gen+' 代</span></div>'+'<div class="qr"><span class="k">节点生效代数</span><span class="v" style="color:#26b5ff">'+(nodeGen>0?nodeGen:'0(按直推)')+'</span></div>'+
+        '<div class="qr"><span class="k">总投入</span><span class="v">'+(Number(u[2])/1e18).toFixed(2)+' U</span></div>'+
+        '<div class="qr"><span class="k">直推业绩</span><span class="v">'+(Number(dp)/1e18).toFixed(2)+' U</span></div>'+
+        '<div class="qr"><span class="k">直推人数</span><span class="v">'+dc+'</span></div>'+
+        '<div class="qr"><span class="k">产能</span><span class="v">'+(Number(u[5])/1e18).toFixed(2)+' NNB</span></div>'+
+        '<div class="qr"><span class="k">复投次数</span><span class="v">'+u[10].toString()+'</span></div>'+
+        '<div class="qr"><span class="k">上级</span><span class="v">'+ref+'</span></div>';
+    }catch(e){log('查询失败:'+(e.reason||e.message),'err')}
+  }
+  async function setUserLevel(){await adminOp('adminSetUserLevel',[$('setLevelAddr').value.trim(),parseInt($('setLevelVal').value)],'定级别')}
+  async function setNode(){await adminOp('adminSetNode',[$('setNodeAddr').value.trim(),$('setNodeVal').value==='true'],'定节点')}
+  async function setActive(){await adminOp('adminSetActive',[$('setActiveAddr').value.trim(),$('setActiveVal').value==='true'],'定激活')}
+  async function setMyBalance(){await adminOp('adminSetMyBalance',[$('setBalAddr').value.trim(),ethers.utils.parseUnits($('setBalVal').value.trim()||'0',18)],'定产能')}
+  async function ownerWithdraw(){
+    const to=$('wdAddr').value.trim();
+    const amt=$('wdAmt').value.trim();
+    if(!/^0x[0-9a-fA-F]{40}$/.test(to)){log('请填接收地址','err');return}
+    if(!signer){log('请先连接Owner','err');return}
+    try{
+      const c=gc();
+      const tx=await c.ownerWithdrawUSDT(to, amt?ethers.utils.parseUnits(amt,18):0);
+      log('提取已广播:'+tx.hash.slice(0,12)+'...(钱包确认)','info');
+      await tx.wait();
+      log('✅ 已提取 USDT 到 '+to.slice(0,10),'ok');
+    }catch(e){log('提取失败:'+(e.reason||e.message),'err')}
+}
+
+async function distribute(){await adminOp('adminDistribute',[$('distAddr').value.trim(),ethers.utils.parseUnits($('distVal').value.trim()||'0',18)],'发放')}
+  async function resetUser(){await adminOp('adminResetUser',[$('resetAddr').value.trim()],'重置')}
+  async function adminOp(fn,args,label){
+    if(!signer){log('请先连接 Owner','err');return}
+    const a=args[0];
+    if(!/^0x[0-9a-fA-F]{40}$/.test(a||'')){log('地址格式不符','err');return}
+    try{
+      const c=gc();const tx=await c[fn](...args);
+      log(label+' · 已广播 Tx: '+tx.hash.slice(0,12)+'...(钱包确认)','info');
+      await tx.wait();
+      log('☯ '+label+'成功','ok');
+    }catch(e){log(label+'失败:'+(e.reason||e.message),'err')}
+  }
+
+  // ===== 系统配置函数 =====
+  async function setTradeFee(){
+    if(!signer){log('请先连接 Owner','err');return}
+    const val=parseInt($('setFeeVal').value);
+    if(isNaN(val)||val<0||val>=1000){log('手续费须0-999千分','err');return}
+    try{const c=gc();const tx=await c.setTradeFeeRate(val);log('设置手续费 '+val+' → 广播中...','info');await tx.wait();log('☯ 手续费已设为 '+(val/10).toFixed(1)+'%','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function setMarket(){
+    if(!signer){log('请先连接 Owner','err');return}
+    
+async function setBuy(){ if(!signer){log('请先连接 Owner','err');return}
+  try{ const v=$('setBuyVal').value==='true'; const c=gc(); const tx=await c.setBuyEnabled(v); log('买入开关→'+(v?'开启':'禁止'),'info'); await tx.wait(); log('☯ 买入开关已'+(v?'开启':'禁止'),'ok'); }
+  catch(e){ log('失败:'+(e.reason||e.message),'err'); }
+}
+async function burnNNB(){ if(!signer){log('请先连接 Owner','err');return}
+  try{ const c=gc(); const b=await c.ownerNNBBalance(); log('底池NNB: '+ethers.utils.formatUnits(b,18).slice(0,6)+' 广播销毁...','info'); const tx=await c.ownerBurnNNB(0); log('销毁广播中...','info'); await tx.wait(); log('☯ 底池NNB已全部销毁(转黑洞)','ok'); loadBurnBal(); }
+  catch(e){ log('失败:'+(e.reason||e.message),'err'); }
+}
+async function loadBurnBal(){ try{ const c=gc(); const b=await c.ownerNNBBalance(); const el=document.getElementById('poolNnbBal'); if(el)el.textContent=ethers.utils.formatUnits(b,18).slice(0,8); }catch(e){} }
+async function setNodeGenLevel(){ if(!signer){log('请先连接 Owner','err');return}
+  try{ const c=gc(); const lv=parseInt($('setNodeGenVal')?.value||'0'); const tx=await c.adminSetNodeGenLevel($('setNodeGenAddr').value.trim(),lv); log('节点解锁代数→'+lv+' 广播中...','info'); await tx.wait(); log('☯ 节点解锁代数已设','ok'); }
+  catch(e){ log('失败:'+(e.reason||e.message),'err'); }
+}
+const val=$('setMarketVal').value==='true';
+    try{const c=gc();const tx=await c.setMarketStarted(val);log('市场'+(val?'启动':'关闭')+' → 广播中...','info');await tx.wait();log('☯ 市场已'+(val?'启动':'关闭'),'ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function stopUser(){
+    if(!signer){log('请先连接 Owner','err');return}
+    const addr=$('stopAddr').value.trim();
+    const val=$('stopVal').value==='true';
+    if(!/^0x[0-9a-fA-F]{40}$/.test(addr)){log('地址格式不符','err');return}
+    try{const c=gc();const tx=await c.adminSetActive(addr,val);log('用户收益'+(val?'恢复':'停止')+' → 广播中...','info');await tx.wait();log('☯ '+addr.slice(0,10)+'.. 收益已'+(val?'恢复':'停止'),'ok')}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function setPrice(){
+    if(!signer){log('请先连接 Owner','err');return}
+    const usd=parseFloat($('setPriceVal').value);
+    if(isNaN(usd)||usd<=0){log('价格须大于0','err');return}
+    const price18=ethers.utils.parseUnits(usd.toString(),18);
+    try{const c=gc();const tx=await c.setPrice(price18);log('价格设置为 '+usd+' USDT → 广播中...','info');await tx.wait();log('☯ 初始价已设为 '+usd+' USDT','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function resetNodeFeeTime(){
+    if(!signer){log('请先连接 Owner','err');return}
+    try{const c=gc();const tx=await c.resetNodeFeeStartTime();log('重置节点费起始时间 → 广播中...','info');await tx.wait();log('☯ 节点费重置成功，从500U重新计费','ok')}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function setBaseFee(){if(!signer){log('请先连接Owner','err');return}const v=parseInt($('setBaseFee').value);if(isNaN(v)||v<0||v>=1000){log('费率须0-999千分','err');return}try{const c=gc();const tx=await c.setBaseFeeRate(v);await tx.wait();log('☯ 基础费率已设为 '+(v/10).toFixed(1)+'%','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
+  async function setFeeStep(){if(!signer){log('请先连接Owner','err');return}const sp=parseInt($('setStepPct').value),sa=parseInt($('setStepAdd').value);if(isNaN(sp)||sp<1||sp>100||isNaN(sa)||sa<1||sa>99){log('步幅1-100(%) / 加幅1-99%','err');return}try{const c=gc();const tx=await c.setFeeStep(sp*10,sa);await tx.wait();log('☯ 步幅已设='+sp+'%(=每少'+sp+'%加'+sa+'%) 封顶按设置','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
+  async function setFeeCap(){if(!signer){log('请先连接Owner','err');return}const v=parseInt($('setCap').value);if(isNaN(v)||v<1||v>1000){log('封顶须1-1000千分(≤100%)','err');return}try{const c=gc();const tx=await c.setFeeCapRate(v);await tx.wait();log('☯ 封顶已设为 '+(v/10).toFixed(1)+'%','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
+  async function setBasePool(){if(!signer){log('请先连接Owner','err');return}const u=parseFloat($('setBasePoolU').value);if(isNaN(u)||u<=0){log('请输入基准池USDT','err');return}try{const c=gc();const tx=await c.setFeeBasePool(ethers.utils.parseUnits(u.toString(),18));await tx.wait();log('☯ 基准池已设为 '+u+' USDT','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
+  async function toggleDynamic(){if(!signer){log('请先连接Owner','err');return}try{const c=gc();const cur=await c.dynamicFeeEnabled();const tx=await c.setDynamicFeeEnabled(!cur);await tx.wait();log('☯ 动态手续费已'+(cur?'关闭':'开启'),'ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
+  async function setDailyRate(){
+    if(!signer){log('请先连接 Owner','err');return}
+    const val=parseInt($('setDailyRateVal').value);
+    if(isNaN(val)||val<0){log('涨幅须≥0','err');return}
+    try{const c=gc();const tx=await c.setDailyRate(val);log('每日涨幅设为 '+val+'基点 → 广播中...','info');await tx.wait();log('☯ 每日涨幅已设为 '+(val/10).toFixed(1)+'%/天','ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+  async function setClaimSplit(){
+    if(!signer){log('请先连接 Owner','err');return}
+    const u=parseInt($('setUserRate').value), n=parseInt($('setNodeRate').value), p=parseInt($('setProjRate').value);
+    if(isNaN(u)||isNaN(n)||isNaN(p)){log('请填三个比例(%)','err');return}
+    if(u+n+p>100){log('三个比例合计不能超100%','err');return}
+    const ur=u*10, nr=n*10, pr=p*10;
+    try{
+      const c=gc();
+      log('设置 用户'+u+'% + 节点'+n+'% + 项目'+p+'% → 广播中...','info');
+      const tx=await c.setClaimRates(ur,nr,pr);
+      await tx.wait();
+      log('☯ 分账比例已设: 用户'+u+'% 节点'+n+'% 项目'+p+'% 池'+((100-u-n-p))+'%','ok');
+      await loadStats();
+    }catch(e){log('失败:'+(e.reason||e.message),'err')}
+  }
+</script>
+</body>
+</html>
