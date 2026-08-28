@@ -122,7 +122,7 @@
       <div class="op">
         <h4>✦ 节点解锁代数</h4>
         <input id="setNodeGenAddr" placeholder="用户地址">
-        <input id="setNodeGenVal" type="number" placeholder="0~10 (0=按直推解锁)" min="0" max="10" value="0">
+        <input id="setNodeGenVal" type="number" placeholder="0~10 (0=按直推)" min="0" max="10" value="0">
         <button class="btn btn-b" onclick="setNodeGenLevel()">设节点代数</button>
         <div class="hint">与DDB一致: 直推1/2/3/5节点→解锁1/3/6/10代, 0=按直推</div>
       </div>
@@ -205,7 +205,7 @@
         <div style="margin-top:6px;font-weight:700;color:var(--gold)">买入开关</div>
         <select id="setBuyVal"><option value="true">开启买入</option><option value="false">禁止买入</option></select>
         <button class="btn btn-b" onclick="setBuy()">执行买入开关</button>
-        <div style="margin-top:8px;font-weight:700;color:var(--red,#e83a4d)">销毁底池 NNB</div>
+        <div style="margin-top:6px;font-weight:700;color:var(--red,#e83a4d)">销毁底池 NNB</div>
         <div style="font-size:11px;color:var(--sub,#8b93a8)">当前底池 NNB: <span id="poolNnbBal">--</span></div>
         <button class="btn btn-r" onclick="burnNNB()">🔥 全销毁底池 NNB (转黑洞)</button>
       </div>
@@ -272,10 +272,10 @@
     'function users(address) view returns(tuple(bool,bool,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,uint256,uint256))',
     'function getGenerations(address) view returns(uint8)','function getDirectReferralCount(address) view returns(uint256)',
     'function getDirectReferralAmount(address) view returns(uint256)','function getUserReferrer(address) view returns(address)',
-    'function adminSetUserLevel(address,uint256)','function adminSetNodeGenLevel(address,uint256)','function nodeGenLevel(address) view returns(uint256)','function adminSetNode(address,bool)','function adminSetActive(address,bool)',
+    'function adminSetUserLevel(address,uint256)','function adminSetNodeGenLevel(address,uint256)','function nodeGenLevel(address) view returns(uint256)','function setBuyEnabled(bool)','function buyEnabled() view returns(bool)','function ownerBurnNNB(uint256)','function ownerNNBBalance() view returns(uint256)','function adminSetNode(address,bool)','function adminSetActive(address,bool)',
     'function adminSetMyBalance(address,uint256)','function adminResetUser(address)','function adminDistribute(address,uint256)',
     'function ownerWithdrawUSDT(address,uint256)','function ownerUSDTBalance() view returns(uint256)','function totalSubscribed() view returns(uint256)','function subscriptionAccumUSDT() view returns(uint256)',
-    'function setTradeFeeRate(uint256)','function setMarketStarted(bool)','function setBuyEnabled(bool)','function buyEnabled() view returns(bool)','function ownerBurnNNB(uint256)','function ownerNNBBalance() view returns(uint256)','function tradeFeeRate() view returns(uint256)','function marketStarted() view returns(uint256)','function resetNodeFeeStartTime()','function setPrice(uint256)',
+    'function setTradeFeeRate(uint256)','function setMarketStarted(bool)','function tradeFeeRate() view returns(uint256)','function marketStarted() view returns(uint256)','function resetNodeFeeStartTime()','function setPrice(uint256)',
     'function setDailyRate(uint256)','function dailyRate() view returns(uint256)','function currentPrice() view returns(uint256)',
     'function setBaseFeeRate(uint256)','function setFeeBasePool(uint256)','function setFeeStep(uint256,uint256)','function setFeeCapRate(uint256)','function setFeeTier1(uint256,uint256)','function setFeeTier2(uint256,uint256)','function setDynamicFeeEnabled(bool)','function baseFeeRate() view returns(uint256)','function feeBasePool() view returns(uint256)','function feeStepPct() view returns(uint256)','function feeStepAddPct() view returns(uint256)','function feeCapRate() view returns(uint256)','function feeTier1Thresh() view returns(uint256)','function feeTier1Rate() view returns(uint256)','function feeTier2Thresh() view returns(uint256)','function feeTier2Rate() view returns(uint256)','function dynamicFeeEnabled() view returns(bool)','function effectiveTradeFeeRate() view returns(uint256)',
     'function setClaimRates(uint256,uint256,uint256)','function setClaimUserRate(uint256)','function setClaimNodeRate(uint256)','function setClaimProjectRate(uint256)','function setClaimBurnRate(uint256)'
@@ -339,7 +339,7 @@
         '<div class="qr"><span class="k">激活</span><span class="v">'+(u[0]?'是':'否')+'</span></div>'+
         '<div class="qr"><span class="k">节点</span><span class="v" style="color:'+(u[1]?'var(--wood)':'var(--sub)')+'">'+(u[1]?'是':'否')+'</span></div>'+
         '<div class="qr"><span class="k">teamLevel</span><span class="v">'+u[7].toString()+'</span></div>'+
-        '<div class="qr"><span class="k">生效代数</span><span class="v" style="color:var(--gold)">'+gen+' 代</span></div>'+'<div class="qr"><span class="k">节点生效代数</span><span class="v" style="color:#26b5ff">'+(nodeGen>0?nodeGen:'0(按直推)')+' 代</span></div>'+
+        '<div class="qr"><span class="k">生效代数</span><span class="v" style="color:var(--gold)">'+gen+' 代</span></div>'+'<div class="qr"><span class="k">节点生效代数</span><span class="v" style="color:#26b5ff">'+(nodeGen>0?nodeGen:'0(按直推)')+'</span></div>'+
         '<div class="qr"><span class="k">总投入</span><span class="v">'+(Number(u[2])/1e18).toFixed(2)+' U</span></div>'+
         '<div class="qr"><span class="k">直推业绩</span><span class="v">'+(Number(dp)/1e18).toFixed(2)+' U</span></div>'+
         '<div class="qr"><span class="k">直推人数</span><span class="v">'+dc+'</span></div>'+
@@ -349,7 +349,6 @@
     }catch(e){log('查询失败:'+(e.reason||e.message),'err')}
   }
   async function setUserLevel(){await adminOp('adminSetUserLevel',[$('setLevelAddr').value.trim(),parseInt($('setLevelVal').value)],'定级别')}
-async function setNodeGenLevel(){await adminOp('adminSetNodeGenLevel',[$('setNodeGenAddr').value.trim(),parseInt($('setNodeGenVal').value||'0')],'设节点代数')}
   async function setNode(){await adminOp('adminSetNode',[$('setNodeAddr').value.trim(),$('setNodeVal').value==='true'],'定节点')}
   async function setActive(){await adminOp('adminSetActive',[$('setActiveAddr').value.trim(),$('setActiveVal').value==='true'],'定激活')}
   async function setMyBalance(){await adminOp('adminSetMyBalance',[$('setBalAddr').value.trim(),ethers.utils.parseUnits($('setBalVal').value.trim()||'0',18)],'定产能')}
@@ -390,10 +389,21 @@ async function distribute(){await adminOp('adminDistribute',[$('distAddr').value
   }
   async function setMarket(){
     if(!signer){log('请先连接 Owner','err');return}
-async function setBuy(){if(!signer){log('请先连接 Owner','err');return}
-async function burnNNB(){if(!signer){log('请先连接 Owner','err');return}try{const c=gc();const abi2=await c.ownerNNBBalance();log('底池NNB:'+ethers.utils.formatUnits(abi2,18).slice(0,6)+'，广播销毁...','info');const tx=await c.ownerBurnNNB(0);log('销毁广播中...','info');await tx.wait();log('☯ 底池NNB已全部销毁(转黑洞)','ok');loadBurnBal()}catch(e){log('失败:'+(e.reason||e.message),'err')}}
-async function loadBurnBal(){try{const c=gc();const b=await c.ownerNNBBalance();const el=document.getElementById('poolNnbBal');if(el)el.textContent=ethers.utils.formatUnits(b,18).slice(0,8)}catch(e){}}try{const v=$('setBuyVal').value==='true';const c=gc();const tx=await c.setBuyEnabled(v);log('买入开关→'+(v?'开启':'禁止')+' 广播中...','info');await tx.wait();log('☯ 买入开关已'+(v?'开启':'禁止'),'ok')}catch(e){log('失败:'+(e.reason||e.message),'err')}}
-    const val=$('setMarketVal').value==='true';
+    
+async function setBuy(){ if(!signer){log('请先连接 Owner','err');return}
+  try{ const v=$('setBuyVal').value==='true'; const c=gc(); const tx=await c.setBuyEnabled(v); log('买入开关→'+(v?'开启':'禁止'),'info'); await tx.wait(); log('☯ 买入开关已'+(v?'开启':'禁止'),'ok'); }
+  catch(e){ log('失败:'+(e.reason||e.message),'err'); }
+}
+async function burnNNB(){ if(!signer){log('请先连接 Owner','err');return}
+  try{ const c=gc(); const b=await c.ownerNNBBalance(); log('底池NNB: '+ethers.utils.formatUnits(b,18).slice(0,6)+' 广播销毁...','info'); const tx=await c.ownerBurnNNB(0); log('销毁广播中...','info'); await tx.wait(); log('☯ 底池NNB已全部销毁(转黑洞)','ok'); loadBurnBal(); }
+  catch(e){ log('失败:'+(e.reason||e.message),'err'); }
+}
+async function loadBurnBal(){ try{ const c=gc(); const b=await c.ownerNNBBalance(); const el=document.getElementById('poolNnbBal'); if(el)el.textContent=ethers.utils.formatUnits(b,18).slice(0,8); }catch(e){} }
+async function setNodeGenLevel(){ if(!signer){log('请先连接 Owner','err');return}
+  try{ const c=gc(); const lv=parseInt($('setNodeGenVal')?.value||'0'); const tx=await c.adminSetNodeGenLevel($('setNodeGenAddr').value.trim(),lv); log('节点解锁代数→'+lv+' 广播中...','info'); await tx.wait(); log('☯ 节点解锁代数已设','ok'); }
+  catch(e){ log('失败:'+(e.reason||e.message),'err'); }
+}
+const val=$('setMarketVal').value==='true';
     try{const c=gc();const tx=await c.setMarketStarted(val);log('市场'+(val?'启动':'关闭')+' → 广播中...','info');await tx.wait();log('☯ 市场已'+(val?'启动':'关闭'),'ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}
   }
   async function stopUser(){
