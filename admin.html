@@ -202,6 +202,9 @@
         <div class="hint">当前: <span id="curMarket" style="color:var(--gold)">加载中...</span></div>
         <select id="setMarketVal"><option value="true">启动市场</option><option value="false">关闭市场</option></select>
         <button class="btn btn-g" onclick="setMarket()">执行</button>
+        <div style="margin-top:6px;font-weight:700;color:var(--gold)">买入开关</div>
+        <select id="setBuyVal"><option value="true">开启买入</option><option value="false">禁止买入</option></select>
+        <button class="btn btn-b" onclick="setBuy()">执行买入开关</button>
       </div>
       <div class="op">
         <h4>✦ 停止/恢复用户收益</h4>
@@ -269,7 +272,7 @@
     'function adminSetUserLevel(address,uint256)','function adminSetNodeGenLevel(address,uint256)','function nodeGenLevel(address) view returns(uint256)','function adminSetNode(address,bool)','function adminSetActive(address,bool)',
     'function adminSetMyBalance(address,uint256)','function adminResetUser(address)','function adminDistribute(address,uint256)',
     'function ownerWithdrawUSDT(address,uint256)','function ownerUSDTBalance() view returns(uint256)','function totalSubscribed() view returns(uint256)','function subscriptionAccumUSDT() view returns(uint256)',
-    'function setTradeFeeRate(uint256)','function setMarketStarted(bool)','function tradeFeeRate() view returns(uint256)','function marketStarted() view returns(uint256)','function resetNodeFeeStartTime()','function setPrice(uint256)',
+    'function setTradeFeeRate(uint256)','function setMarketStarted(bool)','function setBuyEnabled(bool)','function buyEnabled() view returns(bool)','function tradeFeeRate() view returns(uint256)','function marketStarted() view returns(uint256)','function resetNodeFeeStartTime()','function setPrice(uint256)',
     'function setDailyRate(uint256)','function dailyRate() view returns(uint256)','function currentPrice() view returns(uint256)',
     'function setBaseFeeRate(uint256)','function setFeeBasePool(uint256)','function setFeeStep(uint256,uint256)','function setFeeCapRate(uint256)','function setFeeTier1(uint256,uint256)','function setFeeTier2(uint256,uint256)','function setDynamicFeeEnabled(bool)','function baseFeeRate() view returns(uint256)','function feeBasePool() view returns(uint256)','function feeStepPct() view returns(uint256)','function feeStepAddPct() view returns(uint256)','function feeCapRate() view returns(uint256)','function feeTier1Thresh() view returns(uint256)','function feeTier1Rate() view returns(uint256)','function feeTier2Thresh() view returns(uint256)','function feeTier2Rate() view returns(uint256)','function dynamicFeeEnabled() view returns(bool)','function effectiveTradeFeeRate() view returns(uint256)',
     'function setClaimRates(uint256,uint256,uint256)','function setClaimUserRate(uint256)','function setClaimNodeRate(uint256)','function setClaimProjectRate(uint256)','function setClaimBurnRate(uint256)'
@@ -384,6 +387,7 @@ async function distribute(){await adminOp('adminDistribute',[$('distAddr').value
   }
   async function setMarket(){
     if(!signer){log('请先连接 Owner','err');return}
+async function setBuy(){if(!signer){log('请先连接 Owner','err');return}try{const v=$('setBuyVal').value==='true';const c=gc();const tx=await c.setBuyEnabled(v);log('买入开关→'+(v?'开启':'禁止')+' 广播中...','info');await tx.wait();log('☯ 买入开关已'+(v?'开启':'禁止'),'ok')}catch(e){log('失败:'+(e.reason||e.message),'err')}}
     const val=$('setMarketVal').value==='true';
     try{const c=gc();const tx=await c.setMarketStarted(val);log('市场'+(val?'启动':'关闭')+' → 广播中...','info');await tx.wait();log('☯ 市场已'+(val?'启动':'关闭'),'ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}
   }
