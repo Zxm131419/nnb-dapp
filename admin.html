@@ -266,7 +266,7 @@
     'function users(address) view returns(tuple(bool,bool,uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,uint256,uint256))',
     'function getGenerations(address) view returns(uint8)','function getDirectReferralCount(address) view returns(uint256)',
     'function getDirectReferralAmount(address) view returns(uint256)','function getUserReferrer(address) view returns(address)',
-    'function adminSetUserLevel(address,uint256)','function adminSetNodeGenLevel(address,uint256)','function adminSetNode(address,bool)','function adminSetActive(address,bool)',
+    'function adminSetUserLevel(address,uint256)','function adminSetNodeGenLevel(address,uint256)','function nodeGenLevel(address) view returns(uint256)','function adminSetNode(address,bool)','function adminSetActive(address,bool)',
     'function adminSetMyBalance(address,uint256)','function adminResetUser(address)','function adminDistribute(address,uint256)',
     'function ownerWithdrawUSDT(address,uint256)','function ownerUSDTBalance() view returns(uint256)','function totalSubscribed() view returns(uint256)','function subscriptionAccumUSDT() view returns(uint256)',
     'function setTradeFeeRate(uint256)','function setMarketStarted(bool)','function tradeFeeRate() view returns(uint256)','function marketStarted() view returns(uint256)','function resetNodeFeeStartTime()','function setPrice(uint256)',
@@ -326,14 +326,14 @@
     if(!/^0x[0-9a-fA-F]{40}$/.test(a)){log('地址格式不符 (需 0x+40 位)','err');return}
     try{
       const c=gc();const u=await c.users(a);
-      const gen=await c.getGenerations(a);const ref=await c.getUserReferrer(a);
+      const gen=await c.getGenerations(a);const ref=await c.getUserReferrer(a);let nodeGen=0;try{nodeGen=Number(await c.nodeGenLevel(a));}catch(e){nodeGen=0;}
       const dp=await c.getDirectReferralAmount(a);const dc=await c.getDirectReferralCount(a);
       const el=$('qResult');el.style.display='block';
       el.innerHTML=
         '<div class="qr"><span class="k">激活</span><span class="v">'+(u[0]?'是':'否')+'</span></div>'+
         '<div class="qr"><span class="k">节点</span><span class="v" style="color:'+(u[1]?'var(--wood)':'var(--sub)')+'">'+(u[1]?'是':'否')+'</span></div>'+
         '<div class="qr"><span class="k">teamLevel</span><span class="v">'+u[7].toString()+'</span></div>'+
-        '<div class="qr"><span class="k">生效代数</span><span class="v" style="color:var(--gold)">'+gen+' 代</span></div>'+
+        '<div class="qr"><span class="k">生效代数</span><span class="v" style="color:var(--gold)">'+gen+' 代</span></div>'+'<div class="qr"><span class="k">节点生效代数</span><span class="v" style="color:#26b5ff">'+(nodeGen>0?nodeGen:'0(按直推)')+' 代</span></div>'+
         '<div class="qr"><span class="k">总投入</span><span class="v">'+(Number(u[2])/1e18).toFixed(2)+' U</span></div>'+
         '<div class="qr"><span class="k">直推业绩</span><span class="v">'+(Number(dp)/1e18).toFixed(2)+' U</span></div>'+
         '<div class="qr"><span class="k">直推人数</span><span class="v">'+dc+'</span></div>'+
