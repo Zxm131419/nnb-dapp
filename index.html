@@ -469,7 +469,7 @@ button{cursor:pointer;font-family:inherit}
   <div class="navbar"><div class="nav-left"><button class="nav-btn" onclick="go('home')"><i class="ph ph-caret-left"></i> <span data-i18n="back">返回首页</span></button></div><button class="btn-connect" onclick="connectWallet()"><i class="ph ph-wallet"></i> <span data-i18n="wallet.connect">连接钱包</span></button></div>
   <div class="card">
     <div style="text-align:center;margin-bottom:14px"><div style="font-size:20px;font-weight:800;background:linear-gradient(90deg,var(--fire),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent" data-i18n="node.title">成为推广节点,解锁团队收益!</div></div>
-    <div class="node-perk"><div class="dot"><i class="ph ph-currency-dollar"></i></div><span data-i18n="node.cost">激活节点需支付 <b style="color:var(--gold)">500 USDT</b></span></div>
+    <div class="node-perk"><div class="dot"><i class="ph ph-currency-dollar"></i></div><span data-i18n="node.cost">激活节点需支付 <b style="color:var(--gold)" id="nodeFeeDisp">500 USDT</b></span></div>
     <div class="node-perk"><div class="dot"><i class="ph ph-star"></i></div><span data-i18n="node.income">额外获得推广矿机挖矿收益的 <b style="color:var(--green)">9%</b></span></div>
   </div>
   <div class="section-title" data-i18n="invite.title">我的推广</div>
@@ -509,7 +509,7 @@ button{cursor:pointer;font-family:inherit}
   <div class="navbar"><div class="nav-left"><button class="nav-btn" onclick="go('home')"><i class="ph ph-caret-left"></i> <span data-i18n="back">返回首页</span></button></div><button class="btn-connect" onclick="connectWallet()"><i class="ph ph-wallet"></i> <span data-i18n="wallet.connect">连接钱包</span></button></div>
   <div class="node-banner">
     <div class="node-highlight" data-i18n="node.title">成为推广节点,解锁团队收益!</div>
-    <div class="node-perk"><div class="dot"><i class="ph ph-currency-dollar"></i></div><span data-i18n="node.cost">激活节点需支付 <b style="color:var(--gold)">500 USDT</b></span></div>
+    <div class="node-perk"><div class="dot"><i class="ph ph-currency-dollar"></i></div><span data-i18n="node.cost">激活节点需支付 <b style="color:var(--gold)" id="nodeFeeDisp">500 USDT</b></span></div>
     <div class="node-perk"><div class="dot"><i class="ph ph-star"></i></div><span data-i18n="node.income">额外获得推广矿机挖矿收益的 <b style="color:var(--green)">9%</b></span></div>
     <button class="btn btn-gold" style="margin-top:16px" onclick="activateNode()" data-i18n="node.btn">授权激活节点</button>
   </div>
@@ -588,7 +588,7 @@ const ABI={
   pair:['function getReserves() view returns (uint112,uint112,uint32)'],
   erc20:['function balanceOf(address) view returns (uint256)','function symbol() view returns (string)','function decimals() view returns (uint8)'],
   mining:['function buyMining(uint256) external','function users(address) view returns (tuple(bool activated,bool isNode,uint256 totalInvestedUSD,uint256 totalMined,uint256 lastBuyTime,uint256 myBalance,uint256 directPushTotalUSD,uint256 teamLevel,uint256 teamCount,address referrer,uint256 totalReinvestCount,uint256 totalWithdrawCount,uint256 lockedUntil,uint256 boostMultiplier,uint256 boostExpireTime))','function currentMinerCount() view returns (uint256)','function MINERS(uint256) view returns (tuple(uint256 price,uint256 dailyRate,uint256 lockDays,uint256 minPurchase,uint256 maxPurchase,bool exists))'],
-  ref:['function getUserReferrer(address) view returns (address)','function getDirectReferralCount(address) view returns (uint256)','function isNode(address) view returns (bool)','function isUserActivated(address) view returns (bool)','function getDirectReferralAmount(address) view returns (uint256)','function getBoostMultiplier(address) view returns (uint256)','function getBoostExpireTime(address) view returns (uint256)','function getUserReinvestCount(address) view returns (uint256)','function getUserUnclaimed(address) view returns (uint256)','function getUserBurned(address) view returns (bool)','function bindReferrer(address) external','function buyMining(uint256) external','function claim() external','function reinvest(uint256) external','function activateNode() external payable']
+  ref:['function getUserReferrer(address) view returns (address)','function getDirectReferralCount(address) view returns (uint256)','function isNode(address) view returns (bool)','function isUserActivated(address) view returns (bool)','function getDirectReferralAmount(address) view returns (uint256)','function getBoostMultiplier(address) view returns (uint256)','function getBoostExpireTime(address) view returns (uint256)','function getUserReinvestCount(address) view returns (uint256)','function getUserUnclaimed(address) view returns (uint256)','function getUserBurned(address) view returns (bool)','function bindReferrer(address) external','function buyMining(uint256) external','function claim() external','function reinvest(uint256) external','function currentNodeFee(uint256) view returns (uint256)','function activateNode() external payable']
 };
 let provider,signer,addr=null,currentPrice=0; let currentFeeBp=130; let _globalMyBalance=0, _globalClaimable=0;
 const $=id=>document.getElementById(id);
@@ -601,7 +601,7 @@ function go(page){
   document.querySelectorAll('.bnav-item')[navs.indexOf(page)]?.classList.add('active');
   if(page==='trade'){loadPrice();loadPoolInfo();;if(typeof nnbApplyLang==="function")nnbApplyLang();}
   if(page==='mine'){loadMiners();startClaimCountdown();}
-  if(page==='node'){loadNodeInfo();loadNodeDividend();}
+  if(page==='node'){loadNodeInfo();loadNodeDividend();if(typeof getCurrentNodeFee==='function')getCurrentNodeFee();}
   if(page==='invite'){updatePerfUnlock();}
 }
 function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
@@ -1468,19 +1468,40 @@ async function loadNodeInfo(){
   }
 }
 
+// 动态读取当前节点费(链上 currentNodeFee(now)), 并刷新显示
+async function getCurrentNodeFee(){
+  let feeWei=ethers.BigNumber.from(500).mul(ethers.BigNumber.from(10).pow(18));
+  try{
+    if(!provider)provider=new ethers.providers.Web3Provider(window.ethereum);
+    const c=new ethers.Contract(C.contracts.referral,['function currentNodeFee(uint256) view returns (uint256)'],provider);
+    const now=Math.floor(Date.now()/1000);
+    const f=await c.currentNodeFee(now);
+    if(f&&!f.isZero())feeWei=f;
+  }catch(e){}
+  // 刷新显示(两处)
+  try{
+    const amt=Number(ethers.utils.formatUnits(feeWei,18)).toFixed(0);
+    document.querySelectorAll('#nodeFeeDisp').forEach(el=>el.textContent=amt+' USDT');
+  }catch(e){}
+  return feeWei;
+}
 async function activateNode(){
   if(!signer){toast('请先连接钱包');return}
   if(typeof ethers==='undefined'||!signer){toast('组件加载中,请稍后重试');return}
   try{
+    const feeWei=await getCurrentNodeFee();
+    const feeUsdt=Number(ethers.utils.formatUnits(feeWei,18));
+    // 授权取整(向上取整到USDT), 防止金额引起精度/不足
+    const approveAmt=ethers.utils.parseUnits(Math.ceil(feeUsdt).toString(),18);
     const usdtContract=new ethers.Contract(C.tokens.USDT,['function balanceOf(address) view returns (uint256)','function approve(address,uint256)'],signer);
     const usdtBal=await usdtContract.balanceOf(addr);
-    if(usdtBal.lt(ethers.utils.parseUnits('500',18))){
-      toast('USDT不足,需500 USDT激活节点');
+    if(usdtBal.lt(approveAmt)){
+      toast('USDT不足,需 '+feeUsdt.toFixed(0)+' USDT激活节点');
       return;
     }
     // 授权 USDT 给业务合约，让合约内部自动分账并设置节点（一次交易完成，防止节点未设置）
-    toast('第一步: 授权USDT...');
-    const ap=await usdtContract.approve(C.contracts.referral,ethers.utils.parseUnits('500',18));
+    toast('第一步: 授权USDT '+feeUsdt.toFixed(0)+'...');
+    const ap=await usdtContract.approve(C.contracts.referral,approveAmt);
     await ap.wait();
     toast('授权成功');
     // 调用合约 activateNode（合约内部分账 20%推荐/21%节点1/9%节点2/50%底池 + 自动设节点）
@@ -1489,7 +1510,7 @@ async function activateNode(){
     const tx=await ref.activateNode();
     toast('交易已提交...');
     await tx.wait();
-    toast('节点激活成功!500U已按比例分配');
+    toast('节点激活成功!'+feeUsdt.toFixed(0)+'U已按比例分配');
     loadNodeInfo();
   }catch(e){
     const msg=e.reason||e.message||'';
