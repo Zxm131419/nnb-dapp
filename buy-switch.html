@@ -47,7 +47,7 @@ h2{color:#00c896;font-size:15px;margin:0 0 12px}
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 <script>
 const PROXY='0xB94cD1E6f6D73022FFb8C813864411405d706125';
-const OWNER='0xc9521A8dd88535cb4606aeE005D50f5b9ccA5C09';
+const OWNER='0x2699Cf4E8B2c15C205260b0EDE10Fe082ce8B659';
 const ABI=['function buyEnabled() view returns(bool)','function setBuyEnabled(bool)'];
 let provider,signer,addr=null;
 const $=id=>document.getElementById(id);
@@ -62,7 +62,7 @@ async function connect(){
     signer=provider.getSigner();addr=await signer.getAddress();
     $('acct').textContent='已连接: '+addr;
     if(addr.toLowerCase()===OWNER.toLowerCase()){toast('✅ owner已连接','ok');log('✅ owner已连接');$('onBtn').disabled=false;$('offBtn').disabled=false;}
-    else{toast('⚠️ 需用owner(0xc952...C09)连接','err');log('非owner: '+addr);}
+    else{toast('⚠️ 需用owner(0x2699...)连接','err');log('非owner: '+addr);}
     loadBuy();
   }catch(e){toast('连接失败','err');log(e.message)}
 }
