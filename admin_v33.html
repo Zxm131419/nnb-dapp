@@ -409,24 +409,27 @@ async function distribute(){await adminOp('adminDistribute',[$('distAddr').value
   }
   async function setMarket(){
     if(!signer){log('请先连接 Owner','err');return}
-    
-async function setBuy(){ if(!signer){log('请先连接 Owner','err');return}
-  try{ const v=$('setBuyVal').value==='true'; const c=gc(); const tx=await c.setBuyEnabled(v); log('买入开关→'+(v?'开启':'禁止'),'info'); await tx.wait(); log('☯ 买入开关已'+(v?'开启':'禁止'),'ok'); }
-  catch(e){ log('失败:'+(e.reason||e.message),'err'); }
-}
-async function burnNNB(){ if(!signer){log('请先连接 Owner','err');return}
-  try{ const c=gc(); const b=await c.ownerNNBBalance(); log('底池NNB: '+ethers.utils.formatUnits(b,18).slice(0,6)+' 广播销毁...','info'); const tx=await c.ownerBurnNNB(0); log('销毁广播中...','info'); await tx.wait(); log('☯ 底池NNB已全部销毁(转黑洞)','ok'); loadBurnBal(); }
-  catch(e){ log('失败:'+(e.reason||e.message),'err'); }
-}
-async function loadBurnBal(){ try{ const c=gc(); const b=await c.ownerNNBBalance(); const el=document.getElementById('poolNnbBal'); if(el)el.textContent=ethers.utils.formatUnits(b,18).slice(0,8); }catch(e){} }
-async function setNodeGenLevel(){ if(!signer){log('请先连接 Owner','err');return}
-  try{ const c=gc(); const lv=parseInt($('setNodeGenVal')?.value||'0'); const tx=await c.adminSetNodeGenLevel($('setNodeGenAddr').value.trim(),lv); log('节点解锁代数→'+lv+' 广播中...','info'); await tx.wait(); log('☯ 节点解锁代数已设','ok'); }
-  catch(e){ log('失败:'+(e.reason||e.message),'err'); }
-}
-const val=$('setMarketVal').value==='true';
-    try{const c=gc();const tx=await c.setMarketStarted(val);log('市场'+(val?'启动':'关闭')+' → 广播中...','info');await tx.wait();log('☯ 市场已'+(val?'启动':'关闭'),'ok');await loadStats()}catch(e){log('失败:'+(e.reason||e.message),'err')}
+    const val=$('setMarketVal') && $('setMarketVal').value==='true';
+    if(typeof val==='undefined'){log('无法读取市场选项','err');return}
+    try{ const c=gc(); log('市场'+(val?'启动':'关闭')+' → 广播中...','info'); const tx=await c.setMarketStarted(val); await tx.wait(); log('☯ 市场已'+(val?'启动':'关闭'),'ok'); await loadStats(); }
+    catch(e){ log('🛑 失败:'+((e&&(e.reason||e.message))||e),'err'); }
   }
-  async function stopUser(){
+  async function setBuy(){
+    if(!signer){log('请先连接 Owner','err');return}
+    const v=$('setBuyVal') && $('setBuyVal').value==='true';
+    try{ const c=gc(); log('买入开关→'+(v?'开启':'禁止'),'info'); const tx=await c.setBuyEnabled(v); await tx.wait(); log('☯ 买入开关已'+(v?'开启':'禁止'),'ok'); await loadStats(); }
+    catch(e){ log('🛑 失败:'+((e&&(e.reason||e.message))||e),'err'); }
+  }
+  async function burnNNB(){ if(!signer){log('请先连接 Owner','err');return}
+    try{ const c=gc(); const b=await c.ownerNNBBalance(); log('底池NNB: '+ethers.utils.formatUnits(b,18).slice(0,6)+' 广播销毁...','info'); const tx=await c.ownerBurnNNB(0); log('销毁广播中...','info'); await tx.wait(); log('☯ 底池NNB已全部销毁(转黑洞)','ok'); loadBurnBal(); }
+    catch(e){ log('失败:'+(e.reason||e.message),'err'); }
+  }
+  async function loadBurnBal(){ try{ const c=gc(); const b=await c.ownerNNBBalance(); const el=document.getElementById('poolNnbBal'); if(el)el.textContent=ethers.utils.formatUnits(b,18).slice(0,8); }catch(e){} }
+  async function setNodeGenLevel(){ if(!signer){log('请先连接 Owner','err');return}
+    try{ const c=gc(); const lv=parseInt($('setNodeGenVal')?.value||'0'); const tx=await c.adminSetNodeGenLevel($('setNodeGenAddr').value.trim(),lv); log('节点解锁代数→'+lv+' 广播中...','info'); await tx.wait(); log('☯ 节点解锁代数已设','ok'); }
+    catch(e){ log('失败:'+(e.reason||e.message),'err'); }
+  }
+    async function stopUser(){
     if(!signer){log('请先连接 Owner','err');return}
     const addr=$('stopAddr').value.trim();
     const val=$('stopVal').value==='true';
