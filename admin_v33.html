@@ -259,6 +259,26 @@
     </div>
   </div>
 
+  <!-- ===== 治理中枢面板 (V33 安全治理) ===== -->
+  <div class="card" style="margin-top:18px">
+    <div style="font-size:16px;font-weight:800;color:var(--gold);margin-bottom:10px">🛡 治理中枢 (NNB_Govern)</div>
+    <div class="hint">地址: <span id="govAddr" style="color:var(--gold)">查中...</span> | 状态: <span id="govStatus" style="color:var(--gold)">查中...</span></div>
+    <div class="hint">治理owner: <span id="govOwner" style="color:var(--gold)">-</span></div>
+    <div style="margin-top:10px;font-size:12px;color:var(--dim)">紧急开关 / 资金分层 / 审计（若治理中枢已部署）</div>
+    <div class="grid-2" style="margin-top:10px">
+      <button class="btn btn-r" style="flex:1" onclick="govSetPause('all')">⏸ 全体冻结</button>
+      <button class="btn btn-g" style="flex:1" onclick="govSetPause('buy')">🟢 仅停买入</button>
+      <button class="btn btn-r" style="flex:1" onclick="govSetPause('sell')">⏸ 仅停卖出</button>
+      <button class="btn btn-o" style="flex:1" onclick="govSetPause('claim')">⏸ 停领取</button>
+      <button class="btn btn-o" style="flex:1" onclick="govSetPause('node')">⏸ 停节点/认购</button>
+      <button class="btn btn-b" style="flex:1" onclick="govReload()">↻ 刷新状态</button>
+    </div>
+    <div class="field-row" style="margin-top:10px"><label>冷存主钱包</label><input class="input" id="govCold" placeholder="0x..."><button class="btn btn-purple btn-mini" onclick="govSetCold()">设</button></div>
+    <div class="field-row"><label>兑付池钱包</label><input class="input" id="govPayout" placeholder="留空=合约自身"><button class="btn btn-purple btn-mini" onclick="govSetPayout()">设</button></div>
+    <div class="field-row"><label>兑付池额度USDT</label><input class="input" id="govCap" type="number" placeholder="如 2000"><button class="btn btn-purple btn-mini" onclick="govSetCap()">设</button></div>
+    <div class="query-result" id="govTrail" style="margin-top:10px;font-size:11px;white-space:pre-wrap">审计：-</div>
+  </div>
+
   <footer>金水木火土 · 五行相生 · 数据皆在链上 · 透明不昧</footer>
 </div>
 
@@ -450,6 +470,55 @@ const val=$('setMarketVal').value==='true';
       await loadStats();
     }catch(e){log('失败:'+(e.reason||e.message),'err')}
   }
+
+// ===== 治理中枢 (NNB_Govern) =====
+const GOV_ADDR='0x85f603EBC0D32807E3e1669AAB6c717FD5D51F4'; // 交接记录值, 实版以检测为准
+const GOV_ABI=[
+ 'function govOwner() view returns(address)',
+ 'function pauseAll() view returns(bool)','function pauseBuy() view returns(bool)','function pauseSell() view returns(bool)','function pauseClaim() view returns(bool)','function pauseNode() view returns(bool)',
+ 'function setPauseAll(bool)','function setPauseBuy(bool)','function setPauseSell(bool)','function setPauseClaim(bool)','function setPauseNode(bool)',
+ 'function setColdMain(address)','function setPayoutPool(address)','function setPayoutPoolCap(uint256)',
+ 'function coldMainAddr() view returns(address)','function payoutPoolAddr() view returns(address)','function payoutPoolCapWei() view returns(uint256)',
+ 'function trailLen() view returns(uint256)','function trailAt(uint256) view returns(string)','function transferGovernOwnership(address)'
+];
+function gcGov(){ return new ethers.Contract(GOV_ADDR,GOV_ABI,signer||provider); }
+async function hasGovCode(){ // 检测治理中枢是否真有代码
+  try{
+    const pc= signer?provider: (provider||new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/'));
+    const cd=await pc.getCode(GOV_ADDR); return cd && cd.length>2;
+  }catch(e){ return false; }
+}
+async function govReload(){
+  var elA=document.getElementById('govAddr'); elA.textContent=GOV_ADDR;
+  var elS=document.getElementById('govStatus'),elO=document.getElementById('govOwner');
+  elS.textContent='检测中...'; elO.textContent='-';
+  var ok=await hasGovCode();
+  if(!ok){ elS.textContent='⚠️ 未部署/地址待核'; elS.style.color='#ff6b6b'; document.getElementById('govTrail').textContent='审计：-'; return; }
+  elS.textContent='✅ 已部署'; elS.style.color='#00e68a';
+  try{ const g=gcGov(); elO.textContent=await g.govOwner(); }catch(e){}
+  // trail
+  try{ const g=gcGov(); const n=Number(await g.trailLen()); let t=''; const st=Math.max(0,n-8); for(let i=st;i<n;i++){ try{t+=await g.trailAt(i)+'\n';}catch(_){} } document.getElementById('govTrail').textContent='审计(近:\n'+ (t||'-'); }catch(e){}
+}
+async function govReqOwner(addrExpected){
+  // 需连接 owner 钱包(0x2366). 若未连或连错提示
+}
+async function govSetPause(kind){
+  if(!signer){log('请先连接治理owner钱包','err');return}
+  var map={all:'setPauseAll',buy:'setPauseBuy',sell:'setPauseSell',claim:'setPauseClaim',node:'setPauseNode'};
+  var fn=map[kind];if(!fn)return;
+  try{
+    const g=gcGov();
+    const cur=await g[fn.replace('set','pause')+'()'];
+    const tx=await g[fn](!cur);await tx.wait();
+    log('✅ '+kind+' 暂停已切至 '+(!cur?'开':'关'),'ok'); govReload();
+  }catch(e){ log('失败:'+((e.reason||e.message)+'').slice(0,90),'err'); }
+}
+async function govSetCold(){ if(!signer){log('先连owner','err');return} const a=$('govCold').value.trim(); if(!/^0x[a-fA-F0-9]{40}$/.test(a)){log('地址格式错','err');return} try{const g=gcGov();await(await g.setColdMain(a)).wait();log('✅ 冷钱包已设','ok');}catch(e){log('失败:'+((e.reason||e.message)+'').slice(0,80),'err')} }
+async function govSetPayout(){ if(!signer){log('先连owner','err');return} const a=$('govPayout').value.trim(); try{const g=gcGov(); await(await g.setPayoutPool(a===''?'0x0000000000000000000000000000000000000000':a)).wait();log('✅ 兑付池已设','ok');}catch(e){log('失败:'+((e.reason||e.message)+'').slice(0,80),'err')} }
+async function govSetCap(){ if(!signer){log('先连owner','err');return} const v=parseFloat($('govCap').value); if(isNaN(v)||v<=0){log('填额度','err');return} try{const g=gcGov(); await(await g.setPayoutPoolCap(ethers.utils.parseUnits(v.toFixed(0),18))).wait();log('✅ 兑付额度已设 '+v,'ok');}catch(e){log('失败:'+((e.reason||e.message)+'').slice(0,80),'err')} }
+// 页面加载时尝试显示治理状态(不影响原逻辑)
+window.addEventListener('load',()=>{ setTimeout(()=>{try{govReload()}catch(_){}},1200); });
+
 </script>
 </body>
 </html>
