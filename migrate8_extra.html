@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>NNB V33 补迁工具</title>
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<style>
+:root{--bg:#0a0714;--card:#151026;--line:#2a2140;--gold:#f5c842;--green:#22c55e;--muted:#8b84a3;--ink:#e8e4f5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:20px;text-align:center;margin-bottom:6px;background:linear-gradient(90deg,var(--gold),#ff8a3d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800}
+.sub{text-align:center;color:var(--muted);font-size:12px;margin-bottom:18px}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin:6px 0}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#f0b429);color:#1a0828}
+.btn-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.card h3{font-size:15px;color:var(--gold);margin-bottom:10px}
+.hint{font-size:12px;color:var(--muted);margin:8px 0;line-height:1.6}
+.hint.warn{color:#fbbf24}
+.status{text-align:center;font-size:13px;margin:10px 0;padding:10px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
+.status.ok{color:#4ade80;border-color:#16a34a}
+.status.warn{color:#fbbf24;border-color:#b45309}
+#logBox{background:#0c0a18;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:12px;font-family:monospace;max-height:240px;overflow-y:auto;margin-top:10px}
+#logBox div{margin:3px 0}
+#logBox .ok{color:#4ade80}
+#logBox .err{color:#f87171}
+#logBox .info{color:#93c5fd}
+pre{white-space:pre-wrap;font-size:11px;color:var(--muted);background:#0c0a18;border:1px solid var(--line);border-radius:8px;padding:10px;margin:8px 0;max-height:180px;overflow-y:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🐂 NNB V33 补迁工具</h1>
+  <div class="sub">漏迁 7 颗活跃用户 · 旧proxy(0xB94c) → 新proxy(0x11d845)</div>
+
+  <button class="btn btn-gold" onclick="connectOwner()">🔗 连接 Owner 钱包 (0x2366)</button>
+  <div class="status" id="ownerVal">未连接</div>
+
+  <div class="card">
+    <h3>📋 待迁移 7 颗 (已 ÷3 校正)</h3>
+    <div class="hint">按旧系统原样：激活/节点/总投资/产能(×3还原)/直推业绩/代数/推荐关系。已有产能自动跳过(幂等)。</div>
+    <pre id="preview"></pre>
+  </div>
+
+  <div class="card">
+    <h3>⚠️ 重要</h3>
+    <div class="hint warn">1. 只能连接 <b>Owner (0x2366...)</b>。<br>2. 点确认后钱包弹窗签名，需少量 BNB 作 gas。<br>3. 幂等，重复点不重复发产能。</div>
+  </div>
+
+  <button class="btn btn-green" onclick="doMigrate()">✅ 确认迁移全部 7 颗</button>
+
+  <div id="logBox"></div>
+</div>
+
+<script>
+const NEW='0x11d845a51C498d70daECc9Afe932085Eb55b59Bf';
+const MIG_BATCH=[["0x9B359982768a8F76b1Ea2eF17bA99C4d9F639232", 1, 0, "210000000000000000000", "12520325764347720169125", "1787272753", "16826558078550759943625", "207470000000000000000", "19", "1", "0x272b0058431be12bbc56fb5a5e28e11212484bd8", "4", "25", "1789864753", "0", "0"], ["0x3bEB2BF52799ae5D88c5F08018bedBfb9D39529c", 1, 1, "207470000000000000000", "11511755035303045731337", "1787272625", "16909748321565651422887", "206800000000000000000", "19", "1", "0x9b359982768a8f76b1ea2ef17ba99c4d9f639232", "3", "25", "1789864625", "0", "0"], ["0x4c3f04beFE0FB1e7789648657CeD98A78A477dd5", 1, 0, "206800000000000000000", "9196837344028478377683", "1787272456", "17614387551990507207439", "206180000000000000000", "19", "1", "0x3beb2bf52799ae5d88c5f08018bedbfb9d39529c", "3", "25", "1789864456", "0", "0"], ["0x7b57fE136Cc7C699BC9244Ce3326c1fd0d7bb148", 1, 0, "3580384723751343936558", "16218662985608847102203", "1789051520", "262458159004797050965932", "534487077085329719132", "19", "6", "0xd18a542a8097280acaee0ac4c7d10c338596c481", "13", "11", "1791643520", "0", "0"], ["0x887549e9a856f5a43365293dDb3E20Ec5324E2E4", 1, 0, "206180000000000000000", "9882137723974493637070", "1787272329", "17323954092008502120976", "678578338937794464056", "19", "1", "0x4c3f04befe0fb1e7789648657ced98a78a477dd5", "3", "25", "1789864329", "0", "0"], ["0x5Be15101A339019Da1f4af8bdE647A54d9537C45", 1, 0, "678578338937794464056", "16786621284446148781707", "1788330386", "55589459571851283739431", "520829700338693993655", "19", "2", "0x887549e9a856f5a43365293ddb3e20ec5324e2e4", "13", "25", "1790922386", "0", "0"], ["0xBC6f5Cb3BCfA9a13c52b16Ab981dC708F5bA5a7C", 1, 0, "267426975103438812130", "3300578855435014829124", "1789133359", "3626583899904513637485", "1302073581000685281719", "19", "3", "0x5be15101a339019da1f4af8bde647a54d9537c45", "12", "11", "1791725359", "0", "0"]];
+const MIG_IFACE=new ethers.utils.Interface([{type:'function',name:'migrateUsers',stateMutability:'nonpayable',inputs:[{name:'batch',type:'tuple[]',components:[{name:'addr',type:'address'},{name:'activated',type:'bool'},{name:'isNode',type:'bool'},{name:'totalInvestedUSD',type:'uint256'},{name:'totalMined',type:'uint256'},{name:'lastBuyTime',type:'uint256'},{name:'myBalance',type:'uint256'},{name:'directPushTotalUSD',type:'uint256'},{name:'teamLevel',type:'uint256'},{name:'teamCount',type:'uint256'},{name:'referrer',type:'address'},{name:'totalReinvestCount',type:'uint256'},{name:'totalWithdrawCount',type:'uint256'},{name:'lockedUntil',type:'uint256'},{name:'boostMultiplier',type:'uint256'},{name:'boostExpireTime',type:'uint256'}]}],outputs:[]}]);
+let provider,signer;
+const $=id=>document.getElementById(id);
+function log(m,c){const b=$('logBox');const d=document.createElement('div');d.className=c||'info';d.textContent='['+new Date().toLocaleTimeString()+'] '+m;b.appendChild(d);b.scrollTop=b.scrollHeight}
+
+$('preview').textContent="0x9B35998276... act=Y node=N \u4ea7/3\u224816826k ref=0x272b00...\n0x3bEB2BF527... act=Y node=Y \u4ea7/3\u224816909k ref=0x9b3599...\n0x4c3f04beFE... act=Y node=N \u4ea7/3\u224817614k ref=0x3beb2b...\n0x7b57fE136C... act=Y node=N \u4ea7/3\u2248262458k ref=0xd18a54...\n0x887549e9a8... act=Y node=N \u4ea7/3\u224817323k ref=0x4c3f04...\n0x5Be15101A3... act=Y node=N \u4ea7/3\u224855589k ref=0x887549...\n0xBC6f5Cb3BC... act=Y node=N \u4ea7/3\u22483626k ref=0x5be151...";
+
+async function connectOwner(){
+  if(!window.ethereum){log('未检测到钱包，请在 TP/MetaMask 打开','err');return}
+  try{
+    provider=new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send('eth_requestAccounts',[]);
+    signer=provider.getSigner();
+    const o=await signer.getAddress();
+    const owner=await new ethers.Contract(NEW,['function owner() view returns(address)'],signer||provider).owner();
+    if(owner.toLowerCase()===o.toLowerCase()){
+      $('ownerVal').textContent='✅ Owner 权限确认 · '+o.slice(0,8)+'...'+o.slice(-6);
+      $('ownerVal').className='status ok';
+      log('Owner 确认，可迁移','ok');
+    }else{
+      $('ownerVal').textContent='⚠️ 非 Owner ('+o.slice(0,8)+'...)，仅查看';
+      $('ownerVal').className='status warn';
+      log('⚠️ 当前钱包不是 Owner','err');
+    }
+  }catch(e){log('连接失败:'+(e.message||e.code),'err')}
+}
+
+async function doMigrate(){
+  if(!signer){log('请先连接 Owner 钱包','err');return}
+  try{
+    const bArr=MIG_BATCH.map(r=>({
+      addr:r[0], activated:(r[1]===1||r[1]===true), isNode:(r[2]===1||r[2]===true),
+      totalInvestedUSD:ethers.BigNumber.from(r[3]), totalMined:ethers.BigNumber.from(r[4]),
+      lastBuyTime:ethers.BigNumber.from(r[5]), myBalance:ethers.BigNumber.from(r[6]),
+      directPushTotalUSD:ethers.BigNumber.from(r[7]), teamLevel:ethers.BigNumber.from(r[8]),
+      teamCount:ethers.BigNumber.from(r[9]), referrer:r[10]||'0x0000000000000000000000000000000000000000',
+      totalReinvestCount:ethers.BigNumber.from(r[11]), totalWithdrawCount:ethers.BigNumber.from(r[12]),
+      lockedUntil:ethers.BigNumber.from(r[13]), boostMultiplier:ethers.BigNumber.from(r[14]),
+      boostExpireTime:ethers.BigNumber.from(r[15])
+    }));
+    const data=MIG_IFACE.encodeFunctionData('migrateUsers',[bArr]);
+    const est=await signer.provider.estimateGas({to:NEW,data:data});
+    log('预估 gas='+est.toString()+' → 呼叫 migrateUsers ('+bArr.length+'颗)','info');
+    if(!confirm('确认迁移 '+bArr.length+' 颗？产能按旧系统 ÷3 由合约 ×3 还原。确认后钱包弹窗签名。'))return;
+    const tx=await signer.sendTransaction({to:NEW,data:data});
+    log('已广播 Tx: '+tx.hash.slice(0,14)+'...','info');
+    const rc=await tx.wait();
+    log('✅ 迁移成功! 区块 '+rc.blockNumber,'ok');
+    log('请到新系统核对这 7 个钱包','ok');
+  }catch(e){
+    const msg=e.reason||e.message||'';
+    if(msg.includes('insufficient'))log('BNB 不足付 gas','err');
+    else log('失败:'+msg.slice(0,80),'err');
+  }
+}
+</script>
+</body>
+</html>
