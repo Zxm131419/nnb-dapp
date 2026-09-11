@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>NNB 换钱包工具 · 天机阁</title>
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<style>
+:root{--bg:#0a0714;--card:#151026;--line:#2a2140;--gold:#f5c842;--green:#22c55e;--red:#ef4444;--muted:#8b84a3;--ink:#e8e4f5;--purple:#a78bfa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;min-height:100vh}
+.wrap{max-width:460px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:20px;text-align:center;margin-bottom:6px;background:linear-gradient(90deg,var(--gold),#ff8a3d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800}
+.sub{text-align:center;color:var(--muted);font-size:12px;margin-bottom:18px}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin:6px 0}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#f0b429);color:#1a0828}
+.btn-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.btn-red{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+.btn-gray{background:#2a2140;color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.card h3{font-size:15px;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.row:last-child{border-bottom:none}
+.row .lbl{color:var(--muted)}
+.row .val{color:var(--ink);word-break:break-all;font-family:monospace;font-size:12px;text-align:right;max-width:65%}
+.row .val.gold{color:var(--gold)}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0c0a18;color:var(--ink);font-size:14px;margin:6px 0;font-family:monospace}
+input:focus{outline:none;border-color:var(--gold)}
+.hint{font-size:12px;color:var(--muted);margin:8px 0;line-height:1.6}
+.hint.warn{color:#fbbf24}
+.hint.err{color:#f87171}
+#logBox{background:#0c0a18;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:12px;font-family:monospace;max-height:220px;overflow-y:auto;margin-top:10px}
+#logBox div{margin:3px 0}
+#logBox .ok{color:#4ade80}
+#logBox .err{color:#f87171}
+#logBox .info{color:#93c5fd}
+.status{text-align:center;font-size:13px;margin:10px 0;padding:10px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
+.status.ok{color:#4ade80;border-color:#16a34a}
+.status.warn{color:#fbbf24;border-color:#b45309}
+.divider{height:1px;background:var(--line);margin:16px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🐂 NNB 换钱包工具</h1>
+  <div class="sub">连接 Owner 钱包，更换节点费 / 底池收款钱包</div>
+
+  <button class="btn btn-gold" onclick="connectOwner()">🔗 连接 Owner 钱包</button>
+  <div class="status" id="ownerVal">未连接</div>
+
+  <div class="card">
+    <h3>💰 当前收款钱包</h3>
+    <div class="row"><span class="lbl">30% 项目方钱包 (nodeWallet1)</span><span class="val gold" id="curNW1">-</span></div>
+    <div class="row"><span class="lbl">底池钱包 (poolWallet)</span><span class="val gold" id="curPW">-</span></div>
+    <div class="row"><span class="lbl">项目方钱包2 (nodeWallet2)</span><span class="val" id="curNW2">-</span></div>
+    <div class="row"><span class="lbl">合约 Owner</span><span class="val" id="curOwner">-</span></div>
+  </div>
+
+  <div class="card">
+    <h3>🔄 更换 30% 项目方钱包</h3>
+    <div class="hint">用户激活节点时，30% 节点费（当前 150 USDT）会打到这里。换成你有私钥、能收钱的钱包。</div>
+    <input id="newNW1" placeholder="输入新的 30% 收款钱包地址 0x...">
+    <button class="btn btn-green" onclick="setNW1()">✅ 确认更换 30% 钱包</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="card">
+    <h3>🔄 更换底池钱包</h3>
+    <div class="hint">用户激活节点时，剩余 50% 节点费（当前 250 USDT）会打到这里。换成你有私钥、能收钱的钱包。</div>
+    <input id="newPW" placeholder="输入新的底池钱包地址 0x...">
+    <button class="btn btn-green" onclick="setPW()">✅ 确认更换底池钱包</button>
+  </div>
+
+  <div class="card">
+    <h3>⚠️ 安全提示</h3>
+    <div class="hint warn">1. 只能连接 <b>Owner 钱包</b>（0x2366...）才能更换，否则会失败。<br>2. 更换后立即生效，请确认新钱包地址无误。<br>3. 请确保新钱包<b>有私钥、能收 USDT</b>，否则钱会丢失。<br>4. 操作需少量 BNB 作为 gas 费。</div>
+  </div>
+
+  <div id="logBox"></div>
+</div>
+
+<script>
+const V35='0x11d845a51C498d70daECc9Afe932085Eb55b59Bf';
+const ABI=[
+  'function owner() view returns(address)',
+  'function nodeWallet1() view returns(address)',
+  'function nodeWallet2() view returns(address)',
+  'function poolWallet() view returns(address)',
+  'function setNodeWallet1(address)',
+  'function setNodeWallet2(address)',
+  'function setPoolWallet(address)'
+];
+let provider,signer;
+const $=id=>document.getElementById(id);
+function log(m,c){const b=$('logBox');const d=document.createElement('div');d.className=c||'info';d.textContent='['+new Date().toLocaleTimeString()+'] '+m;b.appendChild(d);b.scrollTop=b.scrollHeight}
+function gc(){return new ethers.Contract(V35,ABI,signer||provider)}
+
+async function connectOwner(){
+  if(!window.ethereum){log('未检测到钱包，请在 TP 钱包 / MetaMask 打开','err');return}
+  try{
+    provider=new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send('eth_requestAccounts',[]);
+    signer=provider.getSigner();
+    const o=await signer.getAddress();
+    $('ownerVal').textContent='已连接: '+o.slice(0,8)+'...'+o.slice(-6);
+    $('ownerVal').className='status';
+    const c=gc();
+    const owner=await c.owner();
+    $('curOwner').textContent=owner.slice(0,10)+'...'+owner.slice(-6);
+    if(owner.toLowerCase()===o.toLowerCase()){
+      $('ownerVal').textContent='✅ Owner 权限确认 · '+o.slice(0,8)+'...'+o.slice(-6);
+      $('ownerVal').className='status ok';
+      log('Owner 权限确认，可更换钱包','ok');
+    }else{
+      $('ownerVal').textContent='⚠️ 非 Owner（当前 '+o.slice(0,8)+'...），仅可查看';
+      $('ownerVal').className='status warn';
+      log('⚠️ 当前钱包不是 Owner，无法更换','err');
+    }
+    loadWallets();
+  }catch(e){log('连接失败:'+(e.message||e.code),'err')}
+}
+async function loadWallets(){
+  try{
+    const c=gc();
+    $('curNW1').textContent=(await c.nodeWallet1());
+    $('curNW2').textContent=(await c.nodeWallet2());
+    $('curPW').textContent=(await c.poolWallet());
+  }catch(e){log('读取钱包失败:'+(e.message||'').slice(0,60),'err')}
+}
+function validAddr(a){return /^0x[a-fA-F0-9]{40}$/.test(a)}
+async function setNW1(){
+  if(!signer){log('请先连接 Owner 钱包','err');return}
+  const a=$('newNW1').value.trim();
+  if(!validAddr(a)){log('地址格式错误，需 0x + 40位','err');return}
+  const cur=await gc().nodeWallet1();
+  if(cur.toLowerCase()===a.toLowerCase()){log('新地址与当前相同，无需更换','err');return}
+  if(!confirm('确认将 30% 项目方钱包从 '+cur.slice(0,10)+'... 换成 '+a+'？'))return;
+  try{
+    log('更换 30% 钱包 → 广播中...','info');
+    const tx=await gc().setNodeWallet1(a);
+    await tx.wait();
+    log('✅ 30% 项目方钱包已换成 '+a,'ok');
+    loadWallets();
+  }catch(e){log('失败:'+((e.reason||e.message)+'').slice(0,80),'err')}
+}
+async function setPW(){
+  if(!signer){log('请先连接 Owner 钱包','err');return}
+  const a=$('newPW').value.trim();
+  if(!validAddr(a)){log('地址格式错误，需 0x + 40位','err');return}
+  const cur=await gc().poolWallet();
+  if(cur.toLowerCase()===a.toLowerCase()){log('新地址与当前相同，无需更换','err');return}
+  if(!confirm('确认将底池钱包从 '+cur.slice(0,10)+'... 换成 '+a+'？'))return;
+  try{
+    log('更换底池钱包 → 广播中...','info');
+    const tx=await gc().setPoolWallet(a);
+    await tx.wait();
+    log('✅ 底池钱包已换成 '+a,'ok');
+    loadWallets();
+  }catch(e){log('失败:'+((e.reason||e.message)+'').slice(0,82),'err')}
+}
+</script>
+</body>
+</html>
