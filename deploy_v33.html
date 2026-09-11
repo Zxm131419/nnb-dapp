@@ -294,9 +294,9 @@ async function deployGovern(){
     q('→ 部署 NNB_Govern(治理中樞)  預估 gas='+g.toString());
     const tx=await signer.sendTransaction({data:txo.data, gasLimit: g.add('15000')});
     q('  送出 '+tx.hash+' …'); const rc=await tx.wait();
-    const addr=rc.contractAddress;
-    $id('governAddr').value=addr; persist('nnb_gov',addr);
-    q('  ✅ NNB_Govern @ '+addr);
+    const govAddr=rc.contractAddress;
+    $id('governAddr').value=govAddr; persist('nnb_gov',govAddr);
+    q('  ✅ NNB_Govern @ '+govAddr);
   }catch(e){ q('❌ ①失敗:'+String(e&&(e.message||e.reason||e)).slice(0,400)); }
 }
 /* 2 */ async function deployImpl(){
