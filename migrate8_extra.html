@@ -86,6 +86,17 @@ async function connectOwner(){
 
 async function doMigrate(){
   if(!signer){log('请先连接 Owner 钱包','err');return}
+  // ===== 诊断: 显示当前实际签名账户 =====
+  try{
+    const curAddr=(await signer.getAddress()).toLowerCase();
+    const expAddr='0x2366eac0c651b984d82b785bedbf04d9cbb36fdd';
+    log('当前签名账户: '+curAddr.slice(0,10)+'...'+curAddr.slice(-6),'info');
+    log('合约Owner应为: '+expAddr.slice(0,10)+'...'+expAddr.slice(-6),'info');
+    if(curAddr!==expAddr){
+      log('❌ 签名账户≠Owner! 请把钱包当前账户切到 0x2366... 再试','err');
+      return;
+    }
+  }catch(de){log('诊断失败:'+de.message,'err')}
   try{
     const bArr=MIG_BATCH.map(r=>({
       addr:r[0], activated:(r[1]===1||r[1]===true), isNode:(r[2]===1||r[2]===true),
