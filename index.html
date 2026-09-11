@@ -352,6 +352,7 @@ button{cursor:pointer;font-family:inherit}
       <div class="trade-label"><span data-i18n="trade.receive">收到 NNB (预计)</span></div>
       <div style="font-size:22px;font-weight:700;color:var(--gold)" id="buyEstimate">0.00</div>
       <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:10px 0"><span data-i18n="trade.price">价格</span><span id="buyPrice">1 NNB ≈ 0.01 USDT</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:10px 0 0 0"><span data-i18n="trade.fee">买入手续费</span><span style="color:var(--green);font-weight:600" id="buyFee">0.00%</span></div>
       
       <button class="btn btn-green" onclick="doBuy()" data-i18n="trade.buyBtn">确认买入</button>
     </div>
@@ -365,6 +366,8 @@ button{cursor:pointer;font-family:inherit}
       <div class="trade-label"><span data-i18n="trade.receiveUSDT">收到 USDT</span></div>
       <div style="font-size:22px;font-weight:700;color:var(--gold)" id="sellEstimate">0.00</div>
       <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:10px 0"><span data-i18n="trade.price">价格</span><span id="sellPrice">1 NNB ≈ 0.01 USDT</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:10px 0 0 0"><span data-i18n="trade.sellFee">动态卖出手续费</span><span style="color:var(--red);font-weight:600" id="sellFee">--</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:6px 0 0 0"><span data-i18n="trade.feeNote">实收 = 数量×价格×(1000-费率)/1000</span><span style="color:var(--gold)" id="sellFeeAmount"></span></div>
       
       <button class="btn btn-red" onclick="doSell()" data-i18n="trade.sellBtn">确认卖出</button>
     </div>
@@ -776,12 +779,19 @@ function updateEstimates(){
   }else if(document.getElementById('buyEstimate')){
     document.getElementById('buyEstimate').textContent='0.00';
   }
+  // 买入手续费显示（买入 0%，卖出按动态费率）
+  const bf=document.getElementById('buyFee');if(bf)bf.textContent='0.00%';
+  const sf=document.getElementById('sellFee');if(sf)sf.textContent=(currentFeeBp/10).toFixed(2)+'%';
   const sa=parseFloat(document.getElementById('sellAmount')?.value)||0;
   if(sa>0&&document.getElementById('sellEstimate')){
     // 卖出按链上动态手续费率: 实收 = NNB数量 * 价格 * (1000-feeBp)/1000
-    document.getElementById('sellEstimate').textContent=(sa*currentPrice*(1000-currentFeeBp)/1000).toFixed(6);
+    const gross=sa*currentPrice;
+    const net=gross*(1000-currentFeeBp)/1000;
+    document.getElementById('sellEstimate').textContent=net.toFixed(6);
+    const sfa=document.getElementById('sellFeeAmount');if(sfa)sfa.textContent='≈ 手续费 '+(gross-net).toFixed(2)+' USDT';
   }else if(document.getElementById('sellEstimate')){
     document.getElementById('sellEstimate').textContent='0.00';
+    const sfa=document.getElementById('sellFeeAmount');if(sfa)sfa.textContent='';
   }
 }
 
