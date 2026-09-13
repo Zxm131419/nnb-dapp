@@ -489,7 +489,7 @@ button{cursor:pointer;font-family:inherit}
       </div>
       <div style="margin-top:10px">
         <div style="display:flex;gap:6px;align-items:center">
-          <input id="contribBuyAmt" type="number" placeholder="輸入購買金額 U" style="flex:1;background:#0d0a18;border:1px solid rgba(180,140,255,0.3);color:#e6e9f5;border-radius:8px;padding:8px;font-size:13px;min-width:0">
+          <input id="contribBuyAmt" type="number" inputmode="decimal" placeholder="在此輸入 U 金額" style="flex:1;background:#1a1430;border:1.5px solid rgba(180,140,255,0.6);color:#fff;border-radius:8px;padding:11px 10px;font-size:15px;font-weight:600;min-width:0">
           <button class="btn" onclick="buyContribution()" id="contribBuyBtn" style="background:linear-gradient(135deg,#7b5cd6,#5a3fa8);color:#fff;padding:8px 14px;font-size:13px;white-space:nowrap;margin:0">購買</button>
         </div>
         <div style="display:flex;gap:6px;margin-top:6px">
@@ -1407,8 +1407,18 @@ async function loadContribution(){
     document.getElementById('contribDue').textContent=due.toFixed(2)+' U';
     const st=document.getElementById('contribStatus');
     const warn=document.getElementById('contribWarn');
-    if(active){ st.textContent='正常'; st.style.background='rgba(55,214,122,0.15)'; st.style.color='#37d67a'; warn.style.display='none'; }
-    else { st.textContent='已暫停'; st.style.background='rgba(255,92,92,0.15)'; st.style.color='#ff5c5c'; warn.style.display='block'; }
+    // 未初始化(cap=0 且 init=false) → 視為正常(不受限)
+    const inited = (cap>0 || used>0 || due>0);
+    if(!inited){
+      st.textContent='未啟用'; st.style.background='rgba(139,147,179,0.15)'; st.style.color='#8b93b3';
+      warn.style.display='none';
+      document.getElementById('contribCap').textContent='—';
+      document.getElementById('contribRemain').textContent='—';
+    } else if(active){
+      st.textContent='正常'; st.style.background='rgba(55,214,122,0.15)'; st.style.color='#37d67a'; warn.style.display='none';
+    } else {
+      st.textContent='已暫停'; st.style.background='rgba(255,92,92,0.15)'; st.style.color='#ff5c5c'; warn.style.display='block';
+    }
   }catch(e){
     panel.style.display='none';
   }
