@@ -460,6 +460,45 @@ button{cursor:pointer;font-family:inherit}
       <div style="font-size:12px;color:var(--muted)" id="claimTimer" data-i18n="claim.timer.loading">加载中...</div>
     </div>
     <button class="btn btn-gold" style="margin-top:10px" id="claimBtn" onclick="claimReward()" disabled style="opacity:0.5" data-i18n="mine.claim">领取今日收益</button>
+    <!-- ===== V34 貢獻值區塊 ===== -->
+    <div id="contribPanel" style="margin-top:12px;background:linear-gradient(135deg,rgba(40,20,80,0.8),rgba(20,10,40,0.9));border:1px solid rgba(180,140,255,0.35);border-radius:12px;padding:12px;display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-weight:700;font-size:13px;color:#c9b3ff">◆ 貢獻值額度</div>
+        <div id="contribStatus" style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(55,214,122,0.15);color:#37d67a">正常</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:8px;text-align:center">
+          <div style="font-size:10px;color:var(--muted)">額度上限</div>
+          <div style="font-weight:700;font-size:14px;color:#c9b3ff" id="contribCap">0.00 U</div>
+        </div>
+        <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:8px;text-align:center">
+          <div style="font-size:10px;color:var(--muted)">剩餘額度</div>
+          <div style="font-weight:700;font-size:14px;color:#37d67a" id="contribRemain">0.00 U</div>
+        </div>
+        <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:8px;text-align:center">
+          <div style="font-size:10px;color:var(--muted)">已消耗</div>
+          <div style="font-weight:700;font-size:14px;color:#ffb648" id="contribUsed">0.00 U</div>
+        </div>
+        <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:8px;text-align:center">
+          <div style="font-size:10px;color:var(--muted)">待補金額</div>
+          <div style="font-weight:700;font-size:14px;color:#ff5c5c" id="contribDue">0.00 U</div>
+        </div>
+      </div>
+      <div id="contribWarn" style="display:none;margin-top:8px;background:rgba(255,92,92,0.12);border:1px solid rgba(255,92,92,0.4);border-radius:8px;padding:8px;font-size:11px;color:#ff8b8b;line-height:1.5">
+        ⛔ 貢獻值額度已耗盡，收益已暫停。請用 U 購買貢獻值以恢復收益。
+      </div>
+      <div style="margin-top:10px">
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="contribBuyAmt" type="number" placeholder="輸入購買金額 U" style="flex:1;background:#0d0a18;border:1px solid rgba(180,140,255,0.3);color:#e6e9f5;border-radius:8px;padding:8px;font-size:13px;min-width:0">
+          <button class="btn" onclick="buyContribution()" id="contribBuyBtn" style="background:linear-gradient(135deg,#7b5cd6,#5a3fa8);color:#fff;padding:8px 14px;font-size:13px;white-space:nowrap;margin:0">購買</button>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="btn" onclick="fillContribDue()" style="flex:1;background:rgba(255,92,92,0.2);color:#ff8b8b;border:1px solid rgba(255,92,92,0.4);padding:6px;font-size:11px;margin:0">一鍵補齊待補金額</button>
+          <button class="btn" onclick="fillContribAmount(1200)" style="flex:1;background:rgba(180,140,255,0.15);color:#c9b3ff;border:1px solid rgba(180,140,255,0.3);padding:6px;font-size:11px;margin:0">購買 1200U</button>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.5">說明：購買金額的 50% 進合約底池、50% 進項目方錢包。購買後額度立即恢復。</div>
+      </div>
+    </div>
     <div class="muted" style="text-align:center;margin-top:8px;font-size:11px"><span data-i18n="mine.gasHint">领取需要极少量 BNB 作为 gas 费</span></div>
     <div style="text-align:center;margin-top:4px;font-size:10px;color:var(--muted)" id="accelHint" style="display:none">nnbT('mine.accel19')+' '+ = 伞下用户领取时从剩余产能加速释放的部分（递减释放，需复投补充）</div>
   </div>
@@ -1340,6 +1379,82 @@ function startClaimCountdown(){
 }
 
 
+// ===== V34 貢獻值邏輯 =====
+const CONTRIB_MGR='0xB7570d38751d9624eB746493226Ed25250f3834a';
+const CONTRIB_ABI=[
+  'function contribInfo(address) view returns (uint256 cap,uint256 used,uint256 bought,uint256 due,bool active)',
+  'function buyContribution(uint256) external',
+  'function contribDue(address) view returns (uint256)'
+];
+
+async function loadContribution(){
+  const panel=document.getElementById('contribPanel');
+  if(!panel)return;
+  if(!addr){ panel.style.display='none'; return; }
+  try{
+    const rp=provider||new ethers.providers.Web3Provider(window.ethereum);
+    const c=new ethers.Contract(CONTRIB_MGR,CONTRIB_ABI, rp);
+    const r=await c.contribInfo(addr);
+    const cap=Number(ethers.utils.formatUnits(r.cap,18));
+    const used=Number(ethers.utils.formatUnits(r.used,18));
+    const due=Number(ethers.utils.formatUnits(r.due,18));
+    const active=r.active;
+    const remain=Math.max(0,cap-used);
+    panel.style.display='block';
+    document.getElementById('contribCap').textContent=cap.toFixed(2)+' U';
+    document.getElementById('contribUsed').textContent=used.toFixed(2)+' U';
+    document.getElementById('contribRemain').textContent=remain.toFixed(2)+' U';
+    document.getElementById('contribDue').textContent=due.toFixed(2)+' U';
+    const st=document.getElementById('contribStatus');
+    const warn=document.getElementById('contribWarn');
+    if(active){ st.textContent='正常'; st.style.background='rgba(55,214,122,0.15)'; st.style.color='#37d67a'; warn.style.display='none'; }
+    else { st.textContent='已暫停'; st.style.background='rgba(255,92,92,0.15)'; st.style.color='#ff5c5c'; warn.style.display='block'; }
+  }catch(e){
+    panel.style.display='none';
+  }
+}
+
+function fillContribDue(){
+  const c=document.getElementById('contribDue');
+  if(!c)return;
+  const v=parseFloat(c.textContent)||0;
+  if(v<=0){toast('目前沒有待補金額');return}
+  document.getElementById('contribBuyAmt').value=v.toFixed(2);
+}
+function fillContribAmount(v){
+  document.getElementById('contribBuyAmt').value=v;
+}
+
+async function buyContribution(){
+  if(!addr){toast('請先連接錢包');return}
+  const amt=parseFloat(document.getElementById('contribBuyAmt').value||'0');
+  if(!(amt>0)){toast('請輸入購買金額');return}
+  try{
+    const signer=provider.getSigner();
+    const usdt=new ethers.Contract(C.tokens.USDT,['function allowance(address,address) view returns(uint256)','function approve(address,uint256) returns(bool)','function balanceOf(address) view returns(uint256)'],signer);
+    const amtWei=ethers.utils.parseUnits(amt.toString(),18);
+    const bal=await usdt.balanceOf(addr);
+    if(bal.lt(amtWei)){toast('USDT 餘額不足');return}
+    const al=await usdt.allowance(addr,CONTRIB_MGR);
+    if(al.lt(amtWei)){
+      toast('請先授權 USDT…');
+      const ap=await usdt.approve(CONTRIB_MGR,amtWei);
+      toast('授權交易已送出…');
+      await ap.wait();
+    }
+    const mgr=new ethers.Contract(CONTRIB_MGR,CONTRIB_ABI,signer);
+    toast('送出購買交易…');
+    const tx=await mgr.buyContribution(amtWei);
+    toast('交易確認中…');
+    await tx.wait();
+    toast('✅ 購買成功，額度已恢復');
+    document.getElementById('contribBuyAmt').value='';
+    loadContribution();
+  }catch(e){
+    toast('購買失敗: '+String(e&&(e.reason||e.message)||e).slice(0,80));
+  }
+}
+
 async function loadUserInfo(){
   if(!addr)return;
   // 先用 ethereum.request 读直推人数（不依赖 ethers）
@@ -1401,6 +1516,7 @@ async function loadUserInfo(){
     // ethers 失败时用 RPC 兜底
     loadClaimStatusFromChain();
   }
+  loadContribution();
 }
 
 async function updatePerfUnlock(){
