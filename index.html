@@ -1379,7 +1379,7 @@ function startClaimCountdown(){
 
 
 // ===== V34 貢獻值邏輯 =====
-const CONTRIB_MGR='0xB7570d38751d9624eB746493226Ed25250f3834a';
+const CONTRIB_MGR='0x71a7d167cb5a9e823bc2b4392e71f1d43423ab09';
 const CONTRIB_ABI=[
   'function contribInfo(address) view returns (uint256 cap,uint256 used,uint256 bought,uint256 due,bool active)',
   'function buyContribution(uint256) external',
@@ -1408,12 +1408,7 @@ async function loadContribution(){
     const warn=document.getElementById('contribWarn');
     // 未初始化(cap=0 且 init=false) → 視為正常(不受限)
     const inited = (cap>0 || used>0 || due>0);
-    if(!inited){
-      st.textContent='未啟用'; st.style.background='rgba(139,147,179,0.15)'; st.style.color='#8b93b3';
-      warn.style.display='none';
-      document.getElementById('contribCap').textContent='—';
-      document.getElementById('contribRemain').textContent='—';
-    } else if(active){
+    if(active){
       st.textContent='正常'; st.style.background='rgba(55,214,122,0.15)'; st.style.color='#37d67a'; warn.style.display='none';
     } else {
       st.textContent='已暫停'; st.style.background='rgba(255,92,92,0.15)'; st.style.color='#ff5c5c'; warn.style.display='block';
