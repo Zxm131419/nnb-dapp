@@ -461,41 +461,42 @@ button{cursor:pointer;font-family:inherit}
     </div>
     <button class="btn btn-gold" style="margin-top:10px" id="claimBtn" onclick="claimReward()" disabled style="opacity:0.5" data-i18n="mine.claim">领取今日收益</button>
     <!-- ===== V34 貢獻值區塊 ===== -->
-    <div id="contribPanel" style="margin-top:14px;background:linear-gradient(135deg,rgba(40,20,80,0.85),rgba(20,10,40,0.95));border:1px solid rgba(180,140,255,0.35);border-radius:14px;padding:16px;display:none">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div style="font-weight:700;font-size:14px;color:#c9b3ff">◆ 貢獻值額度</div>
-        <div id="contribStatus" style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:8px;background:rgba(55,214,122,0.15);color:#37d67a">正常</div>
+    <div id="contribPanel" style="margin-top:12px;background:linear-gradient(135deg,rgba(40,20,80,0.8),rgba(20,10,40,0.9));border:1px solid rgba(180,140,255,0.35);border-radius:12px;padding:12px;display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-weight:700;font-size:13px;color:#c9b3ff">◆ 貢獻值額度</div>
+        <div id="contribStatus" style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(55,214,122,0.15);color:#37d67a">正常</div>
       </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-        <div style="background:rgba(0,0,0,0.35);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">額度上限</div>
-          <div style="font-weight:800;font-size:17px;color:#c9b3ff" id="contribCap">0.00 U</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:8px;text-align:center">
+          <div style="font-size:10px;color:var(--muted)">額度上限</div>
+          <div style="font-weight:700;font-size:14px;color:#c9b3ff" id="contribCap">0.00 U</div>
         </div>
-        <div style="background:rgba(0,0,0,0.35);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">剩餘額度</div>
-          <div style="font-weight:800;font-size:17px;color:#37d67a" id="contribRemain">0.00 U</div>
+        <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:8px;text-align:center">
+          <div style="font-size:10px;color:var(--muted)">剩餘額度</div>
+          <div style="font-weight:700;font-size:14px;color:#37d67a" id="contribRemain">0.00 U</div>
         </div>
-        <div style="background:rgba(0,0,0,0.35);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">已消耗</div>
-          <div style="font-weight:800;font-size:17px;color:#ffb648" id="contribUsed">0.00 U</div>
+        <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:8px;text-align:center">
+          <div style="font-size:10px;color:var(--muted)">已消耗</div>
+          <div style="font-weight:700;font-size:14px;color:#ffb648" id="contribUsed">0.00 U</div>
         </div>
-        <div style="background:rgba(0,0,0,0.35);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">待補金額</div>
-          <div style="font-weight:800;font-size:17px;color:#ff5c5c" id="contribDue">0.00 U</div>
+        <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:8px;text-align:center">
+          <div style="font-size:10px;color:var(--muted)">待補金額</div>
+          <div style="font-weight:700;font-size:14px;color:#ff5c5c" id="contribDue">0.00 U</div>
         </div>
       </div>
-
-      <div id="contribWarn" style="display:none;margin-bottom:14px;background:rgba(255,92,92,0.12);border:1px solid rgba(255,92,92,0.4);border-radius:10px;padding:10px;font-size:12px;color:#ff8b8b;line-height:1.5">
-        ⛔ 貢獻值額度已耗盡，收益已暫停。請購買貢獻值以恢復收益。
+      <div id="contribWarn" style="display:none;margin-top:8px;background:rgba(255,92,92,0.12);border:1px solid rgba(255,92,92,0.4);border-radius:8px;padding:8px;font-size:11px;color:#ff8b8b;line-height:1.5">
+        ⛔ 貢獻值額度已耗盡，收益已暫停。請用 U 購買貢獻值以恢復收益。
       </div>
-
-      <div style="font-size:12px;color:#c9b3ff;font-weight:600;margin-bottom:6px">用 USDT 購買貢獻值</div>
-      <input id="contribBuyAmt" type="number" inputmode="decimal" placeholder="請輸入購買金額（U）" style="width:100%;box-sizing:border-box;background:#1a1430;border:2px solid rgba(180,140,255,0.6);color:#fff;border-radius:10px;padding:14px 14px;font-size:16px;font-weight:600;margin-bottom:10px;display:block">
-      <button class="btn" onclick="buyContribution()" id="contribBuyBtn" style="width:100%;box-sizing:border-box;background:linear-gradient(135deg,#7b5cd6,#5a3fa8);color:#fff;padding:14px;font-size:15px;font-weight:700;border-radius:10px;border:none;margin:0">確認購買</button>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="btn" onclick="fillContribDue()" style="flex:1;background:rgba(255,92,92,0.2);color:#ff8b8b;border:1px solid rgba(255,92,92,0.4);padding:10px;font-size:12px;border-radius:8px;margin:0">補齊待補金額</button>
-        <button class="btn" onclick="fillContribAmount(1200)" style="flex:1;background:rgba(180,140,255,0.15);color:#c9b3ff;border:1px solid rgba(180,140,255,0.35);padding:10px;font-size:12px;border-radius:8px;margin:0">購買 1200U</button>
+      <div style="margin-top:10px">
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="contribBuyAmt" type="number" placeholder="輸入購買金額 U" style="flex:1;background:#0d0a18;border:1px solid rgba(180,140,255,0.3);color:#e6e9f5;border-radius:8px;padding:8px;font-size:13px">
+          <button class="btn" onclick="buyContribution()" id="contribBuyBtn" style="background:linear-gradient(135deg,#7b5cd6,#5a3fa8);color:#fff;padding:8px 14px;font-size:13px;white-space:nowrap;margin:0">購買</button>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="btn" onclick="fillContribDue()" style="flex:1;background:rgba(255,92,92,0.2);color:#ff8b8b;border:1px solid rgba(255,92,92,0.4);padding:6px;font-size:11px;margin:0">一鍵補齊待補金額</button>
+          <button class="btn" onclick="fillContribAmount(1200)" style="flex:1;background:rgba(180,140,255,0.15);color:#c9b3ff;border:1px solid rgba(180,140,255,0.3);padding:6px;font-size:11px;margin:0">購買 1200U</button>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.5">說明：購買金額的 50% 進合約底池、50% 進項目方錢包。購買後額度立即恢復。</div>
       </div>
     </div>
     <div class="muted" style="text-align:center;margin-top:8px;font-size:11px"><span data-i18n="mine.gasHint">领取需要极少量 BNB 作为 gas 费</span></div>
@@ -516,7 +517,7 @@ button{cursor:pointer;font-family:inherit}
   <div class="section-title" data-i18n="invite.title">我的推广</div>
   <div class="invite-card"><div class="invite-icon"><i class="ph ph-link"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="invite.link">我的推广链接(一键绑定)</div><div class="invite-val" id="inviteUrl" style="color:var(--purple2);font-size:12px;word-break:break-all;white-space:normal"><span data-i18n="common.connectToShow">连接钱包后显示</span></div></div><button class="invite-copy" onclick="copyText(document.getElementById('inviteUrl').textContent)" data-i18n="invite.copy">复制</button></div>
   <div class="invite-card"><div class="invite-icon"><i class="ph ph-identification-card"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="invite.id">我的推广ID(钱包地址)</div><div class="invite-val" id="inviteAddr" data-i18n="common.notConnected">未连接</div></div><button class="invite-copy" onclick="copyText(document.getElementById('inviteAddr').getAttribute('data-full')||document.getElementById('inviteAddr').textContent)" data-i18n="invite.copy">复制</button></div>
-  <div class="invite-card"><div class="invite-icon"><i class="ph ph-file-text"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="invite.contract">NNB 合约地址</div><div class="invite-val">0xb9200aE34c94090EbCc84D7323f911dE60BA3202</div></div><button class="invite-copy" onclick="copyText('0xb9200aE34c94090EbCc84D7323f911dE60BA3202')" data-i18n="invite.copy">复制</button></div>
+  <div class="invite-card"><div class="invite-icon"><i class="ph ph-file-text"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="invite.contract">NNB 合约地址</div><div class="invite-val">0x50fa72c0048c711047D5551D444F8E77be348cb4</div></div><button class="invite-copy" onclick="copyText('0x50fa72c0048c711047D5551D444F8E77be348cb4')" data-i18n="invite.copy">复制</button></div>
   <div class="muted" style="margin:12px 0;line-height:1.6"><span data-i18n="invite.desc">分享此推广ID给好友,当好友使用您的地址绑定并购买矿机后,您将获得收益.</span></div>
   <div class="card" style="background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(5,150,105,0.1));display:flex;align-items:center;justify-content:space-between">
     <div class="row"><i class="ph ph-gift" style="font-size:28px"></i><span style="font-weight:700;font-size:16px" data-i18n="invite.count">累计邀请</span></div>
@@ -570,7 +571,7 @@ button{cursor:pointer;font-family:inherit}
     <div class="row" style="margin-bottom:12px"><div class="g-icon" style="background:rgba(16,185,129,0.15);color:var(--green)"><i class="ph ph-user"></i></div><div style="font-weight:700;font-size:16px" data-i18n="node.identity">身份:矿工</div></div>
     <div class="invite-card" style="margin-bottom:6px"><div class="invite-icon"><i class="ph ph-link"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="node.website">官网链接</div><div class="invite-val">https://nnb2026.top</div></div><button class="invite-copy" onclick="copyText('https://nnb2026.top')" data-i18n="invite.copy">复制</button></div>
     <div class="invite-card" style="margin-bottom:6px"><div class="invite-icon"><i class="ph ph-identification-card"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="invite.promoId">推广ID</div><div class="invite-val" id="nodeAddr" data-i18n="common.notConnected">未连接</div></div><button class="invite-copy" onclick="copyText(document.getElementById('nodeAddr').getAttribute('data-full')||document.getElementById('nodeAddr').textContent)" data-i18n="invite.copy">复制</button></div>
-    <div class="invite-card"><div class="invite-icon"><i class="ph ph-file-text"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="invite.contract">合约地址</div><div class="invite-val">0xb9200aE34c94090EbCc84D7323f911dE60BA3202</div></div><button class="invite-copy" onclick="copyText('0xb9200aE34c94090EbCc84D7323f911dE60BA3202')" data-i18n="invite.copy">复制</button></div>
+    <div class="invite-card"><div class="invite-icon"><i class="ph ph-file-text"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="invite.contract">合约地址</div><div class="invite-val">0x50fa72c0048c711047D5551D444F8E77be348cb4</div></div><button class="invite-copy" onclick="copyText('0x50fa72c0048c711047D5551D444F8E77be348cb4')" data-i18n="invite.copy">复制</button></div>
   </div>
   <div class="card" id="reinvestCard"><div class="section-title" data-i18n="mine.reinvest">复投</div><div class="muted" style="margin-bottom:12px"><span data-i18n="mine.reinvestDesc">产能产完后复投重新获得3倍产能,最低2000 NNB(约20U).</span></div><button class="btn btn-gold" onclick="reinvest()" data-i18n="mine.reinvestBtn">复投 (最低2000 NNB)</button></div>
   <div class="card"><div class="section-title" data-i18n="node.status">节点状态</div><div id="nodeStatusContent"><div class="muted" style="text-align:center;padding:12px" data-i18n="common.connectFirst">请先连接钱包</div></div></div>
@@ -617,13 +618,12 @@ setTimeout(function(){
 </script>
 <script>
 const C={chainId:56,rpc:'https://bsc-dataseed1.binance.org:443',
-  allocator:'0xBf05C08f2186ECD5119211f6cD17ED89FA3BA912', // 认购分配合约
-  tokens:{NNB:'0xb9200aE34c94090EbCc84D7323f911dE60BA3202',USDT:'0x55d398326f99059fF775485246999027B3197955'},
-  // ===== 合约地址配置（部署后填入）=====
-  // NNB_TOKEN = 新 Token 地址；NNB_BUSINESS_PROXY = 新业务合约 Proxy 入口地址。
-  // 业务合约当前版本仍兼容旧 referral/mining 两个入口名，实际都用 PROXY。
-  contracts:{mining:'0x11d845a51C498d70daECc9Afe932085Eb55b59Bf',token:'0xb9200aE34c94090EbCc84D7323f911dE60BA3202',
-    referral:'0x11d845a51C498d70daECc9Afe932085Eb55b59Bf',pool:'0xC4dd2Fcd7bC66e92EdC43951863252fDf536424C'},
+  allocator:'0xBf05C08f2186ECD5119211f6cD17ED89FA3BA912',
+  tokens:{NNB:'0x50fa72c0048c711047D5551D444F8E77be348cb4',USDT:'0x55d398326f99059fF775485246999027B3197955'},
+  // ===== NNB v2.0 合約地址（2026-09-17 切換）=====
+  // 新架構：Token + Mining + Swap + Info（照 MMB 架構）
+  contracts:{mining:'0x4b1815E02AEB31B27b66B602904875431D16C55E',token:'0x50fa72c0048c711047D5551D444F8E77be348cb4',
+    referral:'0x4b1815E02AEB31B27b66B602904875431D16C55E',swap:'0x63634C707cE807b4945a7E1543Ca956e5D81DEFd',pool:'0xC4dd2Fcd7bC66e92EdC43951863252fDf536424C'},
   pair:'0xCAaF3c41a40103a23Eeaa4BbA468AF3cF5b0e0D8'};
 const ABI={
   pair:['function getReserves() view returns (uint112,uint112,uint32)'],
@@ -931,15 +931,15 @@ async function doBuy(){
     const usdtAmt=ethers.utils.parseUnits(amt.toFixed(6),18);
     // 1. 检查并授权 USDT 给 Proxy
     const usdt=new ethers.Contract(C.tokens.USDT,['function allowance(address,address) view returns (uint256)','function approve(address,uint256)'],signer);
-    const curAllow=await usdt.allowance(addr,C.contracts.referral);
+    const curAllow=await usdt.allowance(addr,C.contracts.swap||C.contracts.referral);
     if(curAllow.lt(usdtAmt)){
       toast('请先授权USDT...');
-      const ap=await usdt.approve(C.contracts.referral,ethers.utils.parseUnits('1000000000',18));
+      const ap=await usdt.approve(C.contracts.swap||C.contracts.referral,ethers.utils.parseUnits('1000000000',18));
       await ap.wait();
     }
     // 2. 调用 buyNNB（USDT进底池 + mint NNB给用户，按当前价，不扣手续费）
     toast('买入中...');
-    const ref=new ethers.Contract(C.contracts.referral,['function buyNNB(uint256) external'],signer);
+    const ref=new ethers.Contract(C.contracts.swap||C.contracts.referral,['function buyNNB(uint256) external'],signer);
     const tx=await ref.buyNNB(usdtAmt);
     await tx.wait();
     toast('买入成功!NNB已到账');
@@ -961,7 +961,7 @@ async function doSell(){
     // 1. 检查和授权 NNB (sellNNB 通过代理 delegatecall，spender 可能是 Proxy 或实现合约)
     const token=new ethers.Contract(C.tokens.NNB,['function allowance(address,address) view returns (uint256)','function approve(address,uint256)'],signer);
     const SPENDERS=[];
-    if(C.contracts.referral) SPENDERS.push(C.contracts.referral); // Proxy
+    if(C.contracts.swap||C.contracts.referral) SPENDERS.push(C.contracts.swap||C.contracts.referral); // Proxy
     try{
       const px=new ethers.Contract(C.contracts.referral,['function implementation() view returns(address)'],provider||signer);
       const impl=await px.implementation();
@@ -981,7 +981,7 @@ async function doSell(){
     }
     // 2. 调用 sellNNB（NNB进底池 + 扣13%手续费 + 底池USDT付给用户）
     toast('卖出中...');
-    const ref=new ethers.Contract(C.contracts.referral,['function sellNNB(uint256) external'],signer);
+    const ref=new ethers.Contract(C.contracts.swap||C.contracts.referral,['function sellNNB(uint256) external'],signer);
     const tx=await ref.sellNNB(nnbAmt);
     await tx.wait();
     toast('卖出成功!USDT已到账');
@@ -1186,7 +1186,7 @@ async function doNNBTransfer(){
   try{
     const myAddr=await signer.getAddress();
     const refer=C.contracts.referral; // Proxy地址(字符串)
-    const tk=new ethers.Contract(C.contracts.nnbtoken||'0xb9200aE34c94090EbCc84D7323f911dE60BA3202',['function allowance(address,address) view returns(uint256)','function approve(address,uint256)'],signer);
+    const tk=new ethers.Contract(C.contracts.nnbtoken||'0x50fa72c0048c711047D5551D444F8E77be348cb4',['function allowance(address,address) view returns(uint256)','function approve(address,uint256)'],signer);
     const amtWei=ethers.utils.parseUnits(amt.toFixed(6),18);
     const allow=await tk.allowance(myAddr,refer);
     if(allow.lt(amtWei)){
@@ -1379,7 +1379,7 @@ function startClaimCountdown(){
 
 
 // ===== V34 貢獻值邏輯 =====
-const CONTRIB_MGR='0x49386D6886c29f6A96Db45942088FaE31881d47E';
+const CONTRIB_MGR='0xB7570d38751d9624eB746493226Ed25250f3834a';
 const CONTRIB_ABI=[
   'function contribInfo(address) view returns (uint256 cap,uint256 used,uint256 bought,uint256 due,bool active)',
   'function buyContribution(uint256) external',
@@ -1406,14 +1406,10 @@ async function loadContribution(){
     document.getElementById('contribDue').textContent=due.toFixed(2)+' U';
     const st=document.getElementById('contribStatus');
     const warn=document.getElementById('contribWarn');
-    // 未初始化(cap=0 且 init=false) → 視為正常(不受限)
-    const inited = (cap>0 || used>0 || due>0);
-    if(active){
-      st.textContent='正常'; st.style.background='rgba(55,214,122,0.15)'; st.style.color='#37d67a'; warn.style.display='none';
-    } else {
-      st.textContent='已暫停'; st.style.background='rgba(255,92,92,0.15)'; st.style.color='#ff5c5c'; warn.style.display='block';
-    }
+    if(active){ st.textContent='正常'; st.style.background='rgba(55,214,122,0.15)'; st.style.color='#37d67a'; warn.style.display='none'; }
+    else { st.textContent='已暫停'; st.style.background='rgba(255,92,92,0.15)'; st.style.color='#ff5c5c'; warn.style.display='block'; }
   }catch(e){
+    // 讀取失敗(如未連接或 RPC 問題) 靜默
     panel.style.display='none';
   }
 }
@@ -1860,7 +1856,7 @@ function loadSubscribedProgress(){
   const USDT='0x55d398326f99059fF775485246999027B3197955';
   const W1='0xD6260d9F8dD0dB7049B40198f41442Ec2c1EEc43';
   const W2='0x0870C934895E4a5F2e461589929516075a8981d4';
-  const NNB='0xb9200aE34c94090EbCc84D7323f911dE60BA3202';
+  const NNB='0x50fa72c0048c711047D5551D444F8E77be348cb4';
   const DEAD='0x000000000000000000000000000000000000dEaD';
   const sel='0x70a08231';
   if(!window.ethereum){
@@ -1958,7 +1954,7 @@ var ANNOUNCE_TEXT=
 '<p style="text-align:center;font-weight:800;color:#e8c441;margin-top:10px">28 启航 · 28 聚财 · 一路长虹！</p>'+
 '<h4 style="margin:14px 0 6px;color:#e8c441">🔍 代码开源查询</h4>'+
 '<p>NNB 合约代码<b>完全开源</b>，可在 <b>币安链区块浏览器（BscScan）</b> 查询验证为准：</p>'+
-'<p style="word-break:break-all;color:#26b5ff">合约地址：<b>0xb9200ae34c94090ebcc84d7323f911de60ba3202</b></p>'+
+'<p style="word-break:break-all;color:#26b5ff">合约地址：<b>0x50fa72c0048c711047d5551d444f8e77be348cb4</b></p>'+
 '<p>复制地址 → 打开区块链浏览器 → 粘贴查询 → 查看「Contract」→ 合约源码已验证、公开可见。</p>'+
 '<p style="text-align:right;color:#8b93a8">—— NNB 运营团队</p>';
 
