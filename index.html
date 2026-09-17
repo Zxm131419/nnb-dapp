@@ -1407,7 +1407,7 @@ async function loadOrderBook(){
         '<div><div style="color:var(--dim)">#'+i+' '+o.seller.slice(0,8)+'…</div>'+
         '<div><b>'+remain.toFixed(2)+'</b> NNB @ '+price.toFixed(6)+' U</div></div>'+
         '<div style="text-align:right"><div style="color:var(--gold);font-weight:700">'+ (remain*price).toFixed(4)+' U</div>'+
-        '<button class="btn" style="padding:5px 10px;font-size:11px;margin:4px 0 0 0" onclick="buyOrder('+i+','+remain+')">買入</button></div></div>';
+        '<button class="btn" style="padding:6px 14px;font-size:12px;font-weight:700;margin:4px 0 0 0;background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff;border:none;border-radius:8px" onclick="buyOrder('+i+','+remain+')">買入</button></div></div>';
     }
     host.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>';
   }catch(e){ host.innerHTML='<div style="text-align:center;color:var(--red);padding:14px">載入失敗</div>'; }
