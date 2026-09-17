@@ -343,65 +343,23 @@ button{cursor:pointer;font-family:inherit}
 <div id="p-trade" class="page">
   <div class="navbar"><div class="nav-left"><button class="nav-btn" onclick="go('home')"><i class="ph ph-caret-left"></i> <span data-i18n="back">返回首页</span></button></div><button class="btn-connect" onclick="connectWallet()"><i class="ph ph-wallet"></i> <span data-i18n="wallet.connect">连接钱包</span></button></div>
   <div class="section-title" data-i18n="trade.title">NNB/USDT 交易池</div>
-  <div class="tabs"><button class="tab active" onclick="switchTab(this,'buy')" data-i18n="trade.buy">买入 NNB</button><button class="tab" onclick="switchTab(this,'sell')" data-i18n="trade.sell">卖出 NNB</button></div>
+
   <div class="card" style="border:1px solid var(--gold)">
-    <div class="section-title" style="margin-top:0">📌 掛單交易（點對點）</div>
-    <div class="muted" style="font-size:12px;line-height:1.6;margin-bottom:10px">
-      賣方掛單 → 買方支付 USDT 直接到賣方錢包（90%），10% 手續費給項目方。<br>
-      <b style="color:var(--green)">合約不持有資金，安全點對點。</b>
-    </div>
+    <div class="section-title" style="margin-top:0">📌 掛單交易</div>
     <div class="trade-label"><span>我的 NNB 餘額</span><span id="mkBal">0</span></div>
     <div class="trade-input-row"><input class="input" id="mkSellAmt" type="number" placeholder="輸入要賣的 NNB 數量" inputmode="decimal"></div>
     <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:8px 0">
-      <span>賣出單價（內部價）</span><span id="mkPrice">0.01 USDT</span>
+      <span>賣出單價</span><span id="mkPrice">0.01 USDT</span>
     </div>
-    <button class="btn btn-gold" onclick="placeSell()">① 掛賣單（需先授權 NNB）</button>
+    <button class="btn btn-gold" onclick="placeSell()">① 掛賣單</button>
     <div style="margin-top:14px;border-top:1px dashed var(--line);padding-top:12px">
-      <div class="section-title" style="font-size:14px">市場賣單（點擊買入）</div>
+      <div class="section-title" style="font-size:14px">市場賣單（點擊買入）<span style="margin-left:auto;font-size:12px;cursor:pointer" onclick="loadOrderBook()">刷新</span></div>
       <div id="orderBook"><div style="text-align:center;color:var(--muted);padding:14px">載入中…</div></div>
     </div>
     <div style="margin-top:14px;border-top:1px dashed var(--line);padding-top:12px">
       <div class="section-title" style="font-size:14px">我的掛單 <span style="margin-left:auto;font-size:12px;cursor:pointer" onclick="loadMyOrders()">刷新</span></div>
       <div id="myOrders"><div style="text-align:center;color:var(--muted);padding:14px">—</div></div>
     </div>
-  </div>
-
-  <div id="trade-buy">
-    <div class="card">
-      <div class="trade-label"><span data-i18n="trade.buyAmount">支付 USDT</span><span id="buyBalance">余额: 0</span></div>
-      <div class="trade-input-row"><input class="input" id="buyAmount" type="number" data-i18n-ph="trade.buyPlaceholder" placeholder="输入 USDT 金额" inputmode="decimal"></div>
-      <div class="swap-arrow"><i class="ph ph-arrow-down"></i></div>
-      <div class="trade-label"><span data-i18n="trade.receive">收到 NNB (预计)</span></div>
-      <div style="font-size:22px;font-weight:700;color:var(--gold)" id="buyEstimate">0.00</div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:10px 0"><span data-i18n="trade.price">价格</span><span id="buyPrice">1 NNB ≈ 0.01 USDT</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:10px 0 0 0"><span data-i18n="trade.fee">买入手续费</span><span style="color:var(--green);font-weight:600" id="buyFee">0.00%</span></div>
-      
-      <button class="btn btn-green" onclick="doBuy()" data-i18n="trade.buyBtn">确认买入</button>
-    </div>
-  </div>
-  <div id="trade-sell" style="display:none">
-    <div class="card">
-      
-      <div class="trade-label"><span data-i18n="trade.sell">卖出 NNB</span><span id="sellBalance">余额: 0</span></div>
-      <div class="trade-input-row"><input class="input" id="sellAmount" type="number" data-i18n-ph="trade.sellPlaceholder" data-i18n-placeholder="trade.amountNnb" placeholder="输入 NNB 数量" inputmode="decimal"></div>
-      <div class="swap-arrow"><i class="ph ph-arrow-down"></i></div>
-      <div class="trade-label"><span data-i18n="trade.receiveUSDT">收到 USDT</span></div>
-      <div style="font-size:22px;font-weight:700;color:var(--gold)" id="sellEstimate">0.00</div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:10px 0"><span data-i18n="trade.price">价格</span><span id="sellPrice">1 NNB ≈ 0.01 USDT</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:10px 0 0 0"><span data-i18n="trade.sellFee">动态卖出手续费</span><span style="color:var(--red);font-weight:600" id="sellFee">--</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:6px 0 0 0"><span data-i18n="trade.feeNote">实收 = 数量×价格×(1000-费率)/1000</span><span style="color:var(--gold)" id="sellFeeAmount"></span></div>
-      
-      <button class="btn btn-red" onclick="doSell()" data-i18n="trade.sellBtn">确认卖出</button>
-    </div>
-  </div>
-  <div class="pool-row" style="margin-top:14px">
-    <div class="pool-item"><div class="p-label" data-i18n="trade.pool">底池 USDT 总量</div><div class="p-val" id="poolUSDT" data-i18n="trade.poolClosed">未开放</div></div>
-  </div>
-  <div style="display:none">
-  <div class="section-title" style="margin-top:14px">我的挂单列表 <span style="margin-left:auto" class="muted" onclick="loadOrders()" style="cursor:pointer" data-i18n="common.refresh">刷新</span></div>
-  <div id="myOrders"><div style="text-align:center;color:var(--muted);padding:20px" data-i18n="common.connectFirst">请先连接钱包</div></div>
-  <div class="section-title" style="margin-top:14px">购买挂单列表 <span style="margin-left:auto" class="muted" onclick="loadBuyOrders()" style="cursor:pointer" data-i18n="common.refresh">刷新</span></div>
-  <div id="buyOrders"><div style="text-align:center;color:var(--muted);padding:20px" data-i18n="trade.noBuyOrders">暂无购买挂单</div></div>
   </div>
 </div>
 
@@ -856,7 +814,7 @@ function updateEstimates(){
 }
 
 let tradeTab='buy';
-function switchTab(el,tab){tradeTab=tab;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const eb=document.getElementById('trade-buy');if(eb)eb.style.display=tab==='buy'?'':'none';const es=document.getElementById('trade-sell');if(es)es.style.display=tab==='sell'?'':'none';}
+// switchTab 已移除（改用掛單 UI）
 let userXlyBal=0,userUsdtBal=0;
 async function loadPoolInfo(){
   // 市场已启动：显示真实链上底池数据（不再显示“未开放”)
