@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260918d';
+window.NNB_VER='20260918e';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260918d"></script>
+<script src="lang.js?v=20260918e"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed1.binance.org" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed.binance.org" crossorigin>
@@ -488,7 +488,7 @@ button{cursor:pointer;font-family:inherit}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
       <div style="background:rgba(20,10,40,0.6);border-radius:10px;padding:12px;text-align:center">
         <div style="color:var(--muted);font-size:11px" data-i18n="mine.rate">当前日化率</div>
-        <div style="font-weight:700;font-size:16px;color:var(--gold);margin-top:4px" id="minerDailyRate">0.38%</div>
+        <div style="font-weight:700;font-size:16px;color:var(--gold);margin-top:4px" id="minerDailyRate">—</div>
       </div>
       <div style="background:rgba(20,10,40,0.6);border-radius:10px;padding:12px;text-align:center">
         <div style="color:var(--muted);font-size:11px" data-i18n="mine.claimable">今日可领</div>
@@ -1727,6 +1727,18 @@ async function loadUserInfo(){
     const ic=document.getElementById('inviteCount');if(ic)ic.textContent=dc;
     const todayClaimable=unclaimed; // claimableAmount 已是今日可领，勿重复乘
     const mcl=document.getElementById('minerClaimable');if(mcl)mcl.textContent=todayClaimable.toLocaleString(undefined,{maximumFractionDigits:2})+' NNB';
+    // ★ 讀取鏈上日化檔位（getDailyBp，萬分制：38=0.38%、42=0.42%、46=0.46%、50=0.50%）
+    try{
+      const padded=addr.toLowerCase().replace('0x','').padStart(64,'0');
+      const r=await window.ethereum.request({method:'eth_call',params:[{to:C.contracts.referral,data:'0xf0490194'+padded},'latest']});
+      const bp=parseInt(r||'0x0',16);
+      if(bp>0&&bp<=1000){
+        const el=document.getElementById('minerDailyRate');
+        if(el)el.textContent=(bp/100).toFixed(2)+'%';
+      }
+    }catch(e){
+      // 放棄時保持原樣，不顯示錯誤值
+    }
     if(bm>1&&be>Date.now()/1000){const rc=document.getElementById('reinvestCard');if(rc)rc.style.display='block';}
     if(burned){const rc=document.getElementById('reinvestCard');if(rc){rc.style.display='block';const btn=rc.querySelector('.btn');if(btn)btn.textContent='已烧伤 - 立即复投恢复';}}
     // 双重保险：如果 claimTimer 还显示加载中，用已读到的数据更新
