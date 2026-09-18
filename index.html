@@ -6,6 +6,60 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<script>
+// ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
+window.NNB_VER='20260918d';
+(function(){
+  try{
+    var seen=localStorage.getItem('nnb_seen_ver');
+    if(seen!==window.NNB_VER){
+      localStorage.setItem('nnb_seen_ver', window.NNB_VER);
+      console.log('[NNB] 版本更新 ->', window.NNB_VER);
+    }
+  }catch(e){}
+})();
+// ★ 强制版本校验：若服务器上的版本比本地记录的新，自动重载一次（破手机缓存）
+(function(){
+  var RELOAD_KEY='nnb_reloaded_for';
+  var checker=function(){
+    try{
+      fetch('version.json?t='+Date.now(),{cache:'no-store'})
+        .then(function(r){return r.ok?r.json():null;})
+        .then(function(j){
+          if(!j||!j.v)return;
+          var localVer=window.NNB_VER;
+          if(j.v!==localVer && sessionStorage.getItem(RELOAD_KEY)!==j.v){
+            sessionStorage.setItem(RELOAD_KEY,j.v);
+            console.log('[NNB] 发现新版 '+j.v+'（本地 '+localVer+'），强制重载');
+            var u=new URL(location.href);
+            u.searchParams.set('v',j.v);
+            location.replace(u.toString());
+          }
+        })
+        .catch(function(){});
+    }catch(e){}
+  };
+  // 等 DOM 就绪后检查（不阻塞渲染）
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',checker); }
+  else { setTimeout(checker,100); }
+})();
+// 给动态插入的脚本/样式自动加版本戳
+(function(){
+  var _ce=document.createElement.bind(document);
+  function stamp(el){
+    try{
+      if(el.tagName==='SCRIPT' && el.src && el.src.indexOf(location.origin)===0 && el.src.indexOf('?')<0){
+        el.src += '?v='+window.NNB_VER;
+      }
+      if(el.tagName==='LINK' && el.href && el.href.indexOf(location.origin)===0 && el.href.indexOf('?')<0){
+        el.href += '?v='+window.NNB_VER;
+      }
+    }catch(e){}
+    return el;
+  }
+  document.createElement=function(t){ return stamp(_ce(t)); };
+})();
+</script>
 <link rel="icon" type="image/x-icon" href="favicon.ico?v=20260805">
 <link rel="shortcut icon" href="favicon.ico?v=20260805">
 <link rel="apple-touch-icon" href="logo.jpg?v=20260805">
@@ -231,7 +285,13 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260826b"></script>
+<script src="lang.js?v=20260918d"></script>
+<!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
+<link rel="preconnect" href="https://bsc-dataseed1.binance.org" crossorigin>
+<link rel="preconnect" href="https://bsc-dataseed.binance.org" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="dns-prefetch" href="https://bsc-dataseed2.binance.org">
+<link rel="dns-prefetch" href="https://rpc.ankr.com">
 </head>
 <body>
 <div class="toast" id="toast"></div>
@@ -271,9 +331,9 @@ button{cursor:pointer;font-family:inherit}
   <div class="price-card">
     <div class="price-row">
       <div class="price-icon"><img src="logo.jpg?v=20260805" alt="NNB"></div>
-      <div><div class="price-label" data-i18n="price.market" data-i18n="price.market">价格市场</div><div class="price-origin"><span data-i18n="price.origin">原始价格:</span> $0.01</div></div>
+      <div><div class="price-label" data-i18n="price.market" data-i18n="price.market">价格市场</div><div class="price-origin"><span data-i18n="price.origin">原始价格:</span> $0.01 <span id="verTag" style="color:#5a6a8a;font-size:10px"></span></div></div>
     </div>
-    <div class="price-value" id="priceDisplay">$0.010000</div>
+    <div class="price-value" id="priceDisplay">載入中…</div>
     <div class="price-change">
       <span class="up" id="changeDisplay">+ 0.00%</span>
       <span class="muted" data-i18n="price.total">总涨幅: <span id="totalChange" class="up">+0.00%</span></span>
@@ -349,7 +409,7 @@ button{cursor:pointer;font-family:inherit}
     <div class="trade-label"><span>我的 NNB 餘額</span><span id="mkBal">0</span></div>
     <div class="trade-input-row"><input class="input" id="mkSellAmt" type="number" placeholder="輸入要賣的 NNB 數量" inputmode="decimal"></div>
     <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:8px 0">
-      <span>賣出單價</span><span id="mkPrice">0.01 USDT</span>
+      <span>賣出單價</span><span id="mkPrice">載入中…</span>
     </div>
     <button class="btn btn-gold" onclick="placeSell()">① 掛賣單</button>
     <div style="margin-top:14px;border-top:1px dashed var(--line);padding-top:12px">
@@ -611,7 +671,7 @@ const ABI={
   mining:['function buyMining(uint256) external','function users(address) view returns (tuple(bool activated,bool isNode,uint256 totalInvestedUSD,uint256 totalMined,uint256 lastBuyTime,uint256 myBalance,uint256 directPushTotalUSD,uint256 teamLevel,uint256 teamCount,address referrer,uint256 totalReinvestCount,uint256 totalWithdrawCount,uint256 lockedUntil,uint256 boostMultiplier,uint256 boostExpireTime))','function currentMinerCount() view returns (uint256)','function MINERS(uint256) view returns (tuple(uint256 price,uint256 dailyRate,uint256 lockDays,uint256 minPurchase,uint256 maxPurchase,bool exists))'],
   ref:['function getUserReferrer(address) view returns (address)','function getDirectReferralCount(address) view returns (uint256)','function isNode(address) view returns (bool)','function isUserActivated(address) view returns (bool)','function getDirectReferralAmount(address) view returns (uint256)','function getBoostMultiplier(address) view returns (uint256)','function getBoostExpireTime(address) view returns (uint256)','function getUserReinvestCount(address) view returns (uint256)','function getUserUnclaimed(address) view returns (uint256)','function getUserBurned(address) view returns (bool)','function bindReferrer(address) external','function buyMining(uint256) external','function claim() external','function reinvest(uint256) external','function currentNodeFee(uint256) view returns (uint256)','function activateNode() external payable']
 };
-let provider,signer,addr=null,currentPrice=0; let currentFeeBp=130; let _globalMyBalance=0, _globalClaimable=0;
+let provider,signer,addr=null,currentPrice=0,_priceLoaded=false; let currentFeeBp=130; let _globalMyBalance=0, _globalClaimable=0;
 const $=id=>document.getElementById(id);
 
 function go(page){
@@ -729,7 +789,11 @@ async function loadPrice(){
     const priceData = '0xe4b137bc' + arg;      // currentEffectivePrice(now)
     const feeData   = '0x1293edbf';            // effectiveTradeFeeRate()
 
-    // 读取 helper：优先 window.ethereum eth_call（钱包内无跨域问题），否则 fetch RPC
+    // ★ 先显示「载入中」，避免用户看到旧的默认 0.01
+    const elP=document.getElementById('priceDisplay');
+    if(elP && (currentPrice<=0 || !_priceLoaded)) elP.textContent='載入中…';
+
+    // 读取 helper：优先 window.ethereum eth_call（钱包内无跨域问题），否则并行 fetch 多 RPC
     async function ethRead(calldata){
       // 方式1: 钱包 eth_call（可靠）
       if(window.ethereum&&window.ethereum.request){
@@ -738,20 +802,26 @@ async function loadPrice(){
           if(r&&r!=='0x')return r;
         }catch(e){}
       }
-      // 方式2: fetch 多 RPC
-      const rpcs=['https://bsc-dataseed1.binance.org:443','https://bsc-dataseed.binance.org/','https://rpc.ankr.com/bsc','https://bsc-dataseed3.ninicoin.io'];
-      for(const rpc of rpcs){
-        try{
-          const resp=await fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({jsonrpc:'2.0',method:'eth_call',params:[{to:V35,data:calldata},'latest'],id:1})});
-          const json=await resp.json();
-          if(json.result&&json.result!=='0x')return json.result;
-        }catch(e){}
-      }
-      return '0x';
+      // 方式2: 并行打多个 RPC，取最快成功的回应
+      const rpcs=['https://bsc-dataseed1.binance.org','https://bsc-dataseed.binance.org','https://bsc-dataseed2.binance.org','https://rpc.ankr.com/bsc','https://bsc.publicnode.com'];
+      const tries=rpcs.map(rpc=>new Promise(resolve=>{
+        const ctl=(typeof AbortController!=='undefined')?new AbortController():null;
+        const timer=setTimeout(()=>{ if(ctl) ctl.abort(); resolve(null); },3000);
+        fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({jsonrpc:'2.0',method:'eth_call',params:[{to:V35,data:calldata},'latest'],id:1}),
+          signal: ctl?ctl.signal:undefined})
+          .then(r=>r.json())
+          .then(j=>{ clearTimeout(timer); resolve(j&&j.result&&j.result!=='0x'?j.result:null); })
+          .catch(()=>{ clearTimeout(timer); resolve(null); });
+      }));
+      // 取第一个成功的（先完成者胜出）
+      return await Promise.race([
+        ...tries,
+        new Promise(r=>setTimeout(()=>r(null),3500))
+      ]) || (await Promise.all(tries)).find(x=>x) || '0x';
     }
 
-    let price=0.01;
+    let price=0;
     try{
       const pr=await ethRead(priceData);
       const bn=BigInt(pr);
@@ -760,8 +830,10 @@ async function loadPrice(){
         if(val>0&&isFinite(val))price=val;
       }
     }catch(e){}
-    if(!price||price<=0||!isFinite(price))price=0.01;
+    // ★ 读不到时保留上一次的值（不要回退到 0.01）
+    if(!price||price<=0||!isFinite(price)) price = (currentPrice>0?currentPrice:0.01);
     currentPrice=price;
+    _priceLoaded = true;
 
     // 读链上卖出手续费率（千分）
     try{
@@ -780,17 +852,14 @@ async function loadPrice(){
     const el5=document.getElementById('sellPrice');if(el5)el5.textContent='1 NNB ≈ '+currentPrice.toFixed(8)+' USDT';
     updateEstimates();
   }catch(e){
-    currentPrice=0.01; currentFeeBp=130;
-    const el1=document.getElementById('priceDisplay');if(el1)el1.textContent='$0.010000';
-    const el2=document.getElementById('changeDisplay');if(el2){el2.className='up';el2.textContent='+ 0.00%';}
-    const el3=document.getElementById('totalChange');if(el3){el3.className='up';el3.textContent='+0.00%';}
-    const el4=document.getElementById('buyPrice');if(el4)el4.textContent='1 NNB ≈ 0.01 USDT';
-    const el5=document.getElementById('sellPrice');if(el5)el5.textContent='1 NNB ≈ 0.01 USDT';
-    updateEstimates();
+    currentPrice=0;
+    const el1=document.getElementById('priceDisplay');if(el1)el1.textContent='載入失敗';
+    const el4=document.getElementById('buyPrice');if(el4)el4.textContent='1 NNB ≈ —';
+    const el5=document.getElementById('sellPrice');if(el5)el5.textContent='1 NNB ≈ —';
   }
 }
 function updateEstimates(){
-  if(currentPrice<=0)currentPrice=0.01;
+  if(currentPrice<=0)return;
   const ba=parseFloat(document.getElementById('buyAmount')?.value)||0;
   if(ba>0&&document.getElementById('buyEstimate')){
     document.getElementById('buyEstimate').textContent=(ba/currentPrice).toLocaleString(undefined,{maximumFractionDigits:2});
@@ -1369,7 +1438,9 @@ const MARKET_ABI=[
   'function nextOrderId() view returns (uint256)',
   'function feeRate() view returns (uint256)',
   'function useInternalPrice() view returns (bool)',
-  'function price() view returns (uint256)'
+  'function price() view returns (uint256)',
+  'function isOrderFillable(uint256) view returns (bool)',
+  'function fillableAmount(uint256) view returns (uint256)'
 ];
 function marketAddr(){ return C.contracts.market || '0xD9783711fD81B36650dd76a62042E9775e79D14D'; }
 
@@ -1403,6 +1474,30 @@ async function loadOrderBook(){
       if(remain<=0) continue;
       const price=Number(ethers.utils.formatUnits(o.pricePerNnb,18));
       shown++;
+      // ★ 檢查賣方可成交餘額（防失效單）
+      let fillable=remain, invalid=false;
+      try{
+        const fa=await m.fillableAmount(i);
+        fillable=Number(ethers.utils.formatUnits(fa,18));
+        if(fillable < remain-0.0001) invalid=true;
+      }catch(e){
+        // 舊合約無 fillableAmount → 直接查賣方餘額
+        try{
+          const tk=new ethers.Contract(C.tokens.NNB,['function balanceOf(address) view returns(uint256)'],rp);
+          const bal=Number(ethers.utils.formatUnits(await tk.balanceOf(o.seller),18));
+          fillable=Math.min(bal,remain);
+          if(fillable < remain-0.0001) invalid=true;
+        }catch(e2){}
+      }
+      if(invalid){
+        html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px;opacity:.55">'+
+          '<div><div style="color:var(--red)">#'+i+' '+o.seller.slice(0,8)+'… 🚨 已失效</div>'+
+          '<div><b>'+remain.toFixed(2)+'</b> NNB @ '+price.toFixed(6)+' U</div>'+
+          '<div style="color:var(--red);font-size:11px;margin-top:2px">賣方餘額不足（尚有 '+fillable.toFixed(2)+' NNB），無法成交</div></div>'+
+          '<div style="text-align:right"><div style="color:var(--muted);font-weight:700">'+ (remain*price).toFixed(4)+' U</div>'+
+          '<button class="btn" disabled style="padding:6px 14px;font-size:12px;font-weight:700;margin:4px 0 0 0;background:#3a3a44;color:#8b8b96;border:none;border-radius:8px;cursor:not-allowed">不可買</button></div></div>';
+        continue;
+      }
       html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">'+
         '<div><div style="color:var(--dim)">#'+i+' '+o.seller.slice(0,8)+'…</div>'+
         '<div><b>'+remain.toFixed(2)+'</b> NNB @ '+price.toFixed(6)+' U</div></div>'+
@@ -1465,7 +1560,19 @@ async function buyOrder(orderId, maxNnb){
   if(!input) return;
   const amt=parseFloat(input);
   if(!(amt>0)){toast('數量無效');return}
+  if(amt>maxNnb+0.0001){toast('超過可成交量（'+maxNnb.toFixed(2)+' NNB）');return}
   try{
+    const rp=provider||new ethers.providers.JsonRpcProvider(RPC56||'https://bsc-dataseed.binance.org');
+    // ★ 買入前二次檢查：賣方餘額是否足夠（防失效單 / 防快取）
+    try{
+      const mc=new ethers.Contract(marketAddr(), MARKET_ABI, rp);
+      const fillableNow=Number(ethers.utils.formatUnits(await mc.fillableAmount(orderId),18));
+      if(fillableNow < amt-0.0001){
+        toast('⚠️ 該訂單已失效（賣方餘額不足，可成交 '+fillableNow.toFixed(2)+' NNB）');
+        loadOrderBook();
+        return;
+      }
+    }catch(e){/* 舊合約無此函數 → 讓鏈上 check 把關 */}
     const nnbAmt=ethers.utils.parseUnits(amt.toString(),18);
     const usdt=new ethers.Contract(C.tokens.USDT,['function allowance(address,address) view returns(uint256)','function approve(address,uint256) returns(bool)'],signer);
     const al=await usdt.allowance(addr, marketAddr());
@@ -2007,7 +2114,11 @@ function loadSubscribedProgress(){
   });
 }
 setInterval(loadSubscribedProgress,15000);
-currentPrice=0.01;updateEstimates();loadSubscribedProgress();
+// ★ 价格定时刷新（30 秒），确保用户看到的是最新链上价
+setInterval(function(){ try{ if(typeof loadPrice==='function') loadPrice(); }catch(e){} },30000);
+// ★ 版本标记（便于确认用户手机跑的是哪一版）
+try{ var _vt=document.getElementById('verTag'); if(_vt) _vt.textContent='v'+window.NNB_VER; }catch(e){}
+currentPrice=0;loadSubscribedProgress();
   // 清除旧版本存的无效 ref（没有 ref_time 的）
   const oldRef=localStorage.getItem('nnb_referrer');
   const oldTime=localStorage.getItem('nnb_referrer_time');
