@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260918e';
+window.NNB_VER='20260919a';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260918e"></script>
+<script src="lang.js?v=20260919a"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed1.binance.org" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed.binance.org" crossorigin>
@@ -1460,6 +1460,7 @@ async function loadMarketInfo(){
 
 async function loadOrderBook(){
   const host=document.getElementById('orderBook'); if(!host) return;
+  _invalidOrders=[];   // ★ 重設失效單快取
   try{
     const rp=provider||new ethers.providers.JsonRpcProvider(RPC56||'https://bsc-dataseed.binance.org');
     const m=new ethers.Contract(marketAddr(), MARKET_ABI, rp);
@@ -1490,12 +1491,9 @@ async function loadOrderBook(){
         }catch(e2){}
       }
       if(invalid){
-        html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px;opacity:.55">'+
-          '<div><div style="color:var(--red)">#'+i+' '+o.seller.slice(0,8)+'… 🚨 已失效</div>'+
-          '<div><b>'+remain.toFixed(2)+'</b> NNB @ '+price.toFixed(6)+' U</div>'+
-          '<div style="color:var(--red);font-size:11px;margin-top:2px">賣方餘額不足（尚有 '+fillable.toFixed(2)+' NNB），無法成交</div></div>'+
-          '<div style="text-align:right"><div style="color:var(--muted);font-weight:700">'+ (remain*price).toFixed(4)+' U</div>'+
-          '<button class="btn" disabled style="padding:6px 14px;font-size:12px;font-weight:700;margin:4px 0 0 0;background:#3a3a44;color:#8b8b96;border:none;border-radius:8px;cursor:not-allowed">不可買</button></div></div>';
+        // ★ 失效單：不對買方顯示（自動隱藏），只記錄供賣方管理
+        _invalidOrders.push({id:i, seller:o.seller, remain:remain, price:price, fillable:fillable});
+        shown--;  // 不佔用顯示額度
         continue;
       }
       html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">'+
@@ -1505,7 +1503,28 @@ async function loadOrderBook(){
         '<button class="btn" style="padding:6px 14px;font-size:12px;font-weight:700;margin:4px 0 0 0;background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff;border:none;border-radius:8px" onclick="buyOrder('+i+','+remain+')">買入</button></div></div>';
     }
     host.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>';
+    // ★ 賣方若有效失效單，顯示提醒（可在「我的掛單」管理）
+    _renderInvalidHint();
   }catch(e){ host.innerHTML='<div style="text-align:center;color:var(--red);padding:14px">載入失敗</div>'; }
+}
+
+// ★ 失效單資料快取（買方不顯示，賣方可管理）
+var _invalidOrders=[];
+
+// ★ 失效單提醒（只在「本人是賣方」時顯示）
+function _renderInvalidHint(){
+  try{
+    if(!addr) return;
+    const mine=_invalidOrders.filter(x=>x.seller.toLowerCase()===addr.toLowerCase());
+    if(mine.length===0) return;
+    const host=document.getElementById('orderBook');
+    if(!host) return;
+    const bar=document.createElement('div');
+    bar.style.cssText='margin-top:8px;padding:8px 10px;background:rgba(255,92,92,0.10);border:1px solid rgba(255,92,92,0.35);border-radius:8px;font-size:12px;color:#ffb0b0;line-height:1.6';
+    bar.innerHTML='⚠️ 您有 <b>'+mine.length+'</b> 筆失效掛單（賣方餘額不足）<br>'+
+      '<span style="color:#8b93b3;font-size:11px">請至「我的掛單」取消，或補足 NNB 後生效</span>';
+    host.appendChild(bar);
+  }catch(e){}
 }
 
 async function loadMyOrders(){
@@ -1522,6 +1541,22 @@ async function loadMyOrders(){
       if(!o.active) continue;
       const remain=Number(ethers.utils.formatUnits(o.nnbAmount.sub(o.filled),18));
       const price=Number(ethers.utils.formatUnits(o.pricePerNnb,18));
+      // ★ 檢查餘額足不足
+      let invalid=false, fillable=remain;
+      try{
+        const fa=await m.fillableAmount(ids[k]);
+        fillable=Number(ethers.utils.formatUnits(fa,18));
+        if(fillable < remain-0.0001) invalid=true;
+      }catch(e){}
+      if(invalid){
+        // ★ 賣方自己的失效單：顯示 + 可取消
+        html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">'+
+          '<div><div style="color:var(--red)">#'+ids[k].toString()+' 🚨 已失效</div>'+
+          '<div style="color:var(--muted);text-decoration:line-through"><b>'+remain.toFixed(2)+'</b> NNB @ '+price.toFixed(6)+' U</div>'+
+          '<div style="color:#ffb648;font-size:11px;margin-top:2px">餘額不足（尚有 '+fillable.toFixed(2)+' NNB）</div></div>'+
+          '<div style="text-align:right"><button class="btn btn-red" style="padding:5px 10px;font-size:11px;margin:0" onclick="cancelMyOrder('+ids[k].toString()+')">取消</button></div></div>';
+        continue;
+      }
       html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">'+
         '<div><div style="color:var(--dim)">#'+ids[k].toString()+'</div>'+
         '<div><b>'+remain.toFixed(2)+'</b> NNB @ '+price.toFixed(6)+' U</div></div>'+
