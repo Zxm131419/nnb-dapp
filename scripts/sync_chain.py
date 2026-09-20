@@ -115,6 +115,7 @@ def ev_topic(sig):
 def scan_new_users(from_block, to_block):
     """掃描新用戶事件（三層合約）"""
     evs = [
+        ev_topic("UserRegistered(address,uint256,uint256)"),   # ⭐ v3.0 用戶索引（最優先）
         ev_topic("BoughtMiner(address,uint256,uint256)"),
         ev_topic("Bound(address,address)"),
         ev_topic("NodeActivated(address,uint256)"),
