@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260920b';
+window.NNB_VER='20260920c';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260920b"></script>
+<script src="lang.js?v=20260920c"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed1.binance.org" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed.binance.org" crossorigin>
@@ -1502,7 +1502,7 @@ async function loadOrderBook(){
         continue;
       }
       html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">'+
-        '<div><div style="color:var(--dim)">#'+i+' '+o.seller.slice(0,8)+'…</div>'+
+        '<div><div style="color:var(--dim)">#'+i+' '+o.seller.slice(0,6)+'…'+o.seller.slice(-4)+'</div>'+
         '<div><b>'+remain.toFixed(2)+'</b> NNB @ '+price.toFixed(6)+' U</div></div>'+
         '<div style="text-align:right"><div style="color:var(--gold);font-weight:700">'+ (remain*price).toFixed(4)+' U</div>'+
         '<button class="btn" style="padding:9px 18px;font-size:13px;font-weight:700;margin:6px 0 0 0;background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff;border:none;border-radius:8px;cursor:pointer;min-width:70px" onclick="buyOrder('+i+','+remain+')">買入</button></div></div>';
