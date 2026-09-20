@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260919a';
+window.NNB_VER='20260920a';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260919a"></script>
+<script src="lang.js?v=20260920a"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed1.binance.org" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed.binance.org" crossorigin>
@@ -412,13 +412,15 @@ button{cursor:pointer;font-family:inherit}
       <span>賣出單價</span><span id="mkPrice">載入中…</span>
     </div>
     <button class="btn btn-gold" onclick="placeSell()">① 掛賣單</button>
-    <div style="margin-top:14px;border-top:1px dashed var(--line);padding-top:12px">
-      <div class="section-title" style="font-size:14px">市場賣單（點擊買入）<span style="margin-left:auto;font-size:12px;cursor:pointer" onclick="loadOrderBook()">刷新</span></div>
-      <div id="orderBook"><div style="text-align:center;color:var(--muted);padding:14px">載入中…</div></div>
-    </div>
+    <!-- ★ 我的掛單（移到上方，掛單後立即看到） -->
     <div style="margin-top:14px;border-top:1px dashed var(--line);padding-top:12px">
       <div class="section-title" style="font-size:14px">我的掛單 <span style="margin-left:auto;font-size:12px;cursor:pointer" onclick="loadMyOrders()">刷新</span></div>
       <div id="myOrders"><div style="text-align:center;color:var(--muted);padding:14px">—</div></div>
+    </div>
+    <!-- ★ 市場賣單（限高 + 可滾動） -->
+    <div style="margin-top:14px;border-top:1px dashed var(--line);padding-top:12px">
+      <div class="section-title" style="font-size:14px">市場賣單（點擊買入）<span style="margin-left:auto;font-size:12px;cursor:pointer" onclick="loadOrderBook()">刷新</span></div>
+      <div id="orderBook" style="max-height:320px;overflow-y:auto;-webkit-overflow-scrolling:touch"><div style="text-align:center;color:var(--muted);padding:14px">載入中…</div></div>
     </div>
   </div>
 </div>
@@ -1554,13 +1556,13 @@ async function loadMyOrders(){
           '<div><div style="color:var(--red)">#'+ids[k].toString()+' 🚨 已失效</div>'+
           '<div style="color:var(--muted);text-decoration:line-through"><b>'+remain.toFixed(2)+'</b> NNB @ '+price.toFixed(6)+' U</div>'+
           '<div style="color:#ffb648;font-size:11px;margin-top:2px">餘額不足（尚有 '+fillable.toFixed(2)+' NNB）</div></div>'+
-          '<div style="text-align:right"><button class="btn btn-red" style="padding:5px 10px;font-size:11px;margin:0" onclick="cancelMyOrder('+ids[k].toString()+')">取消</button></div></div>';
+          '<div style="text-align:right"><button class="btn btn-red" style="padding:7px 14px;font-size:12px;font-weight:700;margin:0" onclick="cancelMyOrder('+ids[k].toString()+')">取消</button></div></div>';
         continue;
       }
       html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">'+
         '<div><div style="color:var(--dim)">#'+ids[k].toString()+'</div>'+
         '<div><b>'+remain.toFixed(2)+'</b> NNB @ '+price.toFixed(6)+' U</div></div>'+
-        '<button class="btn btn-red" style="padding:5px 10px;font-size:11px;margin:0" onclick="cancelMyOrder('+ids[k].toString()+')">取消</button></div>';
+        '<button class="btn btn-red" style="padding:7px 14px;font-size:12px;font-weight:700;margin:0" onclick="cancelMyOrder('+ids[k].toString()+')">取消</button></div>';
     }
     host.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:14px">暫無有效掛單</div>';
   }catch(e){ host.innerHTML='<div style="text-align:center;color:var(--red);padding:14px">載入失敗</div>'; }
