@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260921g';
+window.NNB_VER='20260921h';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260921g"></script>
+<script src="lang.js?v=20260921h"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed2.ninicoin.io" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed2.defibit.io" crossorigin>
@@ -2137,20 +2137,36 @@ async function loadContribution(){
     const due   = Number(BigInt('0x'+s(3)))/1e18;
     const active = BigInt('0x'+s(4)) === 1n;
     const remain = Math.max(0, cap + bought - used);
+    const total  = cap + bought;
 
     panel.style.display='block';
     const elCap=document.getElementById('contribCap'); if(elCap) elCap.textContent=cap.toFixed(2)+' U';
     const elUsed=document.getElementById('contribUsed'); if(elUsed) elUsed.textContent=used.toFixed(2)+' U';
-    const elRem=document.getElementById('contribRemain'); if(elRem) elRem.textContent=remain.toFixed(2)+' U';
-    const elDue=document.getElementById('contribDue'); if(elDue) elDue.textContent=due.toFixed(2)+' U';
+    const elRem=document.getElementById('contribRemain');
+    if(elRem){
+      elRem.textContent=remain.toFixed(2)+' U';
+      elRem.style.color = (remain<=0) ? '#ff5c5c' : '';
+    }
+    const elDue=document.getElementById('contribDue');
+    if(elDue){
+      elDue.textContent=due.toFixed(2)+' U';
+      elDue.style.color = (due>0) ? '#ffb648' : '';
+    }
+    // 用量進度（可選顯示）
+    const elPct=document.getElementById('contribPct');
+    if(elPct && total>0) elPct.textContent='已用 '+(used/total*100).toFixed(1)+'%';
+
     const st=document.getElementById('contribStatus');
     const warn=document.getElementById('contribWarn');
     if(active){
       if(st){ st.textContent='正常'; st.style.background='rgba(55,214,122,0.15)'; st.style.color='#37d67a'; }
       if(warn) warn.style.display='none';
     }else{
-      if(st){ st.textContent='已暫停'; st.style.background='rgba(255,92,92,0.15)'; st.style.color='#ff5c5c'; }
+      if(st){ st.textContent='額度耗盡'; st.style.background='rgba(255,92,92,0.15)'; st.style.color='#ff5c5c'; }
       if(warn) warn.style.display='block';
+      // 自動預填待補金額，方便用戶一鍵購買
+      const buyAmt=document.getElementById('contribBuyAmt');
+      if(buyAmt && due>0 && !buyAmt.value) buyAmt.value=due.toFixed(2);
     }
   }catch(e){
     panel.style.display='none';
