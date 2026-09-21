@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260921e';
+window.NNB_VER='20260921f';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260921e"></script>
+<script src="lang.js?v=20260921f"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed2.ninicoin.io" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed2.defibit.io" crossorigin>
@@ -1003,7 +1003,7 @@ function go(page){
   const navs=['home','trade','mine','invite','node'];
   document.querySelectorAll('.bnav-item')[navs.indexOf(page)]?.classList.add('active');
   if(page==='trade'){fastLoadAll();loadOrderBook();loadMyOrders();loadMarketInfo();if(typeof nnbApplyLang==="function")nnbApplyLang();}
-  if(page==='mine'){fastLoadAll();startClaimCountdown();}
+  if(page==='mine'){fastLoadAll();startClaimCountdownFixed();}
   if(page==='node'){fastLoadAll();loadNodeInfo();loadNodeDividend();if(typeof getCurrentNodeFee==='function')getCurrentNodeFee();}
   if(page==='invite'){updatePerfUnlock();}
 }
@@ -1097,7 +1097,7 @@ async function connectWallet(){
       // 少量補充（訂單簿等非同步資料）
       loadOrderBook(); loadMyOrders(); loadMarketInfo();
     });
-    startClaimCountdown();
+    startClaimCountdownFixed();
     // ethers 加载完后初始化 signer
     waitForEthers();
     // 查链上已有的上级并显示
@@ -1439,7 +1439,7 @@ async function loadMiners(){
         updateClaimTimer(burned,boostExpire,todayClaimable);
       }catch(e){}
       // 启动倒计时
-      startClaimCountdown();
+      startClaimCountdownFixed();
       return true;
     }catch(e){return false}
   }
@@ -1470,13 +1470,50 @@ async function loadMiners(){
 
 // V25: 读取链上 lastClaimDay(天号)，每日限领一次
 async function getChainCooldown(a){
+  if(!a) return 0;
   try{
-    const ref=new ethers.Contract(C.contracts.referral,['function lastClaimDay(address) view returns(uint256)'],provider||signer);
-    const ld=await ref.lastClaimDay(a);
+    // ★ 用批次 RPC（快 10 倍），不再用 ethers.Contract
+    const r = await batchEthCall([{to:C.contracts.referral, data:'0x8911f793' + a.toLowerCase().replace('0x','').padStart(64,'0')}], 15000);
+    if(!r || !r[0]) return 0;
+    const ld = Number(BigInt(r[0]));
     const today=Math.floor(Date.now()/1000/86400);
-    if(Number(ld)<today) return 0; // 今天还没领,可领
-    return -1; // 今天已领过
+    if(ld < today) return 0;   // 今天還沒領，可領
+    return -1;                 // 今天已領過
   }catch(e){ return 0; }
+}
+
+// ★ 修復 startClaimCountdown：處理「可領取」與「已領取」兩種狀態
+function startClaimCountdownFixed(){
+  const timerEl=document.getElementById('claimTimer');
+  const btn=document.getElementById('claimBtn');
+  if(!timerEl||!btn)return;
+  getChainCooldown(addr).then(function(remain){
+    if(remain<0){
+      // 今天已領
+      timerEl.textContent='今日已領取，明天8點後可再領';
+      timerEl.style.color='var(--muted)';
+      btn.disabled=true; btn.style.opacity='0.5';
+      btn.textContent='今日已领取';
+    }else{
+      // 可領取
+      if(_globalClaimable>0){
+        timerEl.textContent='可領取 '+_globalClaimable.toLocaleString(undefined,{maximumFractionDigits:2})+' NNB';
+        timerEl.style.color='var(--green)';
+        btn.disabled=false; btn.style.opacity='1';
+        btn.textContent='★ 領取今日收益';
+        const elCnt=document.getElementById('minerClaimable');
+        if(elCnt) elCnt.textContent=_globalClaimable.toLocaleString(undefined,{maximumFractionDigits:2})+' NNB';
+      }else{
+        timerEl.textContent='暫無可領取收益';
+        timerEl.style.color='var(--muted)';
+        btn.disabled=true; btn.style.opacity='0.5';
+        btn.textContent='暫無可領';
+      }
+    }
+  }).catch(function(){
+    timerEl.textContent='載入失敗，請重新整理';
+    timerEl.style.color='var(--red)';
+  });
 }
 // 更新冷却 UI（链上为准，显示剩余时间）
 async function refreshClaimCooldown(todayClaimable){
@@ -1731,7 +1768,7 @@ async function claimReward(){
     await tx.wait();
     toast('领取成功!');
     // 立即更新按钮状态（冷却以链上为准）
-    startClaimCountdown();
+    startClaimCountdownFixed();
     fastLoadAll();
   }catch(e){
     const msg=e.reason||e.message||'';
@@ -1741,22 +1778,7 @@ async function claimReward(){
 }
 
 // 24小时倒计时
-function startClaimCountdown(){
-  // 24h冷却以链上为准（每秒刷新剩余时间）
-  const timerEl=document.getElementById('claimTimer');
-  const btn=document.getElementById('claimBtn');
-  if(!timerEl||!btn)return;
-  getChainCooldown(addr).then(function(remain){
-    if(remain>0){
-      const h=Math.floor(remain/3600), m=Math.floor((remain%3600)/60), sec=Math.floor(remain%60);
-      timerEl.textContent='下次领取: '+h+'时'+m+'分'+sec+'秒';
-      timerEl.style.color='var(--muted)';
-      btn.disabled=true; btn.style.opacity='0.5';
-      btn.textContent='已领取,等待冷却';
-      setTimeout(startClaimCountdown,1000);
-    }
-  });
-}
+// （已停用，改用 startClaimCountdownFixed）
 
 
 // ===== NNB Market 撮合交易邏輯 =====
