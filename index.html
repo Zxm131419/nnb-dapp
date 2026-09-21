@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260921a';
+window.NNB_VER='20260921b';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260921a"></script>
+<script src="lang.js?v=20260921b"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed1.binance.org" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed.binance.org" crossorigin>
@@ -855,6 +855,11 @@ async function loadPrice(){
     const el3=document.getElementById('totalChange');if(el3){el3.className=cls;el3.textContent=(change>=0?'+':'')+change.toFixed(2)+'%';}
     const el4=document.getElementById('buyPrice');if(el4)el4.textContent='1 NNB ≈ '+currentPrice.toFixed(8)+' USDT';
     const el5=document.getElementById('sellPrice');if(el5)el5.textContent='1 NNB ≈ '+currentPrice.toFixed(8)+' USDT';
+    // ★ 同步更新「賣出單價」（未連錢包也能顯示）
+    const ep0=document.getElementById('mkPrice');
+    if(ep0 && (ep0.textContent==='載入中…' || !ep0.textContent || ep0.textContent.indexOf('—')===0)){
+      ep0.textContent=currentPrice.toFixed(6)+' USDT';
+    }
     updateEstimates();
   }catch(e){
     currentPrice=0;
@@ -1451,16 +1456,35 @@ function marketAddr(){ return C.contracts.market || '0xD9783711fD81B36650dd76a62
 
 async function loadMarketInfo(){
   if(!addr){ return; }
+  const ep=document.getElementById('mkPrice');
   try{
     const rp=provider||new ethers.providers.Web3Provider(window.ethereum);
     const m=new ethers.Contract(marketAddr(), MARKET_ABI, rp);
     const tk=new ethers.Contract(C.tokens.NNB,['function balanceOf(address) view returns(uint256)'], rp);
-    const bal=await tk.balanceOf(addr);
-    const el=document.getElementById('mkBal'); if(el) el.textContent=(Number(ethers.utils.formatUnits(bal,18))).toFixed(2)+' NNB';
     const now=Math.floor(Date.now()/1000);
-    const p=await m.currentEffectivePrice(now);
-    const ep=document.getElementById('mkPrice'); if(ep) ep.textContent=(Number(p)/1e18).toFixed(6)+' USDT';
-  }catch(e){}
+    // ★ 價格優先（失敗就重試、最後用 currentPrice 備援）
+    let p = null;
+    for(let attempt=0; attempt<2; attempt++){
+      try{ p = await m.currentEffectivePrice(now); break; }
+      catch(e){ await new Promise(r=>setTimeout(r,300)); }
+    }
+    if(p===null && currentPrice>0){
+      if(ep) ep.textContent=currentPrice.toFixed(6)+' USDT';
+    }else if(p!==null){
+      if(ep) ep.textContent=(Number(p)/1e18).toFixed(6)+' USDT';
+    }else{
+      if(ep) ep.textContent='—（點刷新）';
+    }
+    // 餘額（失敗不影響價格）
+    try{
+      const bal=await tk.balanceOf(addr);
+      const el=document.getElementById('mkBal'); if(el) el.textContent=(Number(ethers.utils.formatUnits(bal,18))).toFixed(2)+' NNB';
+    }catch(e){}
+  }catch(e){
+    if(ep && ep.textContent==='載入中…'){
+      ep.textContent = (currentPrice>0) ? currentPrice.toFixed(6)+' USDT' : '—（點刷新）';
+    }
+  }
 }
 
 async function loadOrderBook(){
@@ -1472,32 +1496,53 @@ async function loadOrderBook(){
     const next=Number(await m.nextOrderId());
     if(next===0){ host.innerHTML='<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>'; return; }
 
-    // ★★★ 效能優化：並行查詢（原本串行要 9~15 秒，現在約 1 秒）
-    //   先掃最近 40 筆（找 15 筆有效單）
-    const SCAN = Math.min(next, 40);
+    // ★ 效能夠用又不打爆 RPC：先掃最近 30 筆
+    const SCAN = Math.min(next, 20);
     const ids = [];
     for(let i=next-1; i>=next-SCAN && i>=0; i--) ids.push(i);
 
-    const results = await Promise.all(ids.map(async (i)=>{
-      try{
-        const [o, fa] = await Promise.all([
-          m.getOrder(i),
-          m.fillableAmount(i).catch(()=>null)
-        ]);
-        if(!o.active) return null;
-        const remain=Number(ethers.utils.formatUnits(o.nnbAmount.sub(o.filled),18));
-        if(remain<=0) return null;
-        const price=Number(ethers.utils.formatUnits(o.pricePerNnb,18));
-        let fillable=remain, invalid=false;
-        if(fa!==null){
-          fillable=Number(ethers.utils.formatUnits(fa,18));
-          if(fillable < remain-0.0001) invalid=true;
+    // ★ 限流並行（一次最多 5 個）
+    async function pool(tasks, limit){
+      const out = new Array(tasks.length);
+      let idx = 0;
+      async function worker(){
+        while(idx < tasks.length){
+          const cur = idx++;
+          try{ out[cur] = await tasks[cur](); }catch(e){ out[cur] = null; }
         }
-        return {id:i, seller:o.seller, remain:remain, price:price, fillable:fillable, invalid:invalid};
-      }catch(e){ return null; }
-    }));
+      }
+      await Promise.all(Array.from({length: Math.min(limit, tasks.length)}, worker));
+      return out;
+    }
 
-    // 過濾 + 排序（新→舊）
+    // ★ 單筆查詢（含重試）
+    async function fetchOne(i){
+      for(let attempt=0; attempt<2; attempt++){
+        try{
+          const o = await m.getOrder(i);
+          if(!o.active) return null;
+          const remain = Number(ethers.utils.formatUnits(o.nnbAmount.sub(o.filled),18));
+          if(remain <= 0) return null;
+          const price = Number(ethers.utils.formatUnits(o.pricePerNnb,18));
+          // 餘額檢查（失敗也不影響主流程）
+          let fillable = remain, invalid = false;
+          try{
+            const fa = await m.fillableAmount(i);
+            fillable = Number(ethers.utils.formatUnits(fa,18));
+            if(fillable < remain - 0.0001) invalid = true;
+          }catch(e2){ /* 拿不到就當作正常 */ }
+          return {id:i, seller:o.seller, remain:remain, price:price, fillable:fillable, invalid:invalid};
+        }catch(e){
+          if(attempt===0){ await new Promise(r=>setTimeout(r,250)); continue; }
+          return null;
+        }
+      }
+      return null;
+    }
+
+    // 限流 5 個並行
+    const results = await pool(ids.map(i => () => fetchOne(i)), 10);
+
     const valid = results.filter(r=>r && !r.invalid);
     const invalids = results.filter(r=>r && r.invalid);
     invalids.forEach(x=>_invalidOrders.push({id:x.id, seller:x.seller, remain:x.remain, price:x.price, fillable:x.fillable}));
@@ -1511,8 +1556,11 @@ async function loadOrderBook(){
         '<button class="btn" style="padding:9px 18px;font-size:13px;font-weight:700;margin:6px 0 0 0;background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff;border:none;border-radius:8px;cursor:pointer;min-width:70px" onclick="buyOrder('+r.id+','+r.remain+')">買入</button></div></div>';
     });
     host.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>';
+    if(valid.length===0 && next>0){
+      host.innerHTML='<div style="text-align:center;color:var(--muted);padding:14px">載入中，請點「刷新」再試</div>';
+    }
     _renderInvalidHint();
-  }catch(e){ host.innerHTML='<div style="text-align:center;color:var(--red);padding:14px">載入失敗</div>'; }
+  }catch(e){ host.innerHTML='<div style="text-align:center;color:var(--red);padding:14px">載入失敗（請點刷新重試）</div>'; }
 }
 
 // ★ 失效單資料快取（買方不顯示，賣方可管理）
