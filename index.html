@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260921b';
+window.NNB_VER='20260921c';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260921b"></script>
+<script src="lang.js?v=20260921c"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed1.binance.org" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed.binance.org" crossorigin>
@@ -670,6 +670,110 @@ const C={chainId:56,rpc:'https://bsc-dataseed1.binance.org:443',
   contracts:{mining:'0x0745f350358d1478C28626235b062Eafc6b49648',token:'0x9F60B80980588B95f55d8E1Fa6A6299e6BDc0bd1',
     referral:'0x0745f350358d1478C28626235b062Eafc6b49648',swap:'0x3aA629408F4f61A6F16E72D4CCc92D39d1FCAB3c',market:'0xD9783711fD81B36650dd76a62042E9775e79D14D',pool:'0xC4dd2Fcd7bC66e92EdC43951863252fDf536424C'},
   pair:'0xCAaF3c41a40103a23Eeaa4BbA468AF3cF5b0e0D8'};
+
+// ============================================================
+// ★★★ 批次 RPC 工具（把多個 eth_call 打包成 1 個 HTTP 請求）
+//   效果：20 個查詢 → 1 次網路往返（省 95% 流量）
+// ============================================================
+const RPC_ENDPOINTS = [
+  'https://bsc-dataseed1.binance.org',
+  'https://bsc-dataseed.binance.org',
+  'https://bsc-dataseed2.binance.org',
+  'https://bsc.publicnode.com',
+  'https://rpc.ankr.com/bsc'
+];
+const _rpcCache = new Map();   // key -> {val, ts}
+const RPC_CACHE_TTL = 8000;    // 8 秒快取
+
+/**
+ * 批次查詢多個 eth_call（含快取 + 多 RPC 競速 + 保底重試）
+ * @param {Array} calls - [{to, data}, ...]
+ * @param {number} ttl - 快取毫秒數
+ * @returns {Promise<Array>} - 按順序回傳
+ */
+async function batchEthCall(calls, ttl){
+  ttl = (ttl===undefined) ? RPC_CACHE_TTL : ttl;
+  const now = Date.now();
+  const results = new Array(calls.length).fill(null);
+  const pending = [];
+
+  // 1. 查快取
+  calls.forEach(function(c, i){
+    const key = (c.to||'').toLowerCase() + '|' + (c.data||'').toLowerCase();
+    const hit = _rpcCache.get(key);
+    if(hit && (now - hit.ts) < ttl){ results[i] = hit.val; }
+    else { pending.push({idx:i, key:key, call:c}); }
+  });
+  if(pending.length === 0) return results;
+
+  // ★ 分批：每批最多 30 個（RPC 上限）
+  const CHUNK = 30;
+  for(let off=0; off<pending.length; off+=CHUNK){
+    const grp = pending.slice(off, off+CHUNK);
+    const payload = grp.map(function(p, n){
+      return {jsonrpc:'2.0', id:n, method:'eth_call',
+              params:[{to:p.call.to, data:p.call.data}, 'latest']};
+    });
+    const resp = await _batchPost(payload);
+    if(!resp || !Array.isArray(resp)) continue;
+    resp.forEach(function(item){
+      if(typeof item.id !== 'number') return;
+      const p = grp[item.id];
+      if(!p) return;
+      const val = (item.result && item.result !== '0x') ? item.result : null;
+      results[p.idx] = val;
+      if(val) _rpcCache.set(p.key, {val:val, ts:Date.now()});
+    });
+  }
+
+  // 保底：少數缺失的用單獨查詢補
+  const missing = pending.filter(function(p){ return results[p.idx]===null; });
+  if(missing.length > 0 && missing.length <= 15){
+    await Promise.all(missing.map(async function(p){
+      try{
+        const r = await fetch(RPC_ENDPOINTS[_rpcIdx++ % RPC_ENDPOINTS.length], {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({jsonrpc:'2.0',id:1,method:'eth_call',params:[{to:p.call.to,data:p.call.data},'latest']})
+        }).then(function(x){ return x.json(); });
+        if(r && r.result && r.result !== '0x'){
+          results[p.idx] = r.result;
+          _rpcCache.set(p.key, {val:r.result, ts:Date.now()});
+        }
+      }catch(e){}
+    }));
+  }
+  return results;
+}
+
+// ★ 批次 POST（多 RPC 競速）
+async function _batchPost(payload){
+  const tries = RPC_ENDPOINTS.map(function(url){
+    return new Promise(function(resolve){
+      const ctl = (typeof AbortController!=='undefined') ? new AbortController() : null;
+      const timer = setTimeout(function(){ if(ctl) ctl.abort(); resolve(null); }, 8000);
+      fetch(url, {method:'POST', headers:{'Content-Type':'application/json'},
+                  body: JSON.stringify(payload), signal: ctl ? ctl.signal : undefined})
+        .then(function(r){ return r.json(); })
+        .then(function(j){ clearTimeout(timer); resolve(j); })
+        .catch(function(){ clearTimeout(timer); resolve(null); });
+    });
+  });
+  let resp = await Promise.race(tries.concat([new Promise(function(r){ setTimeout(function(){ r(null); }, 9000); })]));
+  if(!resp){
+    const all = await Promise.all(tries);
+    resp = all.find(function(x){ return x && Array.isArray(x); }) || null;
+  }
+  return resp;
+}
+
+// 快取清理
+setInterval(function(){
+  const now = Date.now();
+  if(_rpcCache.size > 500){
+    _rpcCache.forEach(function(v,k){ if(now - v.ts > 30000) _rpcCache.delete(k); });
+  }
+}, 30000);
+
 const ABI={
   pair:['function getReserves() view returns (uint112,uint112,uint32)'],
   erc20:['function balanceOf(address) view returns (uint256)','function symbol() view returns (string)','function decimals() view returns (uint8)'],
@@ -1491,64 +1595,64 @@ async function loadOrderBook(){
   const host=document.getElementById('orderBook'); if(!host) return;
   _invalidOrders=[];   // ★ 重設失效單快取
   try{
-    const rp=provider||new ethers.providers.JsonRpcProvider(RPC56||'https://bsc-dataseed.binance.org');
-    const m=new ethers.Contract(marketAddr(), MARKET_ABI, rp);
-    const next=Number(await m.nextOrderId());
-    if(next===0){ host.innerHTML='<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>'; return; }
+    const MARKET = marketAddr();
+    const SCAN = 20;
 
-    // ★ 效能夠用又不打爆 RPC：先掃最近 30 筆
-    const SCAN = Math.min(next, 20);
-    const ids = [];
-    for(let i=next-1; i>=next-SCAN && i>=0; i--) ids.push(i);
+    // ① 先拿 nextOrderId
+    const nextHex = await batchEthCall([{to:MARKET, data:'0x' + 'a5b0f0c1'}], 0).catch(()=>[null]);
+    // nextOrderId() selector 動態計算（避免硬編碼錯誤）
+    const SEL_NEXT = '0x' + _sel('nextOrderId()');
+    const SEL_GET  = '0x' + _sel('getOrder(uint256)');
+    const SEL_FILL = '0x' + _sel('fillableAmount(uint256)');
 
-    // ★ 限流並行（一次最多 5 個）
-    async function pool(tasks, limit){
-      const out = new Array(tasks.length);
-      let idx = 0;
-      async function worker(){
-        while(idx < tasks.length){
-          const cur = idx++;
-          try{ out[cur] = await tasks[cur](); }catch(e){ out[cur] = null; }
-        }
-      }
-      await Promise.all(Array.from({length: Math.min(limit, tasks.length)}, worker));
-      return out;
+    const r0 = await batchEthCall([{to:MARKET, data:SEL_NEXT}], 0);
+    const next = (r0 && r0[0]) ? parseInt(r0[0], 16) : 0;
+    if(!next || next===0){ host.innerHTML='<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>'; return; }
+
+    // ② 批次查全部訂單（1 個 HTTP 請求搞定）
+    const count = Math.min(next, SCAN);
+    const calls = [];
+    const idMap = [];
+    for(let i=next-1; i>=next-count && i>=0; i--){
+      calls.push({to:MARKET, data:SEL_GET + _pad32(i)});
+      idMap.push({id:i, kind:'order'});
+      calls.push({to:MARKET, data:SEL_FILL + _pad32(i)});
+      idMap.push({id:i, kind:'fill'});
     }
 
-    // ★ 單筆查詢（含重試）
-    async function fetchOne(i){
-      for(let attempt=0; attempt<2; attempt++){
-        try{
-          const o = await m.getOrder(i);
-          if(!o.active) return null;
-          const remain = Number(ethers.utils.formatUnits(o.nnbAmount.sub(o.filled),18));
-          if(remain <= 0) return null;
-          const price = Number(ethers.utils.formatUnits(o.pricePerNnb,18));
-          // 餘額檢查（失敗也不影響主流程）
-          let fillable = remain, invalid = false;
-          try{
-            const fa = await m.fillableAmount(i);
-            fillable = Number(ethers.utils.formatUnits(fa,18));
-            if(fillable < remain - 0.0001) invalid = true;
-          }catch(e2){ /* 拿不到就當作正常 */ }
-          return {id:i, seller:o.seller, remain:remain, price:price, fillable:fillable, invalid:invalid};
-        }catch(e){
-          if(attempt===0){ await new Promise(r=>setTimeout(r,250)); continue; }
-          return null;
-        }
+    const res = await batchEthCall(calls, 6000);
+
+    // ③ 解析
+    const byId = {};
+    idMap.forEach(function(m, idx){
+      const v = res[idx];
+      if(!v) return;
+      if(!byId[m.id]) byId[m.id] = {};
+      byId[m.id][m.kind] = v;
+    });
+
+    const valid = [], invalids = [];
+    Object.keys(byId).map(Number).sort(function(a,b){ return b-a; }).forEach(function(i){
+      const o = byId[i].order;
+      if(!o) return;
+      const parsed = _parseOrder(o);
+      if(!parsed || !parsed.active || parsed.remain <= 0) return;
+      let fillable = parsed.remain, invalid = false;
+      const fillHex = byId[i].fill;
+      if(fillHex){
+        fillable = Number(BigInt(fillHex)) / 1e18;
+        if(fillable < parsed.remain - 0.0001) invalid = true;
       }
-      return null;
-    }
+      const item = {id:i, seller:parsed.seller, remain:parsed.remain, price:parsed.price, fillable:fillable, invalid:invalid};
+      if(invalid) invalids.push(item); else valid.push(item);
+    });
 
-    // 限流 5 個並行
-    const results = await pool(ids.map(i => () => fetchOne(i)), 10);
-
-    const valid = results.filter(r=>r && !r.invalid);
-    const invalids = results.filter(r=>r && r.invalid);
-    invalids.forEach(x=>_invalidOrders.push({id:x.id, seller:x.seller, remain:x.remain, price:x.price, fillable:x.fillable}));
+    invalids.forEach(function(x){
+      _invalidOrders.push({id:x.id, seller:x.seller, remain:x.remain, price:x.price, fillable:x.fillable});
+    });
 
     let html='';
-    valid.slice(0,15).forEach(r=>{
+    valid.slice(0,15).forEach(function(r){
       html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">'+
         '<div><div style="color:var(--dim)">#'+r.id+' '+r.seller.slice(0,6)+'…'+r.seller.slice(-4)+'</div>'+
         '<div><b>'+r.remain.toFixed(2)+'</b> NNB @ '+r.price.toFixed(6)+' U</div></div>'+
@@ -1557,10 +1661,47 @@ async function loadOrderBook(){
     });
     host.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>';
     if(valid.length===0 && next>0){
-      host.innerHTML='<div style="text-align:center;color:var(--muted);padding:14px">載入中，請點「刷新」再試</div>';
+      host.innerHTML='<div style="text-align:center;color:var(--muted);padding:14px">暫無有效掛單（可點刷新）</div>';
     }
     _renderInvalidHint();
-  }catch(e){ host.innerHTML='<div style="text-align:center;color:var(--red);padding:14px">載入失敗（請點刷新重試）</div>'; }
+  }catch(e){
+    host.innerHTML='<div style="text-align:center;color:var(--red);padding:14px">載入失敗（請點刷新重試）</div>';
+  }
+}
+
+// ★ selector 計算（keccak256 前 4 bytes）
+function _sel(sig){
+  return _keccak(sig).slice(0,8);
+}
+// ★ 32 byte 補齊
+function _pad32(n){
+  return (typeof n === 'number' ? n.toString(16) : String(n)).padStart(64, '0');
+}
+// ★ 極簡 keccak256（純 JS，避免依賴）
+function _keccak(input){
+  // 使用瀏覽器內建的 ethers 或 fallback
+  if(typeof ethers !== 'undefined' && ethers.utils && ethers.utils.id){
+    return ethers.utils.id(input).slice(2);
+  }
+  return '';
+}
+// ★ 解析 getOrder 回傳（5 個欄位）
+function _parseOrder(hex){
+  try{
+    const h = hex.replace('0x','');
+    const slot = function(i){ return h.slice(i*64, (i+1)*64); };
+    const seller = '0x' + slot(0).slice(24);
+    const nnbAmount = BigInt('0x' + slot(1));
+    const pricePerNnb = BigInt('0x' + slot(2));
+    const filled = BigInt('0x' + slot(3));
+    const active = BigInt('0x' + slot(4)) === 1n;
+    return {
+      seller: seller,
+      remain: Number(nnbAmount - filled) / 1e18,
+      price: Number(pricePerNnb) / 1e18,
+      active: active
+    };
+  }catch(e){ return null; }
 }
 
 // ★ 失效單資料快取（買方不顯示，賣方可管理）
@@ -1586,47 +1727,78 @@ async function loadMyOrders(){
   const host=document.getElementById('myOrders'); if(!host) return;
   if(!addr){ host.innerHTML='<div style="text-align:center;color:var(--muted);padding:14px">請先連接錢包</div>'; return; }
   try{
-    const rp=provider||new ethers.providers.Web3Provider(window.ethereum);
-    const m=new ethers.Contract(marketAddr(), MARKET_ABI, rp);
-    const ids=await m.getUserOrders(addr);
+    const MARKET = marketAddr();
+    const SEL_GETUSER = '0x' + _sel('getUserOrders(address)');
+    const SEL_GET     = '0x' + _sel('getOrder(uint256)');
+    const SEL_FILL    = '0x' + _sel('fillableAmount(uint256)');
+
+    // ① 拿用戶訂單列表
+    const r0 = await batchEthCall([{to:MARKET, data:SEL_GETUSER + _pad32addr(addr)}], 0);
+    if(!r0 || !r0[0]){ host.innerHTML='<div style="text-align:center;color:var(--muted);padding:14px">暫無掛單</div>'; return; }
+
+    const hexList = r0[0].replace('0x','');
+    const arrLen = parseInt(hexList.slice(64,128), 16);
+    const ids = [];
+    for(let k=0;k<arrLen;k++){
+      const off = 128 + k*64;
+      if(off+64 > hexList.length) break;
+      ids.push(parseInt(hexList.slice(off, off+64), 16));
+    }
     if(ids.length===0){ host.innerHTML='<div style="text-align:center;color:var(--muted);padding:14px">暫無掛單</div>'; return; }
-    // ★ 效能優化：並行查詢
-    const last10 = ids.slice(-10).reverse();
-    const results = await Promise.all(last10.map(async (oid)=>{
-      try{
-        const [o, fa] = await Promise.all([
-          m.getOrder(oid),
-          m.fillableAmount(oid).catch(()=>null)
-        ]);
-        if(!o.active) return null;
-        const remain=Number(ethers.utils.formatUnits(o.nnbAmount.sub(o.filled),18));
-        const price=Number(ethers.utils.formatUnits(o.pricePerNnb,18));
-        let fillable=remain, invalid=false;
-        if(fa!==null){
-          fillable=Number(ethers.utils.formatUnits(fa,18));
-          if(fillable < remain-0.0001) invalid=true;
-        }
-        return {oid:oid, remain:remain, price:price, invalid:invalid, fillable:fillable};
-      }catch(e){ return null; }
-    }));
+
+    // ② 只取最後 10 筆，批次查詢
+    const recent = ids.slice(-10).reverse();
+    const calls = [];
+    const idMap = [];
+    recent.forEach(function(oid){
+      calls.push({to:MARKET, data:SEL_GET + _pad32(oid)});
+      idMap.push({id:oid, kind:'order'});
+      calls.push({to:MARKET, data:SEL_FILL + _pad32(oid)});
+      idMap.push({id:oid, kind:'fill'});
+    });
+    const res = await batchEthCall(calls, 6000);
+
+    const byId = {};
+    idMap.forEach(function(m, idx){
+      if(!res[idx]) return;
+      if(!byId[m.id]) byId[m.id] = {};
+      byId[m.id][m.kind] = res[idx];
+    });
+
     let html='';
-    results.filter(r=>r).forEach(r=>{
-      const oid=r.oid.toString();
-      if(r.invalid){
+    recent.forEach(function(oid){
+      const blk = byId[oid];
+      if(!blk || !blk.order) return;
+      const parsed = _parseOrder(blk.order);
+      if(!parsed || !parsed.active || parsed.remain <= 0) return;
+      let fillable = parsed.remain, invalid = false;
+      if(blk.fill){
+        fillable = Number(BigInt(blk.fill)) / 1e18;
+        if(fillable < parsed.remain - 0.0001) invalid = true;
+      }
+      const oidStr = oid.toString();
+      if(invalid){
         html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">'+
-          '<div><div style="color:var(--red)">#'+oid+' 🚨 已失效</div>'+
-          '<div style="color:var(--muted);text-decoration:line-through"><b>'+r.remain.toFixed(2)+'</b> NNB @ '+r.price.toFixed(6)+' U</div>'+
-          '<div style="color:#ffb648;font-size:11px;margin-top:2px">餘額不足（尚有 '+r.fillable.toFixed(2)+' NNB）</div></div>'+
-          '<div style="text-align:right"><button class="btn btn-red" style="padding:7px 14px;font-size:12px;font-weight:700;margin:0" onclick="cancelMyOrder('+oid+')">取消</button></div></div>';
+          '<div><div style="color:var(--red)">#'+oidStr+' 🚨 已失效</div>'+
+          '<div style="color:var(--muted);text-decoration:line-through"><b>'+parsed.remain.toFixed(2)+'</b> NNB @ '+parsed.price.toFixed(6)+' U</div>'+
+          '<div style="color:#ffb648;font-size:11px;margin-top:2px">餘額不足（尚有 '+fillable.toFixed(2)+' NNB）</div></div>'+
+          '<div style="text-align:right"><button class="btn btn-red" style="padding:7px 14px;font-size:12px;font-weight:700;margin:0" onclick="cancelMyOrder('+oidStr+')">取消</button></div></div>';
       }else{
         html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">'+
-          '<div><div style="color:var(--dim)">#'+oid+'</div>'+
-          '<div><b>'+r.remain.toFixed(2)+'</b> NNB @ '+r.price.toFixed(6)+' U</div></div>'+
-          '<button class="btn btn-red" style="padding:7px 14px;font-size:12px;font-weight:700;margin:0" onclick="cancelMyOrder('+oid+')">取消</button></div>';
+          '<div><div style="color:var(--dim)">#'+oidStr+'</div>'+
+          '<div><b>'+parsed.remain.toFixed(2)+'</b> NNB @ '+parsed.price.toFixed(6)+' U</div></div>'+
+          '<button class="btn btn-red" style="padding:7px 14px;font-size:12px;font-weight:700;margin:0" onclick="cancelMyOrder('+oidStr+')">取消</button></div>';
       }
     });
     host.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:14px">暫無有效掛單</div>';
-  }catch(e){ host.innerHTML='<div style="text-align:center;color:var(--red);padding:14px">載入失敗</div>'; }
+  }catch(e){
+    host.innerHTML='<div style="text-align:center;color:var(--red);padding:14px">載入失敗</div>';
+  }
+}
+
+// ★ 地址補齊 32 bytes
+function _pad32addr(a){
+  return a.toLowerCase().replace('0x','').padStart(64,'0');
 }
 
 async function placeSell(){
