@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260921c';
+window.NNB_VER='20260921d';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,13 +285,14 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260921c"></script>
+<script src="lang.js?v=20260921d"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
-<link rel="preconnect" href="https://bsc-dataseed1.binance.org" crossorigin>
+<link rel="preconnect" href="https://bsc-dataseed2.ninicoin.io" crossorigin>
+<link rel="preconnect" href="https://bsc-dataseed2.defibit.io" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed.binance.org" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="dns-prefetch" href="https://bsc-dataseed2.binance.org">
-<link rel="dns-prefetch" href="https://rpc.ankr.com">
+<link rel="dns-prefetch" href="https://bsc-dataseed2.ninicoin.io">
 </head>
 <body>
 <div class="toast" id="toast"></div>
@@ -675,15 +676,17 @@ const C={chainId:56,rpc:'https://bsc-dataseed1.binance.org:443',
 // ★★★ 批次 RPC 工具（把多個 eth_call 打包成 1 個 HTTP 請求）
 //   效果：20 個查詢 → 1 次網路往返（省 95% 流量）
 // ============================================================
+// ★ RPC 清單（實測排序：ninicoin/defibit 最快，約 300ms）
 const RPC_ENDPOINTS = [
+  'https://bsc-dataseed2.ninicoin.io',
+  'https://bsc-dataseed2.defibit.io',
+  'https://bsc-dataseed1.ninicoin.io',
   'https://bsc-dataseed1.binance.org',
-  'https://bsc-dataseed.binance.org',
-  'https://bsc-dataseed2.binance.org',
-  'https://bsc.publicnode.com',
-  'https://rpc.ankr.com/bsc'
+  'https://bsc-dataseed3.binance.org',
+  'https://bsc-dataseed.binance.org'
 ];
+const RPC_CACHE_TTL = 10000;   // 10 秒快取（加大，減少請求）
 const _rpcCache = new Map();   // key -> {val, ts}
-const RPC_CACHE_TTL = 8000;    // 8 秒快取
 
 /**
  * 批次查詢多個 eth_call（含快取 + 多 RPC 競速 + 保底重試）
@@ -745,25 +748,33 @@ async function batchEthCall(calls, ttl){
   return results;
 }
 
-// ★ 批次 POST（多 RPC 競速）
+// ★ 批次 POST（單一 RPC，失敗才換下一個 → 避免被慢 RPC 拖累）
 async function _batchPost(payload){
-  const tries = RPC_ENDPOINTS.map(function(url){
-    return new Promise(function(resolve){
-      const ctl = (typeof AbortController!=='undefined') ? new AbortController() : null;
-      const timer = setTimeout(function(){ if(ctl) ctl.abort(); resolve(null); }, 8000);
-      fetch(url, {method:'POST', headers:{'Content-Type':'application/json'},
-                  body: JSON.stringify(payload), signal: ctl ? ctl.signal : undefined})
-        .then(function(r){ return r.json(); })
-        .then(function(j){ clearTimeout(timer); resolve(j); })
-        .catch(function(){ clearTimeout(timer); resolve(null); });
-    });
-  });
-  let resp = await Promise.race(tries.concat([new Promise(function(r){ setTimeout(function(){ r(null); }, 9000); })]));
-  if(!resp){
-    const all = await Promise.all(tries);
-    resp = all.find(function(x){ return x && Array.isArray(x); }) || null;
+  for(let i=0; i<RPC_ENDPOINTS.length; i++){
+    const url = RPC_ENDPOINTS[i];
+    try{
+      const resp = await _fetchWithTimeout(url, payload, 4000);
+      if(resp && Array.isArray(resp)){
+        // 檢查至少有結果
+        const hasResult = resp.some(function(x){ return x && x.result; });
+        if(hasResult) return resp;
+      }
+    }catch(e){ /* 換下一個 */ }
   }
-  return resp;
+  return null;
+}
+
+// ★ 帶超時的 fetch
+function _fetchWithTimeout(url, payload, timeout){
+  return new Promise(function(resolve, reject){
+    const ctl = (typeof AbortController!=='undefined') ? new AbortController() : null;
+    const timer = setTimeout(function(){ if(ctl) ctl.abort(); resolve(null); }, timeout);
+    fetch(url, {method:'POST', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify(payload), signal: ctl ? ctl.signal : undefined})
+      .then(function(r){ return r.json(); })
+      .then(function(j){ clearTimeout(timer); resolve(j); })
+      .catch(function(e){ clearTimeout(timer); resolve(null); });
+  });
 }
 
 // 快取清理
@@ -912,7 +923,7 @@ async function loadPrice(){
         }catch(e){}
       }
       // 方式2: 并行打多个 RPC，取最快成功的回应
-      const rpcs=['https://bsc-dataseed1.binance.org','https://bsc-dataseed.binance.org','https://bsc-dataseed2.binance.org','https://rpc.ankr.com/bsc','https://bsc.publicnode.com'];
+      const rpcs=['https://bsc-dataseed2.ninicoin.io','https://bsc-dataseed2.defibit.io','https://bsc-dataseed1.ninicoin.io','https://bsc-dataseed1.binance.org'];
       const tries=rpcs.map(rpc=>new Promise(resolve=>{
         const ctl=(typeof AbortController!=='undefined')?new AbortController():null;
         const timer=setTimeout(()=>{ if(ctl) ctl.abort(); resolve(null); },3000);
@@ -1033,7 +1044,7 @@ async function loadPoolInfo(){
       }catch(e){}
     }
     if(poolUsdt===0){
-      const rpcs=['https://bsc-dataseed1.binance.org:443','https://rpc.ankr.com/bsc','https://bsc.publicnode.com'];
+      const rpcs=['https://bsc-dataseed2.ninicoin.io','https://bsc-dataseed2.defibit.io','https://bsc-dataseed1.binance.org'];
       for(const rpc of rpcs){
         try{
           const resp=await fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(rpcBody)});
@@ -1073,7 +1084,7 @@ async function getBalance(tokenAddr,walletAddr){
     }
     
     // 方法2: 用 fetch 调多个 RPC
-    const rpcs=['https://bsc-dataseed1.binance.org:443','https://rpc.ankr.com/bsc','https://bsc.publicnode.com','https://bsc-dataseed2.defibit.io','https://bsc-dataseed3.ninicoin.io'];
+    const rpcs=['https://bsc-dataseed2.ninicoin.io','https://bsc-dataseed2.defibit.io','https://bsc-dataseed1.binance.org','https://bsc-dataseed3.binance.org'];
     for(const rpc of rpcs){
       try{
         const resp=await fetch(rpc,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',method:'eth_call',params:[{to:tokenAddr,data:data},'latest'],id:1})});
