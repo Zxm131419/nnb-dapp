@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260921d';
+window.NNB_VER='20260921e';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260921d"></script>
+<script src="lang.js?v=20260921e"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed2.ninicoin.io" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed2.defibit.io" crossorigin>
@@ -777,6 +777,208 @@ function _fetchWithTimeout(url, payload, timeout){
   });
 }
 
+// ============================================================
+// ★★★ 統一載入器（一次批次載入所有已知頁面資料）
+//   效果：48 次 RPC → 1~2 批次請求
+// ============================================================
+const _SEL = {
+  users: '0xa87430ba',
+  claimableAmount: '0x89885049',
+  balanceOf: '0x70a08231',
+  getUserReferrer: '0x36144c9a',
+  getDirectReferralCount: '0x98278efb',
+  isNode: '0x01750152',
+  isUserActivated: '0xdfdf9e65',
+  getDirectReferralAmount: '0x21dbeb9b',
+  getBoostMultiplier: '0x6f371efe',
+  getBoostExpireTime: '0xd554fa7e',
+  contribInfo: '0xf7085908',
+  getDailyBp: '0xf0490194',
+  acceleratedAmount: '0x94077959',
+  currentEffectivePrice: '0xe4b137bc',
+  effectiveTradeFeeRate: '0x1293edbf',
+  totalSupply: '0x18160ddd',
+  getReserves: '0x0902f1ac'
+};
+function _pad(a){ return a.toLowerCase().replace('0x','').padStart(64,'0'); }
+function _u256(hex){ return hex ? BigInt(hex) : 0n; }
+
+/**
+ * ★ 一次載入所有資料（批次）
+ * @returns {Promise<object>} - 所有資料
+ */
+async function loadAllData(){
+  const MINING = C.contracts.referral;      // Mining proxy
+  const TOKEN  = C.tokens.NNB;
+  const USDT   = C.tokens.USDT;
+  const PAIR   = C.pair;
+  const now    = Math.floor(Date.now()/1000);
+
+  const calls = [];
+  const map = {};
+  function add(name, to, data){
+    map[name] = calls.length;
+    calls.push({to:to, data:data});
+  }
+
+  // ===== 全域資料（不依賴錢包）=====
+  add('price',       MINING, _SEL.currentEffectivePrice + BigInt(now).toString(16).padStart(64,'0'));
+  add('feeRate',     MINING, _SEL.effectiveTradeFeeRate);
+  add('totalSupply', TOKEN,  _SEL.totalSupply);
+  add('reserves',    PAIR,   _SEL.getReserves);
+
+  // ===== 用戶資料（需連錢包）=====
+  if(addr){
+    const a = _pad(addr);
+    add('nnbBal',      TOKEN,  _SEL.balanceOf + a);
+    add('usdtBal',     USDT,   _SEL.balanceOf + a);
+    add('user',        MINING, _SEL.users + a);
+    add('claimable',   MINING, _SEL.claimableAmount + a);
+    add('accel',       MINING, _SEL.acceleratedAmount + a);
+    add('dailyBp',     MINING, _SEL.getDailyBp + a);
+    add('contrib',     MINING, _SEL.contribInfo + a);
+    add('ref',         MINING, _SEL.getUserReferrer + a);
+    add('directCount', MINING, _SEL.getDirectReferralCount + a);
+    add('isNode',      MINING, _SEL.isNode + a);
+    add('isActive',    MINING, _SEL.isUserActivated + a);
+    add('directAmt',   MINING, _SEL.getDirectReferralAmount + a);
+    add('boostMul',    MINING, _SEL.getBoostMultiplier + a);
+    add('boostExp',    MINING, _SEL.getBoostExpireTime + a);
+  }
+
+  const res = await batchEthCall(calls, 8000);
+  const out = {};
+  Object.keys(map).forEach(function(k){
+    const v = res[map[k]];
+    out[k] = v || null;
+  });
+  return out;
+}
+
+/**
+ * ★ 快速載入（批次一次拿全部，套用到 UI）
+ */
+async function fastLoadAll(){
+  try{
+    const d = await loadAllData();
+
+    // ---- 價格 ----
+    if(d.price){
+      const p = Number(_u256(d.price))/1e18;
+      if(p>0){
+        currentPrice = p;
+        _priceLoaded = true;
+        const el1=document.getElementById('priceDisplay'); if(el1) el1.textContent='$'+p.toFixed(6);
+        const el2=document.getElementById('mkPrice'); if(el2) el2.textContent=p.toFixed(6)+' USDT';
+        const el3=document.getElementById('buyPrice'); if(el3) el3.textContent='1 NNB ≈ '+p.toFixed(8)+' USDT';
+        const el4=document.getElementById('sellPrice'); if(el4) el4.textContent='1 NNB ≈ '+p.toFixed(8)+' USDT';
+        const change=((p-0.01)/0.01*100);
+        const cls=change>=0?'up':'down';
+        const e5=document.getElementById('changeDisplay'); if(e5){e5.className=cls; e5.textContent=(change>=0?'+ +':'- ')+change.toFixed(2)+'%';}
+        const e6=document.getElementById('totalChange'); if(e6){e6.className=cls; e6.textContent=(change>=0?'+':'')+change.toFixed(2)+'%';}
+        if(typeof updateEstimates==='function') updateEstimates();
+      }
+    }
+
+    // ---- 手續費率 ----
+    if(d.feeRate){
+      const bp = Number(_u256(d.feeRate));
+      if(bp>0 && bp<=1000) currentFeeBp = bp;
+    }
+
+    // ---- 用戶資料 ----
+    if(addr && d.user){
+      const h = d.user.replace('0x','');
+      const slot = function(i){ return h.slice(i*64,(i+1)*64); };
+      const activated = BigInt('0x'+slot(0)) === 1n;
+      const isNodeU = BigInt('0x'+slot(1)) === 1n;
+      const myBalance = Number(BigInt('0x'+slot(5)))/1e18;
+
+      _globalMyBalance = myBalance;
+
+      // 產能 / 餘額
+      const mb = document.getElementById('mineBalance');
+      if(mb && d.nnbBal) mb.textContent=(Number(_u256(d.nnbBal))/1e18).toFixed(4);
+      const mcap = document.getElementById('minerCapacity');
+      if(mcap) mcap.textContent = myBalance.toLocaleString(undefined,{maximumFractionDigits:2});
+      const mst = document.getElementById('minerStatus');
+      if(mst) mst.textContent = (myBalance>0||activated) ? nnbT('mine.active') : '未购买';
+      const mkBal = document.getElementById('mkBal');
+      if(mkBal && d.nnbBal) mkBal.textContent=(Number(_u256(d.nnbBal))/1e18).toFixed(2)+' NNB';
+
+      // 今日可領
+      if(d.claimable){
+        const ca = Number(_u256(d.claimable))/1e18;
+        _globalClaimable = ca;
+        const mcl = document.getElementById('minerClaimable');
+        if(mcl) mcl.textContent = ca.toLocaleString(undefined,{maximumFractionDigits:2})+' NNB';
+      }
+
+      // 加速
+      if(d.accel){
+        const acc = Number(_u256(d.accel))/1e18;
+        const show = document.getElementById('minerAccelShow');
+        const amt = document.getElementById('minerAccelAmt');
+        if(show && acc>0){ show.style.display='block'; if(amt) amt.textContent=acc.toLocaleString(undefined,{maximumFractionDigits:2}); }
+      }
+
+      // 日化率
+      if(d.dailyBp){
+        const bp = Number(_u256(d.dailyBp));
+        const el = document.getElementById('minerDailyRate');
+        if(el && bp>0) el.textContent=(bp/100).toFixed(2)+'%';
+      }
+
+      // 貢獻值
+      if(d.contrib){
+        const ch = d.contrib.replace('0x','');
+        const cs = function(i){ return ch.slice(i*64,(i+1)*64); };
+        const cap = Number(BigInt('0x'+cs(0)))/1e18;
+        const used = Number(BigInt('0x'+cs(1)))/1e18;
+        const bought = Number(BigInt('0x'+cs(2)))/1e18;
+        const elCap = document.getElementById('contribCap'); if(elCap) elCap.textContent=cap.toFixed(2)+' U';
+        const elUsed = document.getElementById('contribUsed'); if(elUsed) elUsed.textContent=used.toFixed(2)+' U';
+        const elRem = document.getElementById('contribRemain'); if(elRem) elRem.textContent=(cap+bought-used).toFixed(2)+' U';
+      }
+
+      // 直推人數
+      if(d.directCount){
+        const dc = Number(_u256(d.directCount));
+        const ic = document.getElementById('inviteCount'); if(ic) ic.textContent=dc;
+      }
+
+      // 上級
+      if(d.ref){
+        const rh = d.ref.replace('0x','');
+        const refAddr = '0x'+rh.slice(24);
+        if(refAddr && refAddr !== '0x0000000000000000000000000000000000000000'){
+          showExistingReferrerText(refAddr);
+        }
+      }
+    }
+
+    return true;
+  }catch(e){
+    // ★ 失敗時退回原本的分散載入（保底）
+    try{
+      loadPrice(); loadPoolInfo(); loadUserInfo(); loadMiners(); loadNodeInfo();
+    }catch(e2){}
+    return false;
+  }
+}
+
+function showExistingReferrerText(refAddr){
+  try{
+    const el = document.getElementById('referrerInput');
+    if(el && !el.value) el.value = refAddr;
+    const info = document.getElementById('referrerInfo');
+    if(info){
+      info.textContent = '上級：' + refAddr.slice(0,6) + '…' + refAddr.slice(-4);
+      info.style.color = 'var(--gold)';
+    }
+  }catch(e){}
+}
+
 // 快取清理
 setInterval(function(){
   const now = Date.now();
@@ -800,9 +1002,9 @@ function go(page){
   $('p-'+page)?.classList.add('active');
   const navs=['home','trade','mine','invite','node'];
   document.querySelectorAll('.bnav-item')[navs.indexOf(page)]?.classList.add('active');
-  if(page==='trade'){loadPrice();loadPoolInfo();;if(typeof nnbApplyLang==="function")nnbApplyLang();}
-  if(page==='mine'){loadMiners();startClaimCountdown();}
-  if(page==='node'){loadNodeInfo();loadNodeDividend();if(typeof getCurrentNodeFee==='function')getCurrentNodeFee();}
+  if(page==='trade'){fastLoadAll();loadOrderBook();loadMyOrders();loadMarketInfo();if(typeof nnbApplyLang==="function")nnbApplyLang();}
+  if(page==='mine'){fastLoadAll();startClaimCountdown();}
+  if(page==='node'){fastLoadAll();loadNodeInfo();loadNodeDividend();if(typeof getCurrentNodeFee==='function')getCurrentNodeFee();}
   if(page==='invite'){updatePerfUnlock();}
 }
 function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
@@ -890,7 +1092,12 @@ async function connectWallet(){
       inviteUrlEl.style.whiteSpace='normal';
     }
     toast('钱包已连接');
-    loadPrice();loadPoolInfo();loadUserInfo();loadMiners();loadNodeInfo();startClaimCountdown();
+    // ★★★ 快速載入：一次批次拿全部資料（取代原本 9 個分散載入）
+    fastLoadAll().then(function(){
+      // 少量補充（訂單簿等非同步資料）
+      loadOrderBook(); loadMyOrders(); loadMarketInfo();
+    });
+    startClaimCountdown();
     // ethers 加载完后初始化 signer
     waitForEthers();
     // 查链上已有的上级并显示
@@ -1117,7 +1324,7 @@ async function doBuy(){
     const tx=await ref.buyNNB(usdtAmt);
     await tx.wait();
     toast('买入成功!NNB已到账');
-    loadMiners();loadUserInfo();loadPoolInfo();
+    fastLoadAll();
   }catch(e){
     const msg=e.reason||e.message||'';
     if(msg.includes('insufficient')){toast('USDT余额不足')}
@@ -1159,7 +1366,7 @@ async function doSell(){
     const tx=await ref.sellNNB(nnbAmt);
     await tx.wait();
     toast('卖出成功!USDT已到账');
-    loadMiners();loadUserInfo();loadPoolInfo();
+    fastLoadAll();
   }catch(e){
     const msg=e.reason||e.message||'';
     if(msg.includes('insufficient')){toast('NNB不足或底池USDT不足')}
@@ -1373,7 +1580,7 @@ async function doNNBTransfer(){
     toast('互转中...');
     await tx.wait();
     toast('✅ 已互转 '+amt+' NNB，业绩已上线');
-    loadMiners();loadUserInfo();
+    fastLoadAll();
   }catch(e){
     const msg=e.reason||e.message||'';
     if(msg.includes('not active')){toast('请先购买矿机激活账户')}
@@ -1438,7 +1645,7 @@ async function doBuyMining(){
     toast('交易已提交...');
     await tx.wait();
     toast('购买成功!3倍产能已锁仓');
-    loadUserInfo();loadMiners();
+    fastLoadAll();
   }catch(e){
     const msg=e.reason||e.message||'';
     if(msg.includes('allowance')){toast('授权失败，请重试')}
@@ -1491,7 +1698,7 @@ async function subscribeMining(){
     toast('交易已提交...');
     await tx.wait();
     toast('认购成功!3倍产能已锁仓');
-    loadUserInfo();
+    fastLoadAll();
     loadSubscribedProgress();  // 认购成功立即刷新实时进度
   }catch(e){
     const msg=e.reason||e.message||'';
@@ -1525,7 +1732,7 @@ async function claimReward(){
     toast('领取成功!');
     // 立即更新按钮状态（冷却以链上为准）
     startClaimCountdown();
-    loadUserInfo();loadMiners();
+    fastLoadAll();
   }catch(e){
     const msg=e.reason||e.message||'';
     if(msg.includes('insufficient')){toast('BNB不足付gas费')}
@@ -2192,7 +2399,7 @@ async function reinvest(){
     toast('交易已提交...');
     await tx.wait();
     toast('复投成功!3倍产能已锁仓');
-    loadUserInfo();
+    fastLoadAll();
   }catch(e){
     const msg=e.reason||e.message||'';
     if(msg.includes('insufficient')){toast('NNB不足或BNB不够付gas费')}
@@ -2210,7 +2417,7 @@ async function waitForEthers(){
   try{
     provider=new ethers.providers.Web3Provider(window.ethereum);
     signer=provider.getSigner();
-    loadMiners();loadUserInfo();
+    fastLoadAll();
   }catch(e){}
 }
 
