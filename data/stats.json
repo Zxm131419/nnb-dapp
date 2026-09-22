@@ -1,11 +1,11 @@
 {
   "total": 289,
   "activated": 281,
-  "source_new": 282,
+  "source_new": 283,
   "source_v33": 3,
-  "source_old": 4,
-  "totalBalanceNNB_new": "45,552,484.35",
+  "source_old": 3,
+  "totalBalanceNNB_new": "45,908,807.14",
   "nodeCount": 28,
-  "lastRun": 1789965084,
-  "lastScanBlock": 123117621
+  "lastRun": 1790051225,
+  "lastScanBlock": 123308971
 }
