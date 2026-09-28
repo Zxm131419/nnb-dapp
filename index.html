@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260926a';
+window.NNB_VER='20260928a';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260926a"></script>
+<script src="lang.js?v=20260928a"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed2.ninicoin.io" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed2.defibit.io" crossorigin>
@@ -412,6 +412,11 @@ button{cursor:pointer;font-family:inherit}
     <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:8px 0">
       <span>賣出單價</span><span id="mkPrice">載入中…</span>
     </div>
+    <!-- ★ 動態費率顯示 -->
+    <div style="display:flex;justify-content:space-between;font-size:13px;margin:8px 0">
+      <span>當前手續費率</span><span id="mkFeeRate" style="font-weight:700;color:var(--gold)">載入中…</span>
+    </div>
+    <div id="mkFeeInfo" style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5"></div>
     <button class="btn btn-gold" onclick="placeSell()">① 掛賣單</button>
     <!-- ★ 我的掛單（移到上方，掛單後立即看到） -->
     <div style="margin-top:14px;border-top:1px dashed var(--line);padding-top:12px">
@@ -1800,9 +1805,47 @@ const MARKET_ABI=[
   'function useInternalPrice() view returns (bool)',
   'function price() view returns (uint256)',
   'function isOrderFillable(uint256) view returns (bool)',
-  'function fillableAmount(uint256) view returns (uint256)'
+  'function fillableAmount(uint256) view returns (uint256)',
+  'function getCurrentFeeRate() view returns (uint256)',
+  'function getFeeStatus() view returns (uint256,uint256,uint256,uint256)',
+  'function baseThreshold() view returns (uint256)',
+  'function totalActiveUsdt() view returns (uint256)'
 ];
 function marketAddr(){ return C.contracts.market || '0xD9783711fD81B36650dd76a62042E9775e79D14D'; }
+
+// ★ 載入並顯示動態費率
+async function loadDynamicFee(){
+  const el=$('mkFeeRate'), info=$('mkFeeInfo');
+  if(!el) return;
+  try{
+    const MARKET = marketAddr();
+    const r = await batchEthCall([{to:MARKET, data:'0x'+_sel('getFeeStatus()')}], 10000);
+    if(!r || !r[0]){ el.textContent='10.0%'; return; }
+    const h = r[0].replace('0x','');
+    const slot = function(i){ return h.slice(i*64,(i+1)*64); };
+    const currentRate = Number(BigInt('0x'+slot(0)))/10;   // 千分→%
+    const baseRate    = Number(BigInt('0x'+slot(1)))/10;
+    const activeUsdt  = Number(BigInt('0x'+slot(2)))/1e18;
+    const threshold   = Number(BigInt('0x'+slot(3)))/1e18;
+
+    el.textContent = currentRate.toFixed(1)+'%';
+    // 顏色：越高越紅
+    if(currentRate >= 50) el.style.color='#ff5c5c';
+    else if(currentRate >= 30) el.style.color='#ffb648';
+    else el.style.color='var(--gold)';
+
+    if(info){
+      if(threshold > 0){
+        info.innerHTML = '掛單總額 '+activeUsdt.toFixed(2)+' U / 基準 '+threshold.toFixed(0)+' U'+
+          '<br>基礎 '+baseRate.toFixed(1)+'%，超出基準每 10% 加 20%（封頂 50%）';
+      }else{
+        info.textContent = '基礎費率 '+baseRate.toFixed(1)+'%';
+      }
+    }
+  }catch(e){
+    if(el) el.textContent='10.0%';
+  }
+}
 
 async function loadMarketInfo(){
   if(!addr){ return; }
@@ -1999,6 +2042,8 @@ async function loadTradePage(){
     // 保底：退回舊方法
     try{ loadOrderBook(); loadMyOrders(); loadMarketInfo(); }catch(e2){}
   }
+  // ★ 載入動態費率
+  try{ loadDynamicFee(); }catch(e){}
 }
 
 async function loadOrderBook(){
@@ -2221,13 +2266,26 @@ async function placeSell(){
       const ap=await tk.approve(marketAddr(), ethers.utils.parseUnits('1000000000',18));
       await ap.wait();
     }
+    // ★ 掛單前先算「這筆會被扣多少」
+    try{
+      const rp=provider||signer;
+      const mc=new ethers.Contract(marketAddr(), ['function getFeeStatus() view returns (uint256,uint256,uint256,uint256)','function price() view returns (uint256)'], rp);
+      const st=await mc.getFeeStatus();
+      const rate=Number(st[0])/1000;      // 千分→小數
+      const px=Number(await mc.price())/1e18;
+      const gross=amt*px;
+      const feeU=(gross*rate).toFixed(4);
+      const getU=(gross*(1-rate)).toFixed(4);
+      toast('手續費率 '+(rate*100).toFixed(1)+'%：您得 '+getU+' U，手續費 '+feeU+' U');
+      await new Promise(r=>setTimeout(r,1200));
+    }catch(e){}
     toast('掛單中…');
     const m=new ethers.Contract(marketAddr(), MARKET_ABI, signer);
     const tx=await m.placeSellOrder(nnbAmt, 0);  // 0 = 用內部價
     await tx.wait();
     toast('✅ 掛單成功');
     document.getElementById('mkSellAmt').value='';
-    loadOrderBook(); loadMyOrders();
+    loadOrderBook(); loadMyOrders(); loadDynamicFee();
   }catch(e){ toast('掛單失敗: '+String(e&&(e.reason||e.message)||e).slice(0,80)); }
 }
 
@@ -2454,7 +2512,7 @@ async function loadUserInfo(){
     loadClaimStatusFromChain();
   }
   loadContribution();
-  loadMarketInfo(); loadOrderBook(); loadMyOrders();
+  loadMarketInfo(); loadOrderBook(); loadMyOrders(); loadDynamicFee();
 }
 
 async function updatePerfUnlock(){
