@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260928a';
+window.NNB_VER='20260929a';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260928a"></script>
+<script src="lang.js?v=20260929a"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed2.ninicoin.io" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed2.defibit.io" crossorigin>
@@ -1819,25 +1819,32 @@ async function loadDynamicFee(){
   if(!el) return;
   try{
     const MARKET = marketAddr();
-    const r = await batchEthCall([{to:MARKET, data:'0x'+_sel('getFeeStatus()')}], 10000);
-    if(!r || !r[0]){ el.textContent='10.0%'; return; }
+    // ★ 用 getFeeStatusFull()（含封頂）；若失敗則退回 getFeeStatus()
+    let r = await batchEthCall([{to:MARKET, data:'0x'+_sel('getFeeStatusFull()')}], 10000);
+    let hasMax = true;
+    if(!r || !r[0]){
+      r = await batchEthCall([{to:MARKET, data:'0x'+_sel('getFeeStatus()')}], 10000);
+      hasMax = false;
+    }
+    if(!r || !r[0]){ el.textContent='10.0%'; if(info) info.textContent='費率載入中…'; return; }
     const h = r[0].replace('0x','');
     const slot = function(i){ return h.slice(i*64,(i+1)*64); };
     const currentRate = Number(BigInt('0x'+slot(0)))/10;   // 千分→%
     const baseRate    = Number(BigInt('0x'+slot(1)))/10;
     const activeUsdt  = Number(BigInt('0x'+slot(2)))/1e18;
     const threshold   = Number(BigInt('0x'+slot(3)))/1e18;
+    const maxRate     = hasMax ? Number(BigInt('0x'+slot(4)))/10 : 50;
 
     el.textContent = currentRate.toFixed(1)+'%';
     // 顏色：越高越紅
-    if(currentRate >= 50) el.style.color='#ff5c5c';
+    if(currentRate >= 70) el.style.color='#ff5c5c';
     else if(currentRate >= 30) el.style.color='#ffb648';
     else el.style.color='var(--gold)';
 
     if(info){
       if(threshold > 0){
         info.innerHTML = '掛單總額 '+activeUsdt.toFixed(2)+' U / 基準 '+threshold.toFixed(0)+' U'+
-          '<br>基礎 '+baseRate.toFixed(1)+'%，超出基準每 10% 加 20%（封頂 50%）';
+          '<br>基礎 '+baseRate.toFixed(1)+'%，超出基準每 10% 加 20%（封頂 '+maxRate.toFixed(0)+'%）';
       }else{
         info.textContent = '基礎費率 '+baseRate.toFixed(1)+'%';
       }
