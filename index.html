@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260930b';
+window.NNB_VER='20260930c';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260930b"></script>
+<script src="lang.js?v=20260930c"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed2.ninicoin.io" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed2.defibit.io" crossorigin>
@@ -715,9 +715,36 @@ async function batchEthCall(calls, ttl){
   if(pending.length === 0) return results;
 
   // ★ 分批：每批最多 30 個（RPC 上限）
+  // ★★★ 修復（2026-09-30）：中國大陸地區公共 RPC 被牆 → 改用「錢包 eth_call 優先」
+  const useWallet = !!(window.ethereum && window.ethereum.request);
   const CHUNK = 30;
   for(let off=0; off<pending.length; off+=CHUNK){
     const grp = pending.slice(off, off+CHUNK);
+
+    // ① 優先：用錢包 eth_call（錢包自帶 RPC，不受網路封鎖影響）
+    if(useWallet){
+      const walletRes = await Promise.all(grp.map(async function(p){
+        try{
+          const r = await window.ethereum.request({
+            method:'eth_call',
+            params:[{to:p.call.to, data:p.call.data}, 'latest']
+          });
+          return (r && r !== '0x') ? r : null;
+        }catch(e){ return null; }
+      }));
+      let got = 0;
+      grp.forEach(function(p, i){
+        if(walletRes[i]){
+          results[p.idx] = walletRes[i];
+          _rpcCache.set(p.key, {val:walletRes[i], ts:Date.now()});
+          got++;
+        }
+      });
+      // 如果錢包全部成功，這批就不用走 fetch
+      if(got === grp.length) continue;
+    }
+
+    // ② 備援：批次 POST 到公共 RPC（海外用戶）
     const payload = grp.map(function(p, n){
       return {jsonrpc:'2.0', id:n, method:'eth_call',
               params:[{to:p.call.to, data:p.call.data}, 'latest']};
@@ -728,16 +755,34 @@ async function batchEthCall(calls, ttl){
       if(typeof item.id !== 'number') return;
       const p = grp[item.id];
       if(!p) return;
+      if(results[p.idx] !== null) return;   // ★ 已有錢包結果，不覆蓋
       const val = (item.result && item.result !== '0x') ? item.result : null;
-      results[p.idx] = val;
-      if(val) _rpcCache.set(p.key, {val:val, ts:Date.now()});
+      if(val){
+        results[p.idx] = val;
+        _rpcCache.set(p.key, {val:val, ts:Date.now()});
+      }
     });
   }
 
-  // 保底：少數缺失的用單獨查詢補
+  // 保底：少數缺失的用「錢包優先 + 單獨查詢」補
   const missing = pending.filter(function(p){ return results[p.idx]===null; });
-  if(missing.length > 0 && missing.length <= 15){
+  if(missing.length > 0 && missing.length <= 30){
     await Promise.all(missing.map(async function(p){
+      // ① 錢包優先
+      if(useWallet){
+        try{
+          const r = await window.ethereum.request({
+            method:'eth_call',
+            params:[{to:p.call.to, data:p.call.data}, 'latest']
+          });
+          if(r && r !== '0x'){
+            results[p.idx] = r;
+            _rpcCache.set(p.key, {val:r, ts:Date.now()});
+            return;
+          }
+        }catch(e){}
+      }
+      // ② 公共 RPC 備援
       try{
         const r = await fetch(RPC_ENDPOINTS[_rpcIdx++ % RPC_ENDPOINTS.length], {
           method:'POST', headers:{'Content-Type':'application/json'},
@@ -1102,19 +1147,26 @@ async function connectWallet(){
       inviteUrlEl.style.whiteSpace='normal';
     }
     toast('钱包已连接');
-    // ★★★ 快速載入：一次批次拿全部資料（取代原本 9 個分散載入）
-    fastLoadAll().then(function(){
-      // 少量補充（訂單簿等非同步資料）
-      loadContribution();
-      loadOrderBook(); loadMyOrders(); loadMarketInfo();
-    });
-    startClaimCountdownFixed();
+    // ★★★ 關鍵修復（v3.6.1）：綁定流程「獨立」執行，不被資料載入失敗中斷
+    //   原因：中國大陸公共 RPC 被牆 → fastLoadAll 拋 "Failed to fetch" → 綁定被跳過
+    //   改法：先排程綁定（不受下方載入影響），資料載入失敗也不阻止綁定
+    setTimeout(function(){ try{ showExistingReferrer(); }catch(e){} },1200);
+    setTimeout(function(){ try{ checkAndPromptBind(); }catch(e){} },1800);
+
+    // ★★★ 快速載入：一次批次拿全部資料（失敗不影響綁定）
+    try{
+      fastLoadAll().then(function(){
+        // 少量補充（訂單簿等非同步資料）
+        try{ loadContribution(); }catch(e){}
+        try{ loadOrderBook(); }catch(e){}
+        try{ loadMyOrders(); }catch(e){}
+        try{ loadMarketInfo(); }catch(e){}
+      }).catch(function(e){ console.log('資料載入失敗（不影響綁定）:', e&&e.message); });
+    }catch(e){ console.log('fastLoadAll 例外（不影響綁定）:', e&&e.message); }
+
+    try{ startClaimCountdownFixed(); }catch(e){}
     // ethers 加载完后初始化 signer
-    waitForEthers();
-    // 查链上已有的上级并显示
-    setTimeout(()=>showExistingReferrer(),1500);
-    // 检查是否需要自动绑定（只提示，不自动发交易）
-    setTimeout(()=>checkAndPromptBind(),2000);
+    try{ waitForEthers(); }catch(e){}
   }catch(e){toast('连接失败: '+e.message)}
 }
 
