@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260930d';
+window.NNB_VER='20260930e';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -65,9 +65,9 @@ window.NNB_VER='20260930d';
 <link rel="apple-touch-icon" href="logo.jpg?v=20260805">
 <title>NNB 牛牛金币·金牛聚财运</title>
 <!-- ★ 圖標字體：本地優先（大陸地區 CDN 常被牆）-->
-<link rel="stylesheet" href="ph-regular.css?v=20260930d">
-<link rel="stylesheet" href="ph-fill.css?v=20260930d">
-<link rel="stylesheet" href="ph-bold.css?v=20260930d">
+<link rel="stylesheet" href="ph-regular.css?v=20260930e">
+<link rel="stylesheet" href="ph-fill.css?v=20260930e">
+<link rel="stylesheet" href="ph-bold.css?v=20260930e">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -288,7 +288,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260930d"></script>
+<script src="lang.js?v=20260930e"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed2.ninicoin.io" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed2.defibit.io" crossorigin>
@@ -659,7 +659,7 @@ function loadEthers(src,onload){
   document.head.appendChild(s);
 }
 // ★★★ 修復（v2026.09.30c）：本地優先（大陸地區 CDN 常被牆）
-loadEthers('ethers.min.js?v=20260930d',function(){
+loadEthers('ethers.min.js?v=20260930e',function(){
   console.log('ethers loaded from LOCAL');
 });
 // 備援 1：jsdelivr
@@ -1066,6 +1066,7 @@ const ABI={
   ref:['function getUserReferrer(address) view returns (address)','function getDirectReferralCount(address) view returns (uint256)','function isNode(address) view returns (bool)','function isUserActivated(address) view returns (bool)','function getDirectReferralAmount(address) view returns (uint256)','function getBoostMultiplier(address) view returns (uint256)','function getBoostExpireTime(address) view returns (uint256)','function getUserReinvestCount(address) view returns (uint256)','function getUserUnclaimed(address) view returns (uint256)','function getUserBurned(address) view returns (bool)','function bindReferrer(address) external','function buyMining(uint256) external','function claim() external','function reinvest(uint256) external','function currentNodeFee(uint256) view returns (uint256)','function activateNode() external payable']
 };
 let provider,signer,addr=null,currentPrice=0,_priceLoaded=false; let currentFeeBp=130; let _globalMyBalance=0, _globalClaimable=0;
+let _projectFeeBp=100;  // ★ v3.7 項目方分成（千分，預設 100 = 10%）
 const $=id=>document.getElementById(id);
 
 function go(page){
@@ -1980,6 +1981,17 @@ async function loadDynamicFee(){
   if(!el) return;
   try{
     const MARKET = marketAddr();
+    // ★ v3.7 讀取項目方分成（用於前端折扣顯示；失敗則用預設 100 = 10%）
+    try{
+      // projectFeeBp() selector = 0x1b228115（硬編碼，不依賴 ethers）
+      var _pfSel = '0x1b228115';
+      try{ var _s2=_sel('projectFeeBp()'); if(_s2 && _s2.length===8) _pfSel='0x'+_s2; }catch(e){}
+      const rb = await batchEthCall([{to:MARKET, data:_pfSel}], 10000);
+      if(rb && rb[0]){
+        const bp = Number(BigInt(rb[0]));
+        if(bp>=0 && bp<=1000) _projectFeeBp = bp;
+      }
+    }catch(e){ /* 舊合約無此函數 → 保持預設 */ }
     // ★ 用 getFeeStatusFull()（含封頂）；若失敗則退回 getFeeStatus()
     let r = await batchEthCall([{to:MARKET, data:'0x'+_sel('getFeeStatusFull()')}], 10000);
     let hasMax = true;
@@ -2144,10 +2156,31 @@ async function loadTradePage(){
       });
       let html='';
       valid.slice(0,15).forEach(function(r){
+        // ★ v3.7 計算買方實際支付（含折扣）
+        var gross = r.remain*r.price;
+        var payHtml = '<div style="color:var(--gold);font-weight:700">'+ gross.toFixed(4)+' U</div>';
+        try{
+          if(typeof _projectFeeBp==='number' && typeof currentFeeBp==='number'){
+            var rate = currentFeeBp;                    // 千分
+            var feeU = gross * rate / 1000;
+            var sellerGets = gross - feeU;
+            var projectShare = gross * _projectFeeBp / 1000;
+            var buyerPays = sellerGets + projectShare;
+            if(buyerPays > gross) buyerPays = gross;
+            var save = gross - buyerPays;
+            if(save > 0.0001){
+              payHtml = '<div style="color:var(--dim);text-decoration:line-through;font-size:11px">'+gross.toFixed(4)+' U</div>'+
+                        '<div style="color:#37d67a;font-weight:800;font-size:14px">'+buyerPays.toFixed(4)+' U</div>'+
+                        '<div style="color:#ffb648;font-size:10px;font-weight:700">省 '+save.toFixed(4)+' U（'+(buyerPays/gross*10).toFixed(1)+'折）</div>';
+            } else {
+              payHtml = '<div style="color:var(--gold);font-weight:700">'+gross.toFixed(4)+' U</div>';
+            }
+          }
+        }catch(e){}
         html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">'+
           '<div><div style="color:var(--dim)">#'+r.id+' '+r.seller.slice(0,6)+'…'+r.seller.slice(-4)+'</div>'+
           '<div><b>'+r.remain.toFixed(2)+'</b> NNB @ '+r.price.toFixed(6)+' U</div></div>'+
-          '<div style="text-align:right"><div style="color:var(--gold);font-weight:700">'+ (r.remain*r.price).toFixed(4)+' U</div>'+
+          '<div style="text-align:right">'+payHtml+
           '<button class="btn" style="padding:9px 18px;font-size:13px;font-weight:700;margin:6px 0 0 0;background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff;border:none;border-radius:8px;cursor:pointer;min-width:70px" onclick="buyOrder('+r.id+','+r.remain+')">買入</button></div></div>';
       });
       host.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>';
