@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260929a';
+window.NNB_VER='20260930a';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -285,7 +285,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260929a"></script>
+<script src="lang.js?v=20260930a"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed2.ninicoin.io" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed2.defibit.io" crossorigin>
@@ -1809,7 +1809,11 @@ const MARKET_ABI=[
   'function getCurrentFeeRate() view returns (uint256)',
   'function getFeeStatus() view returns (uint256,uint256,uint256,uint256)',
   'function baseThreshold() view returns (uint256)',
-  'function totalActiveUsdt() view returns (uint256)'
+  'function totalActiveUsdt() view returns (uint256)',
+  // ★ v3.5 大單窗口
+  'function getWindowActiveUsdt() view returns (uint256)',
+  'function getFeeWindow() view returns (uint256)',
+  'function getMinWindowUsdt() view returns (uint256)'
 ];
 function marketAddr(){ return C.contracts.market || '0xD9783711fD81B36650dd76a62042E9775e79D14D'; }
 
@@ -1841,10 +1845,24 @@ async function loadDynamicFee(){
     else if(currentRate >= 30) el.style.color='#ffb648';
     else el.style.color='var(--gold)';
 
+    // ★ v3.5：額外讀「大單窗口」資訊（失敗則忽略，不影響主顯示）
+    let winInfo = '';
+    try{
+      const r2 = await batchEthCall([
+        {to:MARKET, data:'0x'+_sel('getFeeWindow()')},
+        {to:MARKET, data:'0x'+_sel('getMinWindowUsdt()')}
+      ], 8000);
+      if(r2 && r2[0] && r2[1]){
+        const winN = Number(BigInt(r2[0]));
+        const minU = Number(BigInt(r2[1]))/1e18;
+        winInfo = '<br>大單窗口：最近 '+winN+' 筆（門檻 '+minU.toFixed(0)+' U）';
+      }
+    }catch(e){ /* 舊版合約無此函數 → 忽略 */ }
+
     if(info){
       if(threshold > 0){
         info.innerHTML = '掛單總額 '+activeUsdt.toFixed(2)+' U / 基準 '+threshold.toFixed(0)+' U'+
-          '<br>基礎 '+baseRate.toFixed(1)+'%，超出基準每 10% 加 20%（封頂 '+maxRate.toFixed(0)+'%）';
+          '<br>基礎 '+baseRate.toFixed(1)+'%，超出基準每 10% 加 20%（封頂 '+maxRate.toFixed(0)+'%）'+winInfo;
       }else{
         info.textContent = '基礎費率 '+baseRate.toFixed(1)+'%';
       }
