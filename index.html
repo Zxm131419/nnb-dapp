@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260930c';
+window.NNB_VER='20260930d';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -65,9 +65,9 @@ window.NNB_VER='20260930c';
 <link rel="apple-touch-icon" href="logo.jpg?v=20260805">
 <title>NNB 牛牛金币·金牛聚财运</title>
 <!-- ★ 圖標字體：本地優先（大陸地區 CDN 常被牆）-->
-<link rel="stylesheet" href="ph-regular.css?v=20260930c">
-<link rel="stylesheet" href="ph-fill.css?v=20260930c">
-<link rel="stylesheet" href="ph-bold.css?v=20260930c">
+<link rel="stylesheet" href="ph-regular.css?v=20260930d">
+<link rel="stylesheet" href="ph-fill.css?v=20260930d">
+<link rel="stylesheet" href="ph-bold.css?v=20260930d">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -268,8 +268,10 @@ button{cursor:pointer;font-family:inherit}
 .bnav-item .ph-icon{font-size:22px}
 
 /* ===== Toast ===== */
-.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:rgba(16,185,129,0.95);
-  color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;z-index:999;display:none;box-shadow:0 4px 16px rgba(16,185,129,0.35)}
+/* ★ 修復（OPPO/瀏海螢幕）：改用 safe-area + 提高層級 + 更長時間 */
+.toast{position:fixed;top:calc(24px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);
+  background:rgba(16,185,129,0.98);color:#fff;padding:14px 26px;border-radius:12px;font-size:15px;
+  z-index:99999;display:none;box-shadow:0 6px 24px rgba(0,0,0,0.5);max-width:90vw;text-align:center;line-height:1.5}
 .toast.show{display:block}
 
 /* ===== 公告弹窗 ===== */
@@ -286,7 +288,7 @@ button{cursor:pointer;font-family:inherit}
 .announce-foot{padding:12px 22px 18px;text-align:center}
 .announce-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:800;color:#1a0828;cursor:pointer}
 </style>
-<script src="lang.js?v=20260930c"></script>
+<script src="lang.js?v=20260930d"></script>
 <!-- ★ 预连接：加速 RPC / CDN 首次请求 -->
 <link rel="preconnect" href="https://bsc-dataseed2.ninicoin.io" crossorigin>
 <link rel="preconnect" href="https://bsc-dataseed2.defibit.io" crossorigin>
@@ -657,7 +659,7 @@ function loadEthers(src,onload){
   document.head.appendChild(s);
 }
 // ★★★ 修復（v2026.09.30c）：本地優先（大陸地區 CDN 常被牆）
-loadEthers('ethers.min.js?v=20260930c',function(){
+loadEthers('ethers.min.js?v=20260930d',function(){
   console.log('ethers loaded from LOCAL');
 });
 // 備援 1：jsdelivr
@@ -1077,7 +1079,7 @@ function go(page){
   if(page==='node'){fastLoadAll();loadNodeInfo();loadNodeDividend();if(typeof getCurrentNodeFee==='function')getCurrentNodeFee();}
   if(page==='invite'){updatePerfUnlock();}
 }
-function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');var _d=3500;if(msg&&msg.length>20)_d=5000;setTimeout(()=>t.classList.remove('show'),_d)}
 function copyText(t){
   if(!t||t==='未连接'||t==='undefined'){toast('请先连接钱包');return}
   // 兼容 TokenPocket 等内置浏览器
@@ -1671,34 +1673,86 @@ function updateClaimTimer(burned,boostExpire,todayClaimable){
 }
 
 async function bindReferrer(){
-  if(!signer){toast('请先连接钱包');return}
-  if(typeof ethers==='undefined'||!ethers.Contract){toast('组件还没加载完（ethers 未就绪），请等几秒后重试。若一直不行请刷新页面');return}
+  // ★ 加固 v20260930d：多層 fallback，確保各機型都能綁
+  if(!signer){
+    toast('请先点右上角「连接钱包」');
+    // ★ 友善提示：自動嘗試連接（OPPO/部分機型首次訪問未授權）
+    try{ await connectWallet(); }catch(e){}
+    if(!signer){ return; }
+  }
   const r=document.getElementById('referrerInput').value.trim();
   if(!r){toast('请输入上级地址');return}
-  // ★ 地址格式校验（防截断/隐藏字符）
+  // ★ 地址格式校驗（防截断/隐藏字符）
   const clean=r.replace(/[\u0000-\u001f\u200b\u200c\u200d\ufeff\s]/g,'');
   if(!/^0x[0-9a-fA-F]{40}$/.test(clean)){toast('上级地址无效：需 0x + 40 位。请重新粘贴完整地址');return}
   if(clean.toLowerCase()===addr.toLowerCase()){toast('不能绑定自己为上级');return}
+
+  const V35=C.contracts.referral;
+  const txData='0x04f618cb'+clean.toLowerCase().replace('0x','').padStart(64,'0');
+  const eth = window.ethereum || window.tp;
+
+  // === 方式 A：原生 API（最兼容，不依賴 ethers）===
+  if(eth && eth.request){
+    try{
+      toast('请在钱包中确认绑定...');
+      const txHash=await eth.request({method:'eth_sendTransaction',
+        params:[{from:addr,to:V35,data:txData}]});
+      toast('交易已提交，等待确认...');
+      // 輪詢回執（最多 90 秒）
+      let receipt=null;
+      for(let i=0;i<30;i++){
+        try{ receipt=await eth.request({method:'eth_getTransactionReceipt',params:[txHash]}); }catch(e){}
+        if(receipt) break;
+        await new Promise(r=>setTimeout(r,3000));
+      }
+      if(receipt && receipt.status==='0x1'){
+        toast('🎉 绑定成功！');
+        localStorage.removeItem('nnb_referrer');
+        localStorage.removeItem('nnb_referrer_time');
+        const b=document.getElementById('bindBanner');if(b)b.remove();
+        setTimeout(function(){ try{ showExistingReferrer(); }catch(e){} },2000);
+        return;
+      } else if(receipt){
+        toast('绑定失败：交易被回滚（可能上级地址无效）');
+        return;
+      } else {
+        toast('交易已提交，但未取得回執。请稍后刷新页面查看');
+        return;
+      }
+    }catch(e){
+      const em=(e&&(e.message||e.reason))||String(e);
+      if(em.includes('User denied')||em.includes('rejected')||em.includes('cancel')){
+        toast('您已取消绑定');return;
+      }
+      if(em.includes('insufficient')){toast('BNB不足付gas费');return}
+      if(em.includes('invalid ref')){toast('绑定失败：上级地址无效（合约拒绝）');return}
+      if(em.includes('already')){toast('绑定失败：已绑定过上级');return}
+      // 其他錯誤 → 尝试 ethers 备援
+      console.log('原生API失败，尝试ethers:', em);
+    }
+  }
+
+  // === 方式 B：ethers（備援）===
+  if(typeof ethers==='undefined'||!ethers.Contract){
+    toast('组件未加载完，请刷新页面后重试');return;
+  }
   try{
     toast('请在钱包中确认...');
-    const ref=new ethers.Contract(C.contracts.referral,ABI.ref,signer);
+    const ref=new ethers.Contract(V35,ABI.ref,signer);
     const tx=await ref.bindReferrer(clean);
     toast('交易已提交，等待确认...');
-    try{ await tx.wait(1); }catch(e2){ /* 等待失败不影响（交易可能已成功） */ }
-    toast('绑定成功!');
+    try{ await tx.wait(1); }catch(e2){}
+    toast('🎉 绑定成功！');
     localStorage.removeItem('nnb_referrer');
     localStorage.removeItem('nnb_referrer_time');
     const b=document.getElementById('bindBanner');if(b)b.remove();
-    // ★ 绑定后立即刷新显示（确认链上状态）
     setTimeout(function(){ try{ showExistingReferrer(); }catch(e){} },2000);
   }catch(e){
     const msg=(e&&(e.reason||e.message))||String(e);
     if(msg.includes('invalid ref')){toast('绑定失败：上级地址无效（合约拒绝）')}
     else if(msg.includes('already')){toast('绑定失败：已绑定过上级')}
     else if(msg.includes('insufficient')){toast('BNB不足付gas费')}
-    else if(msg.includes('Failed to fetch')||msg.includes('failed to fetch')){
-      toast('绑定交易可能已提交，但网络读取超时。请稍后在链上确认，或刷新页面查看结果');
-    }
+    else if(msg.includes('denied')||msg.includes('rejected')||msg.includes('cancel')){toast('您已取消绑定')}
     else{toast('失败: '+msg.slice(0,60))}
   }
 }
@@ -2887,7 +2941,12 @@ async function checkAndPromptBind(){
     }else if(msg.includes('insufficient')){
       toast('BNB不足付gas费');
     }else{
-      toast('自动绑定失败,可在矿机页手动绑定');
+      // ★ 加固：自動綁定失敗 → 自動填入輸入框 + 提示手動綁定
+      try{
+        const inputEl=document.getElementById('referrerInput');
+        if(inputEl && !inputEl.value) inputEl.value=ref;
+      }catch(e2){}
+      toast('自动绑定失败，请到矿机页手动点「确认绑定」');
     }
   }
 }
