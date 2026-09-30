@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NNB 綁定診斷</title>
+<style>
+:root{--bg:#0f1220;--card:#171b2e;--line:#2a3050;--txt:#e6e9f5;--dim:#8b93b3;--ok:#37d67a;--bad:#ff5c5c;--warn:#ffb648;--gold:#c9a227}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--txt);padding:14px;font-size:14px}
+h1{color:var(--gold);font-size:19px;margin:6px 0 10px}
+h3{font-size:15px;margin:14px 0 6px;color:#dfe4f7}
+button{background:var(--gold);color:#171204;border:none;padding:13px 18px;border-radius:9px;font-weight:700;cursor:pointer;margin:5px 5px 0 0;font-size:14px;width:100%}
+button.g{background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff}
+button.b{background:#2a3156;color:#cdd5f0}
+.out{background:#0a0d18;border:1px dashed var(--line);border-radius:10px;padding:10px;font-family:monospace;font-size:12px;white-space:pre-wrap;margin:8px 0;color:#b7c6ff;max-height:340px;overflow:auto;line-height:1.6}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+</style>
+</head>
+<body>
+<h1>NNB 綁定診斷工具</h1>
+<div class="card" style="border-color:#4b6b12;background:#1b2a05;color:#b6ff48;font-size:13px;line-height:1.7">
+① 在 <b>TP 錢包內建瀏覽器</b> 打開這頁<br>
+② 點「開始診斷」<br>
+③ 把結果截圖發我
+</div>
+
+<div class="card">
+<h3>環境檢查</h3>
+<button class="g" onclick="diagnose()">開始診斷</button>
+<button class="b" onclick="document.getElementById('o').textContent=''">清空</button>
+<div class="out" id="o">等待診斷…</div>
+</div>
+
+<div class="card">
+<h3>連接錢包測試</h3>
+<button onclick="testConnect()">① 連接錢包（會彈確認）</button>
+<button id="btnBind" class="g" onclick="testBind()" disabled>② 測試綁定（需先連接）</button>
+<div class="out" id="o2">—</div>
+</div>
+
+<div class="card">
+<h3>手動綁定指定上級</h3>
+<input id="refAddr" placeholder="0x... 上級地址" style="width:100%;background:#0d1020;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:10px;font-family:monospace;font-size:13px;margin:6px 0">
+<button class="g" onclick="doBind()">發送綁定交易</button>
+<div class="out" id="o3">—</div>
+</div>
+
+<script>
+var provider, signer, acct=null;
+const PROXY="0x0745f350358d1478C28626235b062Eafc6b49648";
+function L(id,t){var e=document.getElementById(id);e.textContent+='\n'+t;e.scrollTop=e.scrollHeight;}
+function clr(id){document.getElementById(id).textContent='';}
+
+async function diagnose(){
+  clr('o');
+  L('o','=== 環境診斷 ===');
+  L('o','時間: '+new Date().toLocaleString());
+  L('o','');
+  // 1. window.ethereum
+  if(window.ethereum){
+    L('o','✅ window.ethereum 存在');
+    L('o','   isMetaMask: '+(window.ethereum.isMetaMask?'是':'否'));
+    L('o','   isTokenPocket: '+(window.ethereum.isTokenPocket?'是':(window.tp?'是(tp)':'否')));
+  } else {
+    L('o','❌ window.ethereum 不存在');
+  }
+  // 2. ethers
+  L('o','');
+  L('o',(typeof ethers!=='undefined')?'✅ ethers 已載入 ('+(ethers.version||'?')+')':'❌ ethers 未載入');
+  // 3. 帳號
+  if(window.ethereum){
+    try{
+      var a=await window.ethereum.request({method:'eth_accounts'});
+      L('o','');
+      L('o','帳號數: '+a.length);
+      if(a.length>0){ L('o','✅ 已連接: '+a[0]); }
+      else { L('o','⚠️ 未連接（需點「連接錢包」）'); }
+    }catch(e){ L('o','❌ eth_accounts: '+e.message); }
+    // 4. chainId
+    try{
+      var cid=await window.ethereum.request({method:'eth_chainId'});
+      var n=parseInt(cid,16);
+      L('o','');
+      L('o','chainId: '+n+' '+(n===56?'✅ BSC主網':'❌ 不是BSC(需56)'));
+    }catch(e){ L('o','chainId 失敗: '+e.message); }
+    // 5. 測試錢包 eth_call
+    try{
+      var r=await window.ethereum.request({method:'eth_call',
+        params:[{to:PROXY,data:'0x8da5cb5b'},'latest']});
+      L('o','');
+      L('o','✅ 錢包 eth_call 正常');
+      L('o','   owner() = 0x'+r.slice(-40));
+    }catch(e){ L('o','❌ 錢包 eth_call 失敗: '+e.message); }
+  }
+  L('o','');
+  L('o','=== 診斷完成 ===');
+}
+
+async function testConnect(){
+  clr('o2');
+  L('o2','① 連接錢包...');
+  try{
+    var eth=window.ethereum||window.tp;
+    if(!eth){ L('o2','❌ 沒有 window.ethereum（不在錢包瀏覽器？）'); return; }
+    var a=await eth.request({method:'eth_requestAccounts'});
+    acct=a[0];
+    L('o2','✅ 已連接: '+acct);
+    if(typeof ethers!=='undefined'){
+      provider=new ethers.providers.Web3Provider(eth);
+      signer=provider.getSigner();
+      L('o2','✅ signer 建立成功');
+      document.getElementById('btnBind').disabled=false;
+    } else {
+      L('o2','⚠️ ethers 未載入，但原生 API 仍可用');
+      document.getElementById('btnBind').disabled=false;
+    }
+  }catch(e){ L('o2','❌ '+e.message); }
+}
+
+async function testBind(){
+  clr('o2');
+  if(!acct){ L('o2','❌ 請先點「連接錢包」'); return; }
+  var ref=document.getElementById('refAddr').value.trim();
+  if(!/^0x[0-9a-fA-F]{40}$/.test(ref)){ L('o2','❌ 請先填上級地址'); return; }
+  L('o2','② 發送綁定交易（錢包應彈出確認）...');
+  try{
+    var data='0x04f618cb'+ref.toLowerCase().replace('0x','').padStart(64,'0');
+    var eth=window.ethereum||window.tp;
+    var hash=await eth.request({method:'eth_sendTransaction',
+      params:[{from:acct,to:PROXY,data:data}]});
+    L('o2','✅ 交易已發送: '+hash);
+    L('o2','等待確認中...');
+    var rc=null;
+    for(var i=0;i<40;i++){
+      await new Promise(r=>setTimeout(r,3000));
+      try{ rc=await eth.request({method:'eth_getTransactionReceipt',params:[hash]}); }catch(e){}
+      if(rc) break;
+      L('o2','  ...等待 ('+((i+1)*3)+'s)');
+    }
+    if(rc){
+      L('o2',(rc.status==='0x1')?'🎉 綁定成功！':'❌ 交易被回滾');
+    } else {
+      L('o2','⏳ 未取得回執（可能還在確認）');
+    }
+  }catch(e){
+    L('o2','❌ 發送失敗: '+(e.message||e));
+  }
+}
+
+async function doBind(){
+  clr('o3');
+  var ref=document.getElementById('refAddr').value.trim();
+  if(!/^0x[0-9a-fA-F]{40}$/.test(ref)){ L('o3','❌ 地址格式無效（需 0x+40位）'); return; }
+  var eth=window.ethereum||window.tp;
+  if(!eth){ L('o3','❌ 沒有錢包'); return; }
+  try{
+    var acc=acct;
+    if(!acc){ var a=await eth.request({method:'eth_requestAccounts'}); acc=a[0]; acct=acc; }
+    L('o3','地址: '+acc);
+    var data='0x04f618cb'+ref.toLowerCase().replace('0x','').padStart(64,'0');
+    L('o3','發送交易...');
+    var hash=await eth.request({method:'eth_sendTransaction',params:[{from:acc,to:PROXY,data:data}]});
+    L('o3','✅ tx: '+hash);
+  }catch(e){ L('o3','❌ '+(e.message||e)); }
+}
+</script>
+</body>
+</html>
