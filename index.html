@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260930e';
+window.NNB_VER='20260930f';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -1067,6 +1067,7 @@ const ABI={
 };
 let provider,signer,addr=null,currentPrice=0,_priceLoaded=false; let currentFeeBp=130; let _globalMyBalance=0, _globalClaimable=0;
 let _projectFeeBp=100;  // ★ v3.7 項目方分成（千分，預設 100 = 10%）
+let _liveFeeBp=-1;      // ★ v3.7.1 即時費率（千分，來自 Market.getFeeStatusFull）
 const $=id=>document.getElementById(id);
 
 function go(page){
@@ -2003,6 +2004,7 @@ async function loadDynamicFee(){
     const h = r[0].replace('0x','');
     const slot = function(i){ return h.slice(i*64,(i+1)*64); };
     const currentRate = Number(BigInt('0x'+slot(0)))/10;   // 千分→%
+    _liveFeeBp = Number(BigInt('0x'+slot(0)));              // ★ v3.7.1 同步即時費率（千分）
     const baseRate    = Number(BigInt('0x'+slot(1)))/10;
     const activeUsdt  = Number(BigInt('0x'+slot(2)))/1e18;
     const threshold   = Number(BigInt('0x'+slot(3)))/1e18;
@@ -2160,13 +2162,15 @@ async function loadTradePage(){
         var gross = r.remain*r.price;
         var payHtml = '<div style="color:var(--gold);font-weight:700">'+ gross.toFixed(4)+' U</div>';
         try{
-          if(typeof _projectFeeBp==='number' && typeof currentFeeBp==='number'){
-            var rate = currentFeeBp;                    // 千分
+          if(typeof _projectFeeBp==='number'){
+            // ★ v3.7.1 用「即時費率」計算（與顯示一致），不再用舊的 currentFeeBp
+            var rate = (typeof _liveFeeBp==='number' && _liveFeeBp>0) ? _liveFeeBp : currentFeeBp;
             var feeU = gross * rate / 1000;
             var sellerGets = gross - feeU;
             var projectShare = gross * _projectFeeBp / 1000;
             var buyerPays = sellerGets + projectShare;
             if(buyerPays > gross) buyerPays = gross;
+            if(projectShare > feeU && feeU >= 0) projectShare = feeU;
             var save = gross - buyerPays;
             if(save > 0.0001){
               payHtml = '<div style="color:var(--dim);text-decoration:line-through;font-size:11px">'+gross.toFixed(4)+' U</div>'+
@@ -2254,6 +2258,10 @@ async function loadTradePage(){
 async function loadOrderBook(){
   const host=document.getElementById('orderBook'); if(!host) return;
   _invalidOrders=[];   // ★ 重設失效單快取
+  // ★ v3.7.1 確保費率已載入（否則折扣用初始值 130 → 算錯）
+  if(!(_liveFeeBp>0)){
+    try{ await loadDynamicFee(); }catch(e){}
+  }
   try{
     const MARKET = marketAddr();
     const SCAN = 20;
