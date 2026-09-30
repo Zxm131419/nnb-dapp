@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NNB 買方折扣分潤升級 v3.7</title>
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script src="nnb-rebate-data.js"></script>
+<style>
+:root{--gold:#c9a227;--bg:#0f1220;--card:#171b2e;--line:#2a3050;--txt:#e6e9f5;--dim:#8b93b3;--ok:#37d67a;--bad:#ff5c5c;}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--txt);}
+.wrap{max-width:960px;margin:0 auto;padding:22px 16px 60px;}h1{color:var(--gold);font-size:22px;margin:6px 0 2px;}
+h3{font-size:15px;margin:4px 0 8px;color:#dfe4f7}
+.sub{color:var(--dim);font-size:13px;margin-bottom:8px}
+.banner{background:#1b2a05;border:1px solid #4b6b12;color:#b6ff48;padding:11px 13px;border-radius:10px;font-size:13px;line-height:1.7;margin:12px 0}
+.warn{background:#2a1a05;border:1px solid #6b4b12;color:#ffd48a;padding:11px 13px;border-radius:10px;font-size:13px;line-height:1.7;margin:12px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+label{display:block;font-size:12px;color:var(--dim);margin:10px 0 3px}
+input[type=text]{width:100%;max-width:300px;background:#0d1020;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:8px 10px;font-family:monospace;font-size:13px}
+button{background:var(--gold);color:#171204;border:none;padding:13px 20px;border-radius:9px;font-weight:700;cursor:pointer;margin:6px 6px 0 0;font-size:14px}
+button.green{background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff}
+button.sec{background:#2a3156;color:#cdd5f0}
+button.mini{padding:7px 12px;font-size:12px;background:#2a3156;color:#cdd5f0}
+button:disabled{opacity:.45;cursor:not-allowed}
+.out{background:#0a0d18;border:1px dashed var(--line);border-radius:10px;padding:10px;font-family:monospace;font-size:12px;white-space:pre-wrap;margin:10px 0;color:#b7c6ff;max-height:440px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+td,th{border:1px solid var(--line);padding:5px 8px;text-align:left}
+th{background:#0d1020;color:var(--dim)}
+.row{display:flex;gap:20px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>NNB 買方折扣分潤升級 v3.7</h1>
+<div class="sub">買方成交自動打折：買方付 = 賣方得 + 項目方10%</div>
+
+<div class="banner">
+✅ <b>升級內容（新變數加在最末尾，零位移）</b><br>
+・費率依據：<b>最近 9 筆「大單」（≥30 U）</b>的即時總額<br>
+・<code>feeWindow</code>（預設 9）<b>可調</b><br>
+・<code>minWindowUsdt</code>（預設 30 U）<b>可調</b><br>
+・新變數 = 0 → 自動用預設，<b>不需初始化</b><br>
+・儲存布局：舊 22 個 <b>零位移</b>，新的在 slot 22/23<br>
+・小單（&lt;30 U）不計入 → 杜絕「碎單刷費率」
+</div>
+
+<div class="warn">
+⚠️ <b>為什麼要加「只算大單」</b>
+<table style="margin-top:8px">
+<tr><th>問題</th><th>說明</th></tr>
+<tr><td>碎單刷費率</td><td>掛一堆 4 U、9 U 的小單也能湊總額</td></tr>
+<tr><td>過濾後</td><td>只算 ≥30 U 的「真實掛單」→ 更公平</td></tr>
+<tr><td>實測</td><td>窗口總額 370.44 U → 356.64 U（濾掉 2 筆碎單）</td></tr>
+</table>
+</div>
+
+<div class="card">
+<b>連線</b>
+<button onclick="connect()">連接錢包</button>
+<div class="out" id="conn">未連線</div>
+</div>
+
+<div class="card" style="border-color:#4b6b12">
+<h3 style="color:#b6ff48">① 升級 Market（大單窗口）</h3>
+<button class="green" id="btn1" onclick="doUpgrade()">升級 Market</button>
+<button class="sec" onclick="checkStatus()">查詢狀態</button>
+<div class="out" id="out">—</div>
+</div>
+
+<div class="card">
+<h3>② 買方折扣設定（項目方分成）</h3>
+<div class="banner" style="margin:8px 0">
+💡 <b>項目方分成越低 → 買方折扣越大</b><br>
+　 買方付 = 賣方得 + 成交額 × 項目方分成<br>
+　 例：項目方 10%、費率 90% → 買方付 20%（<b>2 折</b>）
+</div>
+<div class="row">
+<div>
+<label>項目方分成（千分制，100=10%）</label>
+<input type="text" id="projectBpVal" value="100">
+<button class="mini" onclick="doSetProjectBp()">設定分成</button>
+</div>
+<div>
+<label>快捷</label>
+<button class="mini" onclick="document.getElementById('projectBpVal').value=0">0%（全返買方）</button>
+<button class="mini" onclick="document.getElementById('projectBpVal').value=100">10%（推薦）</button>
+<button class="mini" onclick="document.getElementById('projectBpVal').value=300">30%</button>
+</div>
+</div>
+<div class="out" id="outRebate">—</div>
+</div>
+
+<div class="card">
+<h3>③ 窗口參數（選擇性）</h3>
+<div class="row">
+<div>
+<label>窗口筆數（1~100）</label>
+<input type="text" id="winVal" value="9">
+<button class="mini" onclick="doSetWindow()">設定窗口</button>
+</div>
+<div>
+<label>大單門檻（USDT）</label>
+<input type="text" id="minVal" value="30">
+<button class="mini" onclick="doSetMin()">設定門檻</button>
+</div>
+<div>
+<label>基準（USDT）</label>
+<input type="text" id="thresholdVal" value="300">
+<button class="mini" onclick="doSetThreshold()">設定基準</button>
+</div>
+<div>
+<label>封頂（千分制）</label>
+<input type="text" id="maxFeeVal" value="900">
+<button class="mini" onclick="doSetMax()">設定封頂</button>
+</div>
+</div>
+<div class="out" id="out2">—</div>
+</div>
+
+</div>
+<script>
+var provider, signer, addr=null;
+const RPC='https://bsc-dataseed.binance.org';
+const OWNER=NNBR.owner, PROXY=NNBR.proxy, CFG=NNBR.Market;
+function $id(i){return document.getElementById(i);}
+function q(t){var o=$id('conn');o.textContent+='\n'+t;o.scrollTop=o.scrollHeight;}
+function qo(t){var o=$id('out');o.textContent+='\n'+t;o.scrollTop=o.scrollHeight;}
+function q2(t){var o=$id('out2');o.textContent+='\n'+t;o.scrollTop=o.scrollHeight;}
+
+async function reqNet(){
+  if(!window.ethereum){q('❌ 未偵測到錢包');return false;}
+  try{
+    provider=new ethers.providers.Web3Provider(window.ethereum);
+    const net=await provider.getNetwork();
+    if(net.chainId!==56){q('❌ 非 BSC 主網');return false;}
+    return true;
+  }catch(e){q('❌ 網路失敗');return false;}
+}
+async function connect(){
+  if(!await reqNet()) return;
+  try{
+    await window.ethereum.request({method:'eth_accounts'});
+    signer=provider.getSigner(); addr=await signer.getAddress();
+    q('✅ 已連線: '+addr);
+    q(addr.toLowerCase()===OWNER.toLowerCase() ? '✅ 管理錢包已確認' : '⚠️ 非管理錢包');
+    await preCheck();
+  }catch(e){q('❌ '+String(e.message||e).slice(0,120));}
+}
+
+async function preCheck(){
+  q('');
+  q('=== 升級前驗證（錢包 RPC）===');
+  try{
+    const c=new ethers.Contract(PROXY, CFG.abi, provider);
+    const price=await c.price();
+    const fr=await c.feeRate();
+    const own=await c.owner();
+    const bt=await c.baseThreshold();
+    let ok=true;
+    if(Number(price)!==13500000000000000){q('  ⚠️ price 異常');ok=false;}
+    if(Number(fr)!==100){q('  ⚠️ feeRate 異常');ok=false;}
+    if(own.toLowerCase()!==OWNER.toLowerCase()){q('  ⚠️ owner 異常');ok=false;}
+    q('  price        = '+(Number(price)/1e18)+' ✅');
+    q('  feeRate      = '+fr.toString()+' ✅');
+    q('  baseThreshold= '+(Number(ethers.utils.formatUnits(bt,18)))+' U ✅');
+    q('  owner        = '+own+' ✅');
+    q('');
+    q(ok ? '  ✅ 驗證通過（可安全升級）' : '  ⚠️ 有異常');
+  }catch(e){ q('  ❌ '+String(e.message||e).slice(0,100)); }
+}
+
+async function checkStatus(){
+  const o=$id('out'); o.textContent='';
+  try{
+    const c=new ethers.Contract(PROXY, CFG.abi, provider||new ethers.providers.JsonRpcProvider(RPC));
+    var t='=== 目前狀態 ===\n';
+    t+='price        = '+(Number(await c.price())/1e18)+' USDT\n';
+    t+='feeRate      = '+(await c.feeRate()).toString()+'‰\n';
+    t+='nextOrderId  = '+(await c.nextOrderId()).toString()+'\n';
+    try{
+      const w=await c.getFeeWindow();
+      const m=await c.getMinWindowUsdt();
+      t+='\n★ 窗口筆數  = '+w.toString()+' 筆\n';
+      t+='★ 大單門檻  = '+(Number(ethers.utils.formatUnits(m,18))).toFixed(2)+' U\n';
+      const wt=await c.getWindowActiveUsdt();
+      t+='★ 窗口總額  = '+(Number(ethers.utils.formatUnits(wt,18))).toFixed(4)+' U\n';
+      const cr=await c.getCurrentFeeRate();
+      t+='★ 當前費率  = '+(Number(cr)/10).toFixed(1)+'%\n';
+      const st=await c.getFeeStatusFull();
+      t+='\n基準 = '+(Number(ethers.utils.formatUnits(st[3],18))).toFixed(2)+' U\n';
+      t+='封頂 = '+(Number(st[4])/10).toFixed(1)+'%\n';
+      t+='\n（舊 totalActiveUsdt = '+(Number(ethers.utils.formatUnits(await c.totalActiveUsdt(),18))).toFixed(4)+' U，已廢棄）';
+    }catch(e){ t+='\n⏳ 新函數尚未部署（請先升級）'; }
+    o.textContent=t;
+  }catch(e){ o.textContent='❌ '+String(e.message||e).slice(0,150); }
+}
+
+async function doUpgrade(){
+  if(!await reqNet()) return;
+  $id('btn1').disabled=true;
+  if(!signer||addr.toLowerCase()!==OWNER.toLowerCase()){qo('❌ 需管理錢包');$id('btn1').disabled=false;return;}
+  $id('out').textContent='';
+  try{
+    qo('① 部署新 Market 實作...');
+    const f=new ethers.ContractFactory(CFG.abi, CFG.bytecode, signer);
+    const impl=await f.deploy(); await impl.deployed();
+    qo('  ✅ 新實作 = '+impl.address);
+    qo('');
+    qo('② upgradeToAndCall（代理地址不變）...');
+    const abi=[{"type":"function","name":"upgradeToAndCall","stateMutability":"payable","inputs":[{"name":"newImplementation","type":"address"},{"name":"data","type":"bytes"}],"outputs":[]}];
+    const c=new ethers.Contract(PROXY, abi, signer);
+    const tx=await c.upgradeToAndCall(impl.address,'0x',{gasLimit:600000});
+    qo('  ⏳ '+tx.hash);
+    await tx.wait();
+    qo('  ✅ 升級完成！');
+    qo('');
+    qo('=== ★ 立即驗證 ===');
+    await new Promise(r=>setTimeout(r,3000));
+    await postCheck();
+  }catch(e){ qo('❌ '+String(e&&(e.reason||e.message)||e).slice(0,250)); }
+  $id('btn1').disabled=false;
+}
+
+async function postCheck(){
+  try{
+    const c=new ethers.Contract(PROXY, CFG.abi, provider||new ethers.providers.JsonRpcProvider(RPC));
+    let ok=true;
+    qo('【核心變數（升級後必須不變）】');
+    const price=Number(await c.price());
+    const frt=Number(await c.feeRate());
+    const bt=ethers.utils.formatUnits(await c.baseThreshold(),18);
+    const mfr=Number(await c.maxFeeRate());
+    const own=await c.owner();
+    const rows=[
+      ['price', price===13500000000000000, price/1e18],
+      ['feeRate', frt===100, frt+'‰'],
+      ['baseThreshold', Number(bt)===300, bt+' U'],
+      ['maxFeeRate', mfr===900, (mfr/10)+'%'],
+      ['owner', own.toLowerCase()===OWNER.toLowerCase(), own.slice(0,12)+'..'],
+    ];
+    for(const [n,okk,val] of rows){ qo('  '+n+': '+(okk?'✅ ':'❌ ')+val); if(!okk) ok=false; }
+    qo('');
+    qo('【★ 新窗口參數】');
+    try{
+      const w=await c.getFeeWindow();
+      const m=await c.getMinWindowUsdt();
+      qo('  ✅ 窗口筆數 = '+w.toString()+' 筆');
+      qo('  ✅ 大單門檻 = '+(Number(ethers.utils.formatUnits(m,18))).toFixed(2)+' U');
+    }catch(e){ qo('  ❌ '+String(e.message||e).slice(0,60)); ok=false; }
+    qo('');
+    qo('【★ 窗口總額（即時計算）】');
+    try{
+      const wt=await c.getWindowActiveUsdt();
+      const cr=await c.getCurrentFeeRate();
+      qo('  ✅ 窗口總額 = '+(Number(ethers.utils.formatUnits(wt,18))).toFixed(4)+' U');
+      qo('  ✅ 當前費率 = '+(Number(cr)/10).toFixed(1)+'%');
+    }catch(e){ qo('  ❌ '+String(e.message||e).slice(0,60)); ok=false; }
+    qo('');
+    qo('【訂單讀取】');
+    const nxt=Number(await c.nextOrderId());
+    for(let i=nxt-3;i<nxt;i++){
+      if(i<0) continue;
+      try{
+        const o=await c.getOrder(i);
+        if(o[0]!=='0x0000000000000000000000000000000000000000') qo('  ✅ #'+i+': '+(Number(o[1])/1e18).toFixed(2)+' NNB active='+o[4]);
+      }catch(e){ qo('  ℹ️ #'+i+' (略過)'); }
+    }
+    qo('');
+    qo(ok ? '🎉 升級成功！費率 = 最近N筆大單窗口' : '⚠️ 有異常，請檢查');
+  }catch(e){ qo('❌ 驗證: '+String(e.message||e).slice(0,150)); }
+}
+
+async function doSetWindow(){
+  if(!await reqNet()) return;
+  if(!signer||addr.toLowerCase()!==OWNER.toLowerCase()){q2('❌ 需管理錢包');return;}
+  const v=parseInt($id('winVal').value);
+  if(!(v>=1&&v<=100)){q2('❌ 需 1~100');return;}
+  try{
+    const c=new ethers.Contract(PROXY, CFG.abi, signer);
+    q2('設定窗口 = '+v+' 筆 ...');
+    const tx=await c.setFeeWindow(v,{gasLimit:200000});
+    q2('  ⏳ '+tx.hash); await tx.wait();
+    q2('  ✅ 窗口已更新為 '+v+' 筆');
+  }catch(e){ q2('❌ '+String(e.reason||e.message||e).slice(0,200)); }
+}
+async function doSetMin(){
+  if(!await reqNet()) return;
+  if(!signer||addr.toLowerCase()!==OWNER.toLowerCase()){q2('❌ 需管理錢包');return;}
+  const v=parseFloat($id('minVal').value);
+  if(!(v>=0)){q2('❌ 數值無效');return;}
+  try{
+    const c=new ethers.Contract(PROXY, CFG.abi, signer);
+    q2('設定大單門檻 = '+v+' U ...');
+    const tx=await c.setMinWindowUsdt(ethers.utils.parseUnits(v.toString(),18),{gasLimit:200000});
+    q2('  ⏳ '+tx.hash); await tx.wait();
+    q2('  ✅ 門檻已更新為 '+v+' U');
+  }catch(e){ q2('❌ '+String(e.reason||e.message||e).slice(0,200)); }
+}
+async function doSetThreshold(){
+  if(!await reqNet()) return;
+  if(!signer||addr.toLowerCase()!==OWNER.toLowerCase()){q2('❌ 需管理錢包');return;}
+  const v=parseFloat($id('thresholdVal').value);
+  if(!(v>0)){q2('❌ 數值無效');return;}
+  try{
+    const c=new ethers.Contract(PROXY, CFG.abi, signer);
+    q2('設定基準 = '+v+' U ...');
+    const tx=await c.setBaseThreshold(ethers.utils.parseUnits(v.toString(),18),{gasLimit:200000});
+    q2('  ⏳ '+tx.hash); await tx.wait();
+    q2('  ✅ 基準已更新為 '+v+' U');
+  }catch(e){ q2('❌ '+String(e.reason||e.message||e).slice(0,200)); }
+}
+async function doSetMax(){
+  if(!await reqNet()) return;
+  if(!signer||addr.toLowerCase()!==OWNER.toLowerCase()){q2('❌ 需管理錢包');return;}
+  const v=parseInt($id('maxFeeVal').value);
+  if(!(v>=0&&v<=1000)){q2('❌ 需 0~1000');return;}
+  try{
+    const c=new ethers.Contract(PROXY, CFG.abi, signer);
+    q2('設定封頂 = '+(v/10).toFixed(1)+'% ...');
+    const tx=await c.setMaxFeeRate(v,{gasLimit:200000});
+    q2('  ⏳ '+tx.hash); await tx.wait();
+    q2('  ✅ 封頂已更新為 '+(v/10).toFixed(1)+'%');
+  }catch(e){ q2('❌ '+String(e.reason||e.message||e).slice(0,200)); }
+}
+
+function qR(t){var o=document.getElementById('outRebate');if(o){o.textContent+='\n'+t;o.scrollTop=o.scrollHeight;}}
+async function doSetProjectBp(){
+  if(!await reqNet()) return;
+  if(!signer||addr.toLowerCase()!==OWNER.toLowerCase()){qR('❌ 需管理錢包');return;}
+  const v=parseInt(document.getElementById('projectBpVal').value);
+  if(!(v>=0&&v<=1000)){qR('❌ 需 0~1000');return;}
+  try{
+    const c=new ethers.Contract(PROXY, CFG.abi, signer);
+    qR('設定項目方分成 = '+v+'‰（'+(v/10).toFixed(1)+'%）...');
+    const tx=await c.setProjectFeeBp(v,{gasLimit:200000});
+    qR('  ⏳ '+tx.hash);
+    await tx.wait();
+    qR('  ✅ 已更新！項目方 '+(v/10).toFixed(1)+'%');
+    // 試算
+    const rp=await c.getRebateParams();
+    qR('  驗證 projectFeeBp = '+rp.toString()+'‰');
+  }catch(e){ qR('❌ '+String(e.reason||e.message||e).slice(0,200)); }
+}
+</script>
+</body>
+</html>
