@@ -64,9 +64,10 @@ window.NNB_VER='20260930c';
 <link rel="shortcut icon" href="favicon.ico?v=20260805">
 <link rel="apple-touch-icon" href="logo.jpg?v=20260805">
 <title>NNB 牛牛金币·金牛聚财运</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" media="print" onload="this.media='all'">
+<!-- ★ 圖標字體：本地優先（大陸地區 CDN 常被牆）-->
+<link rel="stylesheet" href="ph-regular.css?v=20260930c">
+<link rel="stylesheet" href="ph-fill.css?v=20260930c">
+<link rel="stylesheet" href="ph-bold.css?v=20260930c">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -655,17 +656,26 @@ function loadEthers(src,onload){
   s.onerror=function(){};
   document.head.appendChild(s);
 }
-loadEthers('https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js',function(){
-  console.log('ethers loaded from jsdelivr');
+// ★★★ 修復（v2026.09.30c）：本地優先（大陸地區 CDN 常被牆）
+loadEthers('ethers.min.js?v=20260930c',function(){
+  console.log('ethers loaded from LOCAL');
 });
-// 备用源
+// 備援 1：jsdelivr
+setTimeout(function(){
+  if(!window.ethersReady){
+    loadEthers('https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js',function(){
+      console.log('ethers loaded from jsdelivr');
+    });
+  }
+},2500);
+// 備援 2：unpkg
 setTimeout(function(){
   if(!window.ethersReady){
     loadEthers('https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js',function(){
       console.log('ethers loaded from unpkg');
     });
   }
-},2000);
+},5000);
 </script>
 <script>
 const C={chainId:56,rpc:'https://bsc-dataseed1.binance.org:443',
@@ -676,6 +686,16 @@ const C={chainId:56,rpc:'https://bsc-dataseed1.binance.org:443',
   contracts:{mining:'0x0745f350358d1478C28626235b062Eafc6b49648',token:'0x9F60B80980588B95f55d8E1Fa6A6299e6BDc0bd1',
     referral:'0x0745f350358d1478C28626235b062Eafc6b49648',swap:'0x3aA629408F4f61A6F16E72D4CCc92D39d1FCAB3c',market:'0xD9783711fD81B36650dd76a62042E9775e79D14D',pool:'0xC4dd2Fcd7bC66e92EdC43951863252fDf536424C'},
   pair:'0xCAaF3c41a40103a23Eeaa4BbA468AF3cF5b0e0D8'};
+
+// ★★★ 錢包優先的 read provider（v20260930c）
+//   大陸地區公共 RPC 被牆 → 統一走錢包 eth_call
+function getReadProvider(){
+  if(window.ethereum && window.ethereum.request){
+    try{ return new ethers.providers.Web3Provider(window.ethereum); }catch(e){}
+  }
+  return new ethers.providers.JsonRpcProvider(RPC56||'https://bsc-dataseed.binance.org');
+}
+window.getReadProvider = getReadProvider;
 
 // ============================================================
 // ★★★ 批次 RPC 工具（把多個 eth_call 打包成 1 個 HTTP 請求）
@@ -1650,7 +1670,38 @@ function updateClaimTimer(burned,boostExpire,todayClaimable){
   btn.textContent='领取今日收益 ('+todayClaimable.toFixed(2)+' NNB)';
 }
 
-async function bindReferrer(){if(!signer){toast('请先连接钱包');return}const r=document.getElementById('referrerInput').value.trim();if(!r){toast('请输入上级地址');return}if(r.toLowerCase()===addr.toLowerCase()){toast('不能绑定自己为上级');return}try{toast('请在钱包中确认...');const ref=new ethers.Contract(C.contracts.referral,ABI.ref,signer);const tx=await ref.bindReferrer(r);await tx.wait();toast('绑定成功!');localStorage.removeItem('nnb_referrer');localStorage.removeItem('nnb_referrer_time');const b=document.getElementById('bindBanner');if(b)b.remove();}catch(e){toast('失败: '+(e.reason||e.message))}}
+async function bindReferrer(){
+  if(!signer){toast('请先连接钱包');return}
+  if(typeof ethers==='undefined'||!ethers.Contract){toast('组件还没加载完（ethers 未就绪），请等几秒后重试。若一直不行请刷新页面');return}
+  const r=document.getElementById('referrerInput').value.trim();
+  if(!r){toast('请输入上级地址');return}
+  // ★ 地址格式校验（防截断/隐藏字符）
+  const clean=r.replace(/[\u0000-\u001f\u200b\u200c\u200d\ufeff\s]/g,'');
+  if(!/^0x[0-9a-fA-F]{40}$/.test(clean)){toast('上级地址无效：需 0x + 40 位。请重新粘贴完整地址');return}
+  if(clean.toLowerCase()===addr.toLowerCase()){toast('不能绑定自己为上级');return}
+  try{
+    toast('请在钱包中确认...');
+    const ref=new ethers.Contract(C.contracts.referral,ABI.ref,signer);
+    const tx=await ref.bindReferrer(clean);
+    toast('交易已提交，等待确认...');
+    try{ await tx.wait(1); }catch(e2){ /* 等待失败不影响（交易可能已成功） */ }
+    toast('绑定成功!');
+    localStorage.removeItem('nnb_referrer');
+    localStorage.removeItem('nnb_referrer_time');
+    const b=document.getElementById('bindBanner');if(b)b.remove();
+    // ★ 绑定后立即刷新显示（确认链上状态）
+    setTimeout(function(){ try{ showExistingReferrer(); }catch(e){} },2000);
+  }catch(e){
+    const msg=(e&&(e.reason||e.message))||String(e);
+    if(msg.includes('invalid ref')){toast('绑定失败：上级地址无效（合约拒绝）')}
+    else if(msg.includes('already')){toast('绑定失败：已绑定过上级')}
+    else if(msg.includes('insufficient')){toast('BNB不足付gas费')}
+    else if(msg.includes('Failed to fetch')||msg.includes('failed to fetch')){
+      toast('绑定交易可能已提交，但网络读取超时。请稍后在链上确认，或刷新页面查看结果');
+    }
+    else{toast('失败: '+msg.slice(0,60))}
+  }
+}
 
 
 // 在DApp内互转NNB：填接收方地址+数量，链上真实划转并自动折算业绩（防作弊）
@@ -2364,6 +2415,7 @@ async function buyOrder(orderId, maxNnb){
   if(!(amt>0)){toast('數量無效');return}
   if(amt>maxNnb+0.0001){toast('超過可成交量（'+maxNnb.toFixed(2)+' NNB）');return}
   try{
+    // ★ 修復：若已有 provider（來自錢包）優先使用，避免被牆的公共 RPC
     const rp=provider||new ethers.providers.JsonRpcProvider(RPC56||'https://bsc-dataseed.binance.org');
     // ★ 買入前二次檢查：賣方餘額是否足夠（防失效單 / 防快取）
     try{
