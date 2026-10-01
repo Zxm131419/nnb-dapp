@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260930f';
+window.NNB_VER='20260930g';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -984,6 +984,18 @@ async function fastLoadAll(){
         _globalClaimable = ca;
         const mcl = document.getElementById('minerClaimable');
         if(mcl) mcl.textContent = ca.toLocaleString(undefined,{maximumFractionDigits:2})+' NNB';
+      }else{
+        // ★ 修復：批次讀取失敗時，單獨重試（避免誤顯示「暫無可領」）
+        try{
+          const r2 = await batchEthCall([{to:C.contracts.referral, data:_SEL.claimableAmount+_pad(addr)}], 0);
+          if(r2 && r2[0]){
+            const ca = Number(BigInt(r2[0]))/1e18;
+            _globalClaimable = ca;
+            const mcl = document.getElementById('minerClaimable');
+            if(mcl) mcl.textContent = ca.toLocaleString(undefined,{maximumFractionDigits:2})+' NNB';
+            console.log('claimable 重試成功:', ca);
+          }
+        }catch(e){ console.log('claimable 重試失敗:', e); }
       }
 
       // 加速
@@ -1065,7 +1077,7 @@ const ABI={
   mining:['function buyMining(uint256) external','function users(address) view returns (tuple(bool activated,bool isNode,uint256 totalInvestedUSD,uint256 totalMined,uint256 lastBuyTime,uint256 myBalance,uint256 directPushTotalUSD,uint256 teamLevel,uint256 teamCount,address referrer,uint256 totalReinvestCount,uint256 totalWithdrawCount,uint256 lockedUntil,uint256 boostMultiplier,uint256 boostExpireTime))','function currentMinerCount() view returns (uint256)','function MINERS(uint256) view returns (tuple(uint256 price,uint256 dailyRate,uint256 lockDays,uint256 minPurchase,uint256 maxPurchase,bool exists))'],
   ref:['function getUserReferrer(address) view returns (address)','function getDirectReferralCount(address) view returns (uint256)','function isNode(address) view returns (bool)','function isUserActivated(address) view returns (bool)','function getDirectReferralAmount(address) view returns (uint256)','function getBoostMultiplier(address) view returns (uint256)','function getBoostExpireTime(address) view returns (uint256)','function getUserReinvestCount(address) view returns (uint256)','function getUserUnclaimed(address) view returns (uint256)','function getUserBurned(address) view returns (bool)','function bindReferrer(address) external','function buyMining(uint256) external','function claim() external','function reinvest(uint256) external','function currentNodeFee(uint256) view returns (uint256)','function activateNode() external payable']
 };
-let provider,signer,addr=null,currentPrice=0,_priceLoaded=false; let currentFeeBp=130; let _globalMyBalance=0, _globalClaimable=0;
+let provider,signer,addr=null,currentPrice=0,_priceLoaded=false; let currentFeeBp=130; let _globalMyBalance=0, _globalClaimable=-1;
 let _projectFeeBp=100;  // ★ v3.7 項目方分成（千分，預設 100 = 10%）
 let _liveFeeBp=-1;      // ★ v3.7.1 即時費率（千分，來自 Market.getFeeStatusFull）
 const $=id=>document.getElementById(id);
@@ -1590,8 +1602,15 @@ function startClaimCountdownFixed(){
         btn.textContent='★ 領取今日收益';
         const elCnt=document.getElementById('minerClaimable');
         if(elCnt) elCnt.textContent=_globalClaimable.toLocaleString(undefined,{maximumFractionDigits:2})+' NNB';
+      }else if(_globalClaimable<0){
+        // ★ 修復：-1 表示「尚未讀取完成」→ 顯示載入中（不誤導）
+        timerEl.textContent='收益載入中...';
+        timerEl.style.color='var(--muted)';
+        btn.disabled=true; btn.style.opacity='0.5';
+        btn.textContent='載入中...';
       }else{
-        timerEl.textContent='暫無可領取收益';
+        // ★ 真正為 0 才顯示「暫無可領」
+        timerEl.textContent='暫無可領取收益（產能為 0）';
         timerEl.style.color='var(--muted)';
         btn.disabled=true; btn.style.opacity='0.5';
         btn.textContent='暫無可領';
