@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20260930g';
+window.NNB_VER='20260930h';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -737,85 +737,94 @@ async function batchEthCall(calls, ttl){
   if(pending.length === 0) return results;
 
   // ★ 分批：每批最多 30 個（RPC 上限）
-  // ★★★ 修復（2026-09-30）：中國大陸地區公共 RPC 被牆 → 改用「錢包 eth_call 優先」
+  // ★★★ 修正（v20260930h）：改回「批次 POST 優先」
+  //   教訓：錢包（TokenPocket）對「並發 eth_call」有限流
+  //   → 19 個並發 → 部分失敗 → 造成「間歇性讀不到資料」（如 claimable 變 0）
+  //   → 正確做法：批次 POST（1 個請求）優先，失敗才用錢包補
   const useWallet = !!(window.ethereum && window.ethereum.request);
   const CHUNK = 30;
   for(let off=0; off<pending.length; off+=CHUNK){
     const grp = pending.slice(off, off+CHUNK);
 
-    // ① 優先：用錢包 eth_call（錢包自帶 RPC，不受網路封鎖影響）
-    if(useWallet){
-      const walletRes = await Promise.all(grp.map(async function(p){
-        try{
-          const r = await window.ethereum.request({
-            method:'eth_call',
-            params:[{to:p.call.to, data:p.call.data}, 'latest']
-          });
-          return (r && r !== '0x') ? r : null;
-        }catch(e){ return null; }
-      }));
-      let got = 0;
-      grp.forEach(function(p, i){
-        if(walletRes[i]){
-          results[p.idx] = walletRes[i];
-          _rpcCache.set(p.key, {val:walletRes[i], ts:Date.now()});
-          got++;
-        }
-      });
-      // 如果錢包全部成功，這批就不用走 fetch
-      if(got === grp.length) continue;
-    }
-
-    // ② 備援：批次 POST 到公共 RPC（海外用戶）
+    // ① 優先：批次 POST 到公共 RPC（1 個 HTTP 請求，最穩定）
     const payload = grp.map(function(p, n){
       return {jsonrpc:'2.0', id:n, method:'eth_call',
               params:[{to:p.call.to, data:p.call.data}, 'latest']};
     });
     const resp = await _batchPost(payload);
-    if(!resp || !Array.isArray(resp)) continue;
-    resp.forEach(function(item){
-      if(typeof item.id !== 'number') return;
-      const p = grp[item.id];
-      if(!p) return;
-      if(results[p.idx] !== null) return;   // ★ 已有錢包結果，不覆蓋
-      const val = (item.result && item.result !== '0x') ? item.result : null;
-      if(val){
-        results[p.idx] = val;
-        _rpcCache.set(p.key, {val:val, ts:Date.now()});
+    if(resp && Array.isArray(resp)){
+      resp.forEach(function(item){
+        if(typeof item.id !== 'number') return;
+        const p = grp[item.id];
+        if(!p) return;
+        const val = (item.result && item.result !== '0x') ? item.result : null;
+        if(val){
+          results[p.idx] = val;
+          _rpcCache.set(p.key, {val:val, ts:Date.now()});
+        }
+      });
+    }
+
+    // ② 補漏：批次失敗的，用錢包 eth_call（大陸地區公共 RPC 可能被牆）
+    const stillMissing = grp.filter(function(p){ return results[p.idx]===null; });
+    if(useWallet && stillMissing.length > 0){
+      // ★ 限制並發（每次最多 5 個，避免錢包限流）
+      const STEP = 5;
+      for(let s=0; s<stillMissing.length; s+=STEP){
+        const sub = stillMissing.slice(s, s+STEP);
+        const walletRes = await Promise.all(sub.map(async function(p){
+          try{
+            const r = await window.ethereum.request({
+              method:'eth_call',
+              params:[{to:p.call.to, data:p.call.data}, 'latest']
+            });
+            return (r && r !== '0x') ? r : null;
+          }catch(e){ return null; }
+        }));
+        sub.forEach(function(p, i){
+          if(walletRes[i]){
+            results[p.idx] = walletRes[i];
+            _rpcCache.set(p.key, {val:walletRes[i], ts:Date.now()});
+          }
+        });
       }
-    });
+    }
   }
 
-  // 保底：少數缺失的用「錢包優先 + 單獨查詢」補
+  // 保底：少數缺失的用「公共RPC優先 + 錢包補」（限制並發，避免限流）
   const missing = pending.filter(function(p){ return results[p.idx]===null; });
   if(missing.length > 0 && missing.length <= 30){
-    await Promise.all(missing.map(async function(p){
-      // ① 錢包優先
-      if(useWallet){
+    const STEP2 = 5;   // ★ 每批最多 5 個並發
+    for(let s=0; s<missing.length; s+=STEP2){
+      const sub = missing.slice(s, s+STEP2);
+      await Promise.all(sub.map(async function(p){
+        // ① 公共 RPC 優先（單獨查詢）
         try{
-          const r = await window.ethereum.request({
-            method:'eth_call',
-            params:[{to:p.call.to, data:p.call.data}, 'latest']
-          });
-          if(r && r !== '0x'){
-            results[p.idx] = r;
-            _rpcCache.set(p.key, {val:r, ts:Date.now()});
+          const r = await fetch(RPC_ENDPOINTS[_rpcIdx++ % RPC_ENDPOINTS.length], {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({jsonrpc:'2.0',id:1,method:'eth_call',params:[{to:p.call.to,data:p.call.data},'latest']})
+          }).then(function(x){ return x.json(); });
+          if(r && r.result && r.result !== '0x'){
+            results[p.idx] = r.result;
+            _rpcCache.set(p.key, {val:r.result, ts:Date.now()});
             return;
           }
         }catch(e){}
-      }
-      // ② 公共 RPC 備援
-      try{
-        const r = await fetch(RPC_ENDPOINTS[_rpcIdx++ % RPC_ENDPOINTS.length], {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({jsonrpc:'2.0',id:1,method:'eth_call',params:[{to:p.call.to,data:p.call.data},'latest']})
-        }).then(function(x){ return x.json(); });
-        if(r && r.result && r.result !== '0x'){
-          results[p.idx] = r.result;
-          _rpcCache.set(p.key, {val:r.result, ts:Date.now()});
+        // ② 錢包備援
+        if(useWallet){
+          try{
+            const r = await window.ethereum.request({
+              method:'eth_call',
+              params:[{to:p.call.to, data:p.call.data}, 'latest']
+            });
+            if(r && r !== '0x'){
+              results[p.idx] = r;
+              _rpcCache.set(p.key, {val:r, ts:Date.now()});
+            }
+          }catch(e){}
         }
-      }catch(e){}
-    }));
+      }));
+    }
   }
   return results;
 }
