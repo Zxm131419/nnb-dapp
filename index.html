@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20261002a';
+window.NNB_VER='20261002b';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -1300,6 +1300,8 @@ async function loadPrice(){
 }
 function updateEstimates(){
   if(currentPrice<=0)return;
+  // ★ 修復：若即時費率尚未載入，先觸發載入（不影響顯示，下次會正確）
+  if(!(_liveFeeBp>0)){ try{ loadDynamicFee(); }catch(e){} }
   const ba=parseFloat(document.getElementById('buyAmount')?.value)||0;
   if(ba>0&&document.getElementById('buyEstimate')){
     document.getElementById('buyEstimate').textContent=(ba/currentPrice).toLocaleString(undefined,{maximumFractionDigits:2});
@@ -1308,12 +1310,14 @@ function updateEstimates(){
   }
   // 买入手续费显示（买入 0%，卖出按动态费率）
   const bf=document.getElementById('buyFee');if(bf)bf.textContent='0.00%';
-  const sf=document.getElementById('sellFee');if(sf)sf.textContent=(currentFeeBp/10).toFixed(2)+'%';
+  // ★ 修復：用「即時費率」_liveFeeBp（Market.getFeeStatusFull），不用舊的 currentFeeBp
+  const _effBp = (typeof _liveFeeBp==='number' && _liveFeeBp>0) ? _liveFeeBp : currentFeeBp;
+  const sf=document.getElementById('sellFee');if(sf)sf.textContent=(_effBp/10).toFixed(2)+'%';
   const sa=parseFloat(document.getElementById('sellAmount')?.value)||0;
   if(sa>0&&document.getElementById('sellEstimate')){
     // 卖出按链上动态手续费率: 实收 = NNB数量 * 价格 * (1000-feeBp)/1000
     const gross=sa*currentPrice;
-    const net=gross*(1000-currentFeeBp)/1000;
+    const net=gross*(1000-_effBp)/1000;
     document.getElementById('sellEstimate').textContent=net.toFixed(6);
     const sfa=document.getElementById('sellFeeAmount');if(sfa)sfa.textContent='≈ 手续费 '+(gross-net).toFixed(2)+' USDT';
   }else if(document.getElementById('sellEstimate')){
