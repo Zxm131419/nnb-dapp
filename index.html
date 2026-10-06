@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20261006b';
+window.NNB_VER='20261006c';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -3342,13 +3342,13 @@ function announceClose(){
   var m=document.getElementById('announceMask');
   if(m){m.classList.remove('show');}
 }
-// 公告弹窗：2026-08-25~08-28 自动弹窗3天（交易中心开通买卖公告），区间内每次进入都弹
+// 公告弹窗：2026-10-06 ~ 2026-10-09 自动弹窗（启航公告）
 function maybeAutoAnnounce(){
   try{
     var now=new Date();
     var y=now.getFullYear(),mo=now.getMonth()+1,d=now.getDate();
-    // 弹窗区间：2026-10-07 ~ 2026-10-09（三天，10/9 24:00 结束）
-    if(!(y===2026 && mo===10 && (d===7||d===8||d===9))) return;
+    // ★ 弹窗区间：2026-10-06 ~ 2026-10-09（10/9 24:00 结束）
+    if(!(y===2026 && mo===10 && (d===6||d===7||d===8||d===9))) return;
     announceOpen();
   }catch(e){}
 }
