@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20261002c';
+window.NNB_VER='20261002d';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -408,18 +408,69 @@ button{cursor:pointer;font-family:inherit}
   <div class="navbar"><div class="nav-left"><button class="nav-btn" onclick="go('home')"><i class="ph ph-caret-left"></i> <span data-i18n="back">返回首页</span></button></div><button class="btn-connect" onclick="connectWallet()"><i class="ph ph-wallet"></i> <span data-i18n="wallet.connect">连接钱包</span></button></div>
   <div class="section-title" data-i18n="trade.title">NNB/USDT 交易池</div>
 
+  <!-- ★ 數據看板（UI 優化，不改邏輯）-->
+  <div class="card" style="border:1px solid var(--line);padding:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:rgba(201,162,39,0.08);border:1px solid rgba(201,162,39,0.25);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:3px">最新價格</div>
+        <div style="font-weight:800;font-size:15px;color:var(--gold)" id="dbPrice">載入中…</div>
+        <div style="font-size:10px;color:var(--muted)" id="dbChange">—</div>
+      </div>
+      <div style="background:rgba(180,77,255,0.08);border:1px solid rgba(180,77,255,0.25);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:3px">當前手續費率</div>
+        <div style="font-weight:800;font-size:15px;color:var(--purple2)" id="dbFeeRate">載入中…</div>
+        <div style="font-size:10px;color:var(--muted)" id="dbFeeInfo">—</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.25);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:3px">累計成交量</div>
+        <div style="font-weight:700;font-size:14px" id="dbTotalVol">—</div>
+        <div style="font-size:10px;color:var(--muted)" id="dbTotalVolU">—</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.25);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:3px">當前掛單總額</div>
+        <div style="font-weight:700;font-size:14px" id="dbActiveVol">—</div>
+        <div style="font-size:10px;color:var(--muted)" id="dbOrderCount">—</div>
+      </div>
+    </div>
+  </div>
+
   <div class="card" style="border:1px solid var(--gold)">
     <div class="section-title" style="margin-top:0">📌 掛單交易</div>
-    <div class="trade-label"><span>我的 NNB 餘額</span><span id="mkBal">0</span></div>
-    <div class="trade-input-row"><input class="input" id="mkSellAmt" type="number" placeholder="輸入要賣的 NNB 數量" inputmode="decimal"></div>
-    <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:8px 0">
-      <span>賣出單價</span><span id="mkPrice">載入中…</span>
+    <!-- ★ UI 升級：表單式（保留所有元素 ID，邏輯不變）-->
+    <div style="font-size:12px;color:var(--muted);margin-bottom:4px">出售數量 (NNB)</div>
+    <div class="trade-input-row" style="position:relative">
+      <input class="input" id="mkSellAmt" type="number" placeholder="輸入要賣的 NNB 數量" inputmode="decimal" style="padding-right:70px">
+      <button onclick="fillAllSell()" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);padding:7px 14px;border:none;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#c084fc);color:#fff;font-size:12px;font-weight:700;cursor:pointer">全部</button>
     </div>
+    <div style="font-size:11px;color:var(--muted);margin:-4px 0 10px 2px">可用餘額：<span id="mkBal">0</span> NNB</div>
+
+    <div style="font-size:12px;color:var(--muted);margin-bottom:4px">出售單價 (USDT)</div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:8px 0">
+      <span>賣出單價</span><span id="mkPrice" style="color:var(--txt);font-weight:700">載入中…</span>
+    </div>
+
     <!-- ★ 動態費率顯示 -->
     <div style="display:flex;justify-content:space-between;font-size:13px;margin:8px 0">
       <span>當前手續費率</span><span id="mkFeeRate" style="font-weight:700;color:var(--gold)">載入中…</span>
     </div>
     <div id="mkFeeInfo" style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5"></div>
+
+    <!-- ★ 交易明細（新增，UI 呈現，不改邏輯）-->
+    <div style="background:rgba(0,0,0,0.28);border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0">
+        <span style="color:var(--muted)">單價</span><span id="sdPrice">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0">
+        <span style="color:var(--muted)">出售數量</span><span id="sdAmt">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0">
+        <span style="color:var(--muted)">手續費</span><span id="sdFee">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:14px;padding:5px 0;border-top:1px dashed var(--line);margin-top:3px">
+        <span style="font-weight:700">預計到賬</span><span id="sdNet" style="font-weight:800;color:var(--gold);font-size:15px">—</span>
+      </div>
+    </div>
+
     <button class="btn btn-gold" onclick="placeSell()">① 掛賣單</button>
     <!-- ★ 我的掛單（移到上方，掛單後立即看到） -->
     <div style="margin-top:14px;border-top:1px dashed var(--line);padding-top:12px">
@@ -957,6 +1008,9 @@ async function fastLoadAll(){
         const cls=change>=0?'up':'down';
         const e5=document.getElementById('changeDisplay'); if(e5){e5.className=cls; e5.textContent=(change>=0?'+ +':'- ')+change.toFixed(2)+'%';}
         const e6=document.getElementById('totalChange'); if(e6){e6.className=cls; e6.textContent=(change>=0?'+':'')+change.toFixed(2)+'%';}
+        // ★ 數據看板：最新價格
+        const dp=document.getElementById('dbPrice'); if(dp) dp.textContent='$'+p.toFixed(6);
+        const dc=document.getElementById('dbChange'); if(dc){dc.className=cls; dc.textContent=(change>=0?'+':'')+change.toFixed(2)+'%';}
         if(typeof updateEstimates==='function') updateEstimates();
       }
     }
@@ -985,7 +1039,7 @@ async function fastLoadAll(){
       const mst = document.getElementById('minerStatus');
       if(mst) mst.textContent = (myBalance>0||activated) ? nnbT('mine.active') : '未购买';
       const mkBal = document.getElementById('mkBal');
-      if(mkBal && d.nnbBal) mkBal.textContent=(Number(_u256(d.nnbBal))/1e18).toFixed(2)+' NNB';
+      if(mkBal && d.nnbBal) mkBal.textContent=(Number(_u256(d.nnbBal))/1e18).toFixed(2);
 
       // 今日可領
       if(d.claimable){
@@ -1324,6 +1378,32 @@ function updateEstimates(){
     document.getElementById('sellEstimate').textContent='0.00';
     const sfa=document.getElementById('sellFeeAmount');if(sfa)sfa.textContent='';
   }
+}
+
+// ★ UI 升級：填入全部餘額
+function fillAllSell(){
+  const bal = (typeof _globalMyBalance==='number' && _globalMyBalance>0) ? _globalMyBalance : 0;
+  const nnbBal = parseFloat((document.getElementById('mkBal')?.textContent||'0').replace(/,/g,''))||0;
+  const useBal = nnbBal>0 ? nnbBal : bal;
+  if(useBal<=0){ toast('餘額為 0 或尚未載入'); return; }
+  const el=document.getElementById('mkSellAmt');
+  if(el){ el.value = useBal.toFixed(2); updateSellDetail(); }
+}
+
+// ★ UI 升級：更新「交易明細」（純顯示，不改邏輯）
+function updateSellDetail(){
+  try{
+    const amt = parseFloat(document.getElementById('mkSellAmt')?.value)||0;
+    const price = currentPrice||0;
+    const bp = (typeof _liveFeeBp==='number' && _liveFeeBp>0) ? _liveFeeBp : currentFeeBp;
+    const gross = amt*price;
+    const fee = gross*bp/1000;
+    const net = gross-fee;
+    const sp=document.getElementById('sdPrice'); if(sp) sp.textContent = price>0 ? price.toFixed(6)+' USDT' : '—';
+    const sa=document.getElementById('sdAmt'); if(sa) sa.textContent = amt>0 ? amt.toFixed(2)+' NNB' : '—';
+    const sf=document.getElementById('sdFee'); if(sf) sf.textContent = amt>0 ? fee.toFixed(4)+' USDT（'+(bp/10).toFixed(1)+'%）' : '—';
+    const sn=document.getElementById('sdNet'); if(sn) sn.textContent = amt>0 ? net.toFixed(4)+' USDT' : '—';
+  }catch(e){}
 }
 
 let tradeTab='buy';
@@ -1841,6 +1921,8 @@ function updateMineEstimate(){
   const el3=document.getElementById('mineEstTotal');if(el3)el3.textContent=nnb3x.toFixed(2)+' NNB (3倍杠杆)';
 }
 document.addEventListener('input',function(e){if(e.target&&e.target.id==='mineAmount')updateMineEstimate();});
+// ★ UI 升級：掛賣數量輸入 → 即時更新明細
+document.addEventListener('input',function(e){if(e.target&&e.target.id==='mkSellAmt')updateSellDetail();});
 
 async function doBuyMining(){
   if(!signer){toast('请先连接钱包');return}
@@ -2025,6 +2107,17 @@ async function loadDynamicFee(){
         if(bp>=0 && bp<=1000) _projectFeeBp = bp;
       }
     }catch(e){ /* 舊合約無此函數 → 保持預設 */ }
+    // ★ 數據看板：累計成交量 totalTradedNnb() selector = 0xdcb17a1e
+    try{
+      const tv = await batchEthCall([{to:MARKET, data:'0xdcb17a1e'}], 15000);
+      if(tv && tv[0]){
+        const volNnb = Number(BigInt(tv[0]))/1e18;
+        const tvEl=document.getElementById('dbTotalVol');
+        if(tvEl) tvEl.textContent = volNnb.toLocaleString(undefined,{maximumFractionDigits:2})+' NNB';
+        const tvU=document.getElementById('dbTotalVolU');
+        if(tvU && currentPrice>0) tvU.textContent = '≈ '+(volNnb*currentPrice).toLocaleString(undefined,{maximumFractionDigits:2})+' USDT';
+      }
+    }catch(e){}
     // ★ 用 getFeeStatusFull()（含封頂）；若失敗則退回 getFeeStatus()
     let r = await batchEthCall([{to:MARKET, data:'0x'+_sel('getFeeStatusFull()')}], 10000);
     let hasMax = true;
@@ -2043,6 +2136,11 @@ async function loadDynamicFee(){
     const maxRate     = hasMax ? Number(BigInt('0x'+slot(4)))/10 : 50;
 
     el.textContent = currentRate.toFixed(1)+'%';
+    // ★ 數據看板：手續費率
+    const dbf=document.getElementById('dbFeeRate'); if(dbf){dbf.textContent=currentRate.toFixed(1)+'%';}
+    const dbi=document.getElementById('dbFeeInfo'); if(dbi){dbi.textContent='基礎 '+baseRate.toFixed(1)+'%｜封頂 '+maxRate.toFixed(0)+'%';}
+    const dbv=document.getElementById('dbActiveVol'); if(dbv){dbv.textContent=activeUsdt.toFixed(2)+' U';}
+    const dbo=document.getElementById('dbOrderCount'); if(dbo){dbo.textContent='基準 '+threshold.toFixed(0)+' U';}
     // 顏色：越高越紅
     if(currentRate >= 70) el.style.color='#ff5c5c';
     else if(currentRate >= 30) el.style.color='#ffb648';
@@ -2093,7 +2191,7 @@ async function loadMarketInfo(){
     if(res && res[1]){
       const bal=Number(BigInt(res[1]))/1e18;
       userXlyBal = bal;
-      const el=document.getElementById('mkBal'); if(el) el.textContent=bal.toFixed(2)+' NNB';
+      const el=document.getElementById('mkBal'); if(el) el.textContent=bal.toFixed(2);
     }
   }catch(e){
     if(ep && ep.textContent==='載入中…'){
@@ -2162,7 +2260,7 @@ async function loadTradePage(){
     if(bRaw){
       const b = Number(BigInt(bRaw))/1e18;
       userXlyBal = b;
-      const el=document.getElementById('mkBal'); if(el) el.textContent=b.toFixed(2)+' NNB';
+      const el=document.getElementById('mkBal'); if(el) el.textContent=b.toFixed(2);
     }
 
     // ===== 處理訂單簿 =====
@@ -2213,11 +2311,25 @@ async function loadTradePage(){
             }
           }
         }catch(e){}
-        html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">'+
-          '<div><div style="color:var(--dim)">#'+r.id+' '+r.seller.slice(0,6)+'…'+r.seller.slice(-4)+'</div>'+
-          '<div><b>'+r.remain.toFixed(2)+'</b> NNB @ '+r.price.toFixed(6)+' U</div></div>'+
-          '<div style="text-align:right">'+payHtml+
-          '<button class="btn" style="padding:9px 18px;font-size:13px;font-weight:700;margin:6px 0 0 0;background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff;border:none;border-radius:8px;cursor:pointer;min-width:70px" onclick="buyOrder('+r.id+','+r.remain+')">買入</button></div></div>';
+        // ★ UI 升級：卡片式設計（參考專業交易所）
+        var _a1=r.seller.slice(2,4), _a2=r.seller.slice(-2);
+        html+='<div style="background:rgba(0,0,0,0.22);border:1px solid var(--line);border-radius:12px;padding:11px;margin-bottom:8px">'+
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
+            '<div style="display:flex;align-items:center;gap:7px">'+
+              '<div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#c084fc);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff">'+_a1+'</div>'+
+              '<div><div style="font-size:11px;color:var(--muted)">'+r.seller.slice(0,6)+'…'+r.seller.slice(-4)+'</div>'+
+              '<div style="font-size:10px;color:var(--dim)">ID '+r.id+'</div></div>'+
+            '</div>'+
+            '<button class="btn" style="padding:8px 16px;font-size:12px;font-weight:700;margin:0;background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff;border:none;border-radius:8px;cursor:pointer;min-width:60px" onclick="buyOrder('+r.id+','+r.remain+')">買入</button>'+
+          '</div>'+
+          '<div style="display:flex;justify-content:space-between;align-items:flex-end">'+
+            '<div>'+
+              '<div style="font-size:14px;font-weight:800">'+r.remain.toFixed(2)+' <span style="font-size:11px;font-weight:400;color:var(--muted)">NNB</span></div>'+
+              '<div style="font-size:11px;color:var(--muted);margin-top:2px">單價 '+r.price.toFixed(6)+' USDT</div>'+
+            '</div>'+
+            '<div style="text-align:right">'+payHtml+'</div>'+
+          '</div>'+
+        '</div>';
       });
       host.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>';
       _renderInvalidHint();
@@ -2351,11 +2463,22 @@ async function loadOrderBook(){
 
     let html='';
     valid.slice(0,15).forEach(function(r){
-      html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line);font-size:12px">'+
-        '<div><div style="color:var(--dim)">#'+r.id+' '+r.seller.slice(0,6)+'…'+r.seller.slice(-4)+'</div>'+
-        '<div><b>'+r.remain.toFixed(2)+'</b> NNB @ '+r.price.toFixed(6)+' U</div></div>'+
-        '<div style="text-align:right"><div style="color:var(--gold);font-weight:700">'+ (r.remain*r.price).toFixed(4)+' U</div>'+
-        '<button class="btn" style="padding:9px 18px;font-size:13px;font-weight:700;margin:6px 0 0 0;background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff;border:none;border-radius:8px;cursor:pointer;min-width:70px" onclick="buyOrder('+r.id+','+r.remain+')">買入</button></div></div>';
+      var _b1=r.seller.slice(2,4);
+      html+='<div style="background:rgba(0,0,0,0.22);border:1px solid var(--line);border-radius:12px;padding:11px;margin-bottom:8px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
+          '<div style="display:flex;align-items:center;gap:7px">'+
+            '<div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#c084fc);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff">'+_b1+'</div>'+
+            '<div><div style="font-size:11px;color:var(--muted)">'+r.seller.slice(0,6)+'…'+r.seller.slice(-4)+'</div>'+
+            '<div style="font-size:10px;color:var(--dim)">ID '+r.id+'</div></div>'+
+          '</div>'+
+          '<button class="btn" style="padding:8px 16px;font-size:12px;font-weight:700;margin:0;background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff;border:none;border-radius:8px;cursor:pointer;min-width:60px" onclick="buyOrder('+r.id+','+r.remain+')">買入</button>'+
+        '</div>'+
+        '<div style="display:flex;justify-content:space-between;align-items:flex-end">'+
+          '<div><div style="font-size:14px;font-weight:800">'+r.remain.toFixed(2)+' <span style="font-size:11px;font-weight:400;color:var(--muted)">NNB</span></div>'+
+          '<div style="font-size:11px;color:var(--muted);margin-top:2px">單價 '+r.price.toFixed(6)+' USDT</div></div>'+
+          '<div style="text-align:right"><div style="color:var(--gold);font-weight:700">'+ (r.remain*r.price).toFixed(4)+' U</div></div>'+
+        '</div>'+
+      '</div>';
     });
     host.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>';
     if(valid.length===0 && next>0){
