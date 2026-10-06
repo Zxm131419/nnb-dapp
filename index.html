@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20261002d';
+window.NNB_VER='20261006a';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -442,7 +442,7 @@ button{cursor:pointer;font-family:inherit}
       <input class="input" id="mkSellAmt" type="number" placeholder="輸入要賣的 NNB 數量" inputmode="decimal" style="padding-right:70px">
       <button onclick="fillAllSell()" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);padding:7px 14px;border:none;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#c084fc);color:#fff;font-size:12px;font-weight:700;cursor:pointer">全部</button>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin:-4px 0 10px 2px">可用餘額：<span id="mkBal">0</span> NNB</div>
+    <div style="font-size:11px;color:var(--muted);margin:6px 0 12px 2px;line-height:1.5">可用餘額：<span id="mkBal">0</span> NNB</div>
 
     <div style="font-size:12px;color:var(--muted);margin-bottom:4px">出售單價 (USDT)</div>
     <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:8px 0">
