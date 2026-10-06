@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20261006d';
+window.NNB_VER='20261006e';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -502,7 +502,7 @@ button{cursor:pointer;font-family:inherit}
       <input class="input" id="mineAmount" type="number" data-i18n-placeholder="mine.amountBuy" placeholder="输入购买数量" inputmode="decimal" style="background:linear-gradient(135deg,rgba(245,200,66,0.08),rgba(180,77,255,0.08));border:1px solid rgba(180,77,255,0.3);padding-right:70px;font-size:16px">
       <button onclick="fillAllNNB()" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);padding:8px 14px;border:none;border-radius:8px;background:var(--bg);color:var(--text);font-size:13px;font-weight:600" data-i18n="common.all">全部</button>
     </div>
-    <div class="muted" style="margin-bottom:14px;font-size:12px"><span data-i18n="mine.purchaseHint">持NNB即可购买矿机,不限额度.</span></div>
+    <div class="muted" style="margin-bottom:14px;font-size:12px"><span data-i18n="mine.purchaseHint">持 NNB 即可购买矿机，最低 714 NNB（约 10U），不限额度.</span></div>
     <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(180,77,255,0.15);font-size:14px">
       <span style="color:var(--muted)" data-i18n="mine.currentValue">当前价值</span>
       <span style="font-weight:600" id="mineCurrentValue">0.0000 USDT</span>
@@ -678,7 +678,7 @@ button{cursor:pointer;font-family:inherit}
     <div class="invite-card" style="margin-bottom:6px"><div class="invite-icon"><i class="ph ph-identification-card"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="invite.promoId">推广ID</div><div class="invite-val" id="nodeAddr" data-i18n="common.notConnected">未连接</div></div><button class="invite-copy" onclick="copyText(document.getElementById('nodeAddr').getAttribute('data-full')||document.getElementById('nodeAddr').textContent)" data-i18n="invite.copy">复制</button></div>
     <div class="invite-card"><div class="invite-icon"><i class="ph ph-file-text"></i></div><div class="invite-info"><div class="invite-tag" data-i18n="invite.contract">合约地址</div><div class="invite-val">0x9F60B80980588B95f55d8E1Fa6A6299e6BDc0bd1</div></div><button class="invite-copy" onclick="copyText('0x9F60B80980588B95f55d8E1Fa6A6299e6BDc0bd1')" data-i18n="invite.copy">复制</button></div>
   </div>
-  <div class="card" id="reinvestCard"><div class="section-title" data-i18n="mine.reinvest">复投</div><div class="muted" style="margin-bottom:12px"><span data-i18n="mine.reinvestDesc">产能产完后复投重新获得3倍产能,最低2000 NNB(约20U).</span></div><button class="btn btn-gold" onclick="reinvest()" data-i18n="mine.reinvestBtn">复投 (最低2000 NNB)</button></div>
+  <div class="card" id="reinvestCard"><div class="section-title" data-i18n="mine.reinvest">复投</div><div class="muted" style="margin-bottom:12px"><span data-i18n="mine.reinvestDesc">产能产完后复投重新获得3倍产能，最低 714 NNB（约 10U）。</span></div><button class="btn btn-gold" onclick="reinvest()" data-i18n="mine.reinvestBtn">复投 (最低714 NNB)</button></div>
   <div class="card"><div class="section-title" data-i18n="node.status">节点状态</div><div id="nodeStatusContent"><div class="muted" style="text-align:center;padding:12px" data-i18n="common.connectFirst">请先连接钱包</div></div></div>
   <div class="card" style="background:linear-gradient(135deg,rgba(245,200,66,0.12),rgba(255,107,53,0.08))">
     <div class="section-title" data-i18n="profile.title">我的收益</div>
@@ -1929,6 +1929,8 @@ async function doBuyMining(){
   if(typeof ethers==='undefined'){toast('组件加载中，请稍后重试');return}
   const amt=parseFloat(document.getElementById('mineAmount')?.value);
   if(!amt||amt<=0){toast('请输入数量');return}
+  // ★ 買礦機最低 714 NNB（約 10U），與鏈上 minBuyMining 一致
+  if(amt<714){toast('最低購買 714 NNB（約 10U）');return}
   // 检查是否绑定上级
   try{
     const refContract=new ethers.Contract(C.contracts.referral,['function getUserReferrer(address) view returns (address)'],provider);
@@ -3018,10 +3020,10 @@ async function reinvest(){
   if(!signer){toast('请先连接钱包');return}
   if(typeof ethers==='undefined'){toast('组件加载中,请稍后');return}
   // 让用户输入NNB数量，最低2000
-  const input=prompt('请输入复投NNB数量(最低2000)','2000');
+  const input=prompt('请输入复投NNB数量(最低714)','714');
   if(!input)return;
   const amt=parseFloat(input);
-  if(!amt||amt<1000){toast('最低复投1000 NNB(约10U)');return}
+  if(!amt||amt<714){toast('最低复投 714 NNB（约 10U）');return}
   try{
     const nnbAmt=ethers.utils.parseUnits(amt.toFixed(6),18);
     // 1. 先 approve NNB 给 V35 合约
