@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20261002b';
+window.NNB_VER='20261002c';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -2112,7 +2112,7 @@ async function loadTradePage(){
   try{
     const MARKET = marketAddr();
     const MINING = C.contracts.referral;
-    const SCAN = 20;
+    const SCAN = 30;   // ★ 修復 v20261002c：與合約窗口一致
 
     // ① 先拿 nextOrderId
     const r0 = await batchEthCall([{to:MARKET, data:'0x2a58b330'}], 0);
@@ -2296,7 +2296,8 @@ async function loadOrderBook(){
   }
   try{
     const MARKET = marketAddr();
-    const SCAN = 20;
+    // ★ 修復 v20261002c：掃描範圍改 30（與合約窗口一致，避免「總額≠列表」）
+    const SCAN = 30;
     const SEL_NEXT = '0x2a58b330';   // nextOrderId()
     const SEL_GET  = '0xd09ef241';   // getOrder(uint256)
     const SEL_FILL = '0xa96ad7f2';   // fillableAmount(uint256)
