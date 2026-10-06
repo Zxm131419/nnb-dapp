@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20261006a';
+window.NNB_VER='20261006b';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -305,7 +305,7 @@ button{cursor:pointer;font-family:inherit}
   <div class="announce-modal">
     <div class="announce-head">
       <span class="announce-bell">🔔</span>
-      <div class="announce-title">🚀 启航 · NNB 8.28 交易正式上线</div>
+      <div class="announce-title">🎉 牛牛币 · 10.7 正式启航</div>
       <button class="announce-close" onclick="announceClose()">×</button>
     </div>
     <div class="announce-body" id="announceBody"></div>
@@ -3320,18 +3320,17 @@ async function claimNodeDividend(){
 var ANNOUNCE_KEY='nnb_announce_first';
 var ANNOUNCE_DAYS=15;
 var ANNOUNCE_TEXT=
-'<p style="text-align:center;font-weight:800;font-size:17px;color:#e8c441">🚀 启航 · NNB 8.28 交易正式上线</p>'+
-'<p>各位 NNB 家人们：</p>'+
-'<p><b>8月28日，NNB 正式开启交易时代！</b></p>'+
-'<p>今日起，NNB 交易中心全线开通，<b>买卖自由，实时交易</b>。</p>'+
-'<p>回望征程，感恩有你；</p>'+
-'<p>展望未来，NNB 与你同行。</p>'+
-'<p style="text-align:center;font-weight:800;color:#e8c441;margin-top:10px">28 启航 · 28 聚财 · 一路长虹！</p>'+
-'<h4 style="margin:14px 0 6px;color:#e8c441">🔍 代码开源查询</h4>'+
-'<p>NNB 合约代码<b>完全开源</b>，可在 <b>币安链区块浏览器（BscScan）</b> 查询验证为准：</p>'+
-'<p style="word-break:break-all;color:#26b5ff">合约地址：<b>0x9f60b80980588b95f55d8e1fa6a6299e6bdc0bd1</b></p>'+
-'<p>复制地址 → 打开区块链浏览器 → 粘贴查询 → 查看「Contract」→ 合约源码已验证、公开可见。</p>'+
-'<p style="text-align:right;color:#8b93a8">—— NNB 运营团队</p>';
+'<p style="text-align:center;font-weight:800;font-size:18px;color:#e8c441;margin-bottom:12px">🎉 牛牛币 · 正式启航 🎉</p>'+
+'<p>亲爱的牛牛币家人们：</p>'+
+'<p>历经 <b>9 月 28 日</b> 至今的试运营，在市场领导人的全力推动下，<b>牛牛币生态体系已然成型</b>。</p>'+
+'<p>一个多月来，技术与市场深度磨合，机制持续打磨，<b>运行稳定可靠</b>。</p>'+
+'<p style="text-align:center;font-weight:800;font-size:16px;color:#e8c441;margin:14px 0">📅 10 月 7 日 — 牛牛币正式启航！</p>'+
+'<p>接下来的路，我们并肩同行，</p>'+
+'<p style="font-weight:700">撸起袖子加油干，</p>'+
+'<p style="font-weight:700">一起把想要的结果拿到手，</p>'+
+'<p style="font-weight:700;color:#e8c441">一起过个肥年！ ✊</p>'+
+'<p style="text-align:center;font-weight:800;color:#e8c441;margin-top:14px;font-size:15px">牛牛币，未来可期 ✊🔥</p>'+
+'<p style="text-align:right;color:#8b93a8;margin-top:10px">—— 牛牛币 DAO 委会</p>';
 
 function announceOpen(){
   var el=document.getElementById('announceBody');
@@ -3348,8 +3347,8 @@ function maybeAutoAnnounce(){
   try{
     var now=new Date();
     var y=now.getFullYear(),mo=now.getMonth()+1,d=now.getDate();
-    // 未禁用；弹窗区间内每次进入都弹（8/25~8/28 三天）
-    if(!(y===2026&&mo===8&&d===28))return;  // 仅 8/28 当天弹窗
+    // 弹窗区间：2026-10-07 ~ 2026-10-09（三天，10/9 24:00 结束）
+    if(!(y===2026 && mo===10 && (d===7||d===8||d===9))) return;
     announceOpen();
   }catch(e){}
 }
