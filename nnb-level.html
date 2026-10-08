@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NNB 解鎖 19 代加速（owner）</title>
+<script src="ethers.min.js"></script>
+<script src="nnb-level-data.js"></script>
+<style>
+:root{--gold:#c9a227;--bg:#0f1220;--card:#171b2e;--line:#2a3050;--txt:#e6e9f5;--dim:#8b93b3;--ok:#37d67a;--bad:#ff5c5c}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--txt);padding:14px;font-size:14px}
+h1{color:var(--gold);font-size:19px;margin:6px 0 10px}
+h3{font-size:15px;margin:12px 0 6px;color:#dfe4f7}
+.sub{color:var(--dim);font-size:12px;margin-bottom:10px}
+.banner{background:#1b2a05;border:1px solid #4b6b12;color:#b6ff48;padding:11px 13px;border-radius:10px;font-size:13px;line-height:1.7;margin:10px 0}
+.warn{background:#2a1a05;border:1px solid #6b4b12;color:#ffd48a;padding:11px 13px;border-radius:10px;font-size:13px;line-height:1.8;margin:10px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+button{background:var(--gold);color:#171204;border:none;padding:14px 18px;border-radius:9px;font-weight:700;cursor:pointer;margin:6px 6px 0 0;font-size:14px;width:100%}
+button.g{background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff}
+button.b{background:#2a3156;color:#cdd5f0}
+button.danger{background:linear-gradient(135deg,#ff5c5c,#c92a2a);color:#fff}
+button:disabled{opacity:.45;cursor:not-allowed}
+.out{background:#0a0d18;border:1px dashed var(--line);border-radius:10px;padding:10px;font-family:monospace;font-size:12px;white-space:pre-wrap;margin:8px 0;color:#b7c6ff;max-height:420px;overflow:auto;line-height:1.7}
+input{width:100%;background:#0d1020;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:10px;font-family:monospace;font-size:12px;margin:4px 0}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+td,th{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#0d1020;color:var(--dim)}
+</style>
+</head>
+<body>
+<h1>NNB 解鎖 19 代加速（owner 專用）</h1>
+<div class="sub">設定團隊代數 = 19 · 只影響指定地址 · 不影響全局</div>
+
+<div class="banner">
+✅ <b>這個操作做什麼</b><br>
+呼叫 <code>adminSetTeamLevelBatch([地址...], 19)</code><br>
+・設定這些用戶的「團隊代數」= 19<br>
+・讓他們的「19代加速」生效<br>
+・<b>只影響名單內的地址</b>，其他用戶不變
+</div>
+
+<div class="warn">
+⚠️ <b>操作前確認</b><br>
+・必須用 <b>owner 錢包</b>（0x2366Eac0...）<br>
+・確認地址名單正確（下方可改）<br>
+・簽名前看清錢包內容
+</div>
+
+<div class="card">
+<h3>① 連接錢包（owner）</h3>
+<button onclick="connect()">連接錢包</button>
+<div class="out" id="conn">未連線</div>
+</div>
+
+<div class="card">
+<h3>② 目標地址名單（每行一個）</h3>
+<textarea id="addrList" style="width:100%;height:90px;background:#0d1020;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:10px;font-family:monospace;font-size:12px"></textarea>
+<label style="display:block;margin-top:8px;color:var(--dim);font-size:12px">要設定的代數（預設 19）</label>
+<input id="levelVal" value="19">
+<button class="b" onclick="check()">查詢狀態</button>
+<div class="out" id="status">—</div>
+</div>
+
+<div class="card" style="border-color:#4b6b12">
+<h3 style="color:#b6ff48">③ 執行設定</h3>
+<button class="g" id="btnSet" onclick="doSet()" disabled>設定 19 代加速</button>
+<div class="out" id="out">—</div>
+</div>
+
+<script>
+var provider, signer, acct=null;
+const OWNER = LEVELCFG.owner.toLowerCase();
+const MINING = LEVELCFG.Mining.address;
+const ABI = LEVELCFG.Mining.abi;
+
+function $(i){return document.getElementById(i);}
+function L(id,t){var e=$(id);e.textContent+='\n'+t;e.scrollTop=e.scrollHeight;}
+function clr(id){$(id).textContent='';}
+
+window.addEventListener('DOMContentLoaded',function(){
+  $('addrList').value = (LEVELCFG.targets||[]).join('\n');
+  $('levelVal').value = LEVELCFG.level || 19;
+});
+
+function getAddrs(){
+  return $('addrList').value.split(/[\n,;]/).map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
+}
+
+async function connect(){
+  if(!window.ethereum){L('conn','❌ 未偵測到錢包（請在 TP 內建瀏覽器打開）');return;}
+  try{
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    const net = await provider.getNetwork();
+    if(net.chainId!==56){L('conn','❌ 非 BSC 主網（chainId='+net.chainId+'）');return;}
+    await window.ethereum.request({method:'eth_requestAccounts'});
+    signer = provider.getSigner();
+    acct = await signer.getAddress();
+    L('conn','✅ 已連線: '+acct);
+    if(acct.toLowerCase()===OWNER){
+      L('conn','✅ owner 確認（可執行）');
+      $('btnSet').disabled=false;
+    }else{
+      L('conn','❌ 這不是 owner 錢包！owner='+LEVELCFG.owner);
+    }
+    await check();
+  }catch(e){ L('conn','❌ '+String(e.message||e).slice(0,150)); }
+}
+
+async function check(){
+  clr('status');
+  const addrs = getAddrs();
+  const lv = parseInt($('levelVal').value||'19');
+  if(addrs.length===0){ L('status','❌ 請輸入地址'); return; }
+  const bad = addrs.filter(function(a){ return !/^0x[0-9a-fA-F]{40}$/.test(a); });
+  if(bad.length>0){ L('status','❌ 格式錯誤: '+bad.join(', ')); return; }
+  const rp = provider || new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org');
+  const c = new ethers.Contract(MINING, ABI, rp);
+  L('status','=== 目標地址狀態 ===');
+  for(const a of addrs){
+    try{
+      const u = await c.users(a);
+      L('status','  '+a);
+      L('status','    activated='+(u.activated?'✅':'❌')+' isNode='+(u.isNode?'是':'否')+' 當前代數='+u.teamLevel.toString()+' 直推='+u.teamCount.toString());
+    }catch(e){
+      L('status','  '+a+' ❌ 讀取失敗: '+String(e.message||e).slice(0,60));
+    }
+  }
+  L('status','');
+  L('status','將設定：代數 = '+lv);
+  // 模擬
+  if(acct && acct.toLowerCase()===OWNER){
+    try{
+      const cw = new ethers.Contract(MINING, ABI, signer);
+      await cw.callStatic.adminSetTeamLevelBatch(addrs, lv, {from: acct});
+      L('status','✅ 模擬成功（可執行）');
+    }catch(e){
+      L('status','⚠️ 模擬失敗: '+String(e.reason||e.message||e).slice(0,120));
+    }
+  }
+}
+
+async function doSet(){
+  clr('out');
+  const addrs = getAddrs();
+  const lv = parseInt($('levelVal').value||'19');
+  if(addrs.length===0){ L('out','❌ 請輸入地址'); return; }
+  const bad = addrs.filter(function(a){ return !/^0x[0-9a-fA-F]{40}$/.test(a); });
+  if(bad.length>0){ L('out','❌ 格式錯誤: '+bad.join(', ')); return; }
+  if(!acct){ L('out','❌ 請先連接錢包'); return; }
+  if(acct.toLowerCase()!==OWNER){ L('out','❌ 需用 owner 錢包'); return; }
+  try{
+    $('btnSet').disabled=true;
+    const c = new ethers.Contract(MINING, ABI, signer);
+    L('out','=== 設定團隊代數 = '+lv+' ===');
+    L('out','地址數: '+addrs.length);
+    L('out','請在錢包確認...');
+    const tx = await c.adminSetTeamLevelBatch(addrs, lv, {gasLimit: 300000});
+    L('out','tx: '+tx.hash);
+    L('out','等待確認...');
+    await tx.wait();
+    L('out','✅ 交易成功');
+    L('out','');
+    L('out','=== 驗證 ===');
+    await new Promise(r=>setTimeout(r,3000));
+    let allOk = true;
+    for(const a of addrs){
+      const u = await c.users(a);
+      const ok = Number(u.teamLevel)===lv;
+      if(!ok) allOk=false;
+      L('out','  '+a.slice(0,14)+'.. teamLevel = '+u.teamLevel.toString()+' '+(ok?'✅':'❌'));
+    }
+    L('out','');
+    L('out', allOk ? '🎉 全部設定成功（19 代加速已解鎖）' : '⚠️ 部分未生效，請重試');
+  }catch(e){
+    L('out','❌ '+String(e.reason||e.message||e).slice(0,200));
+  }
+  $('btnSet').disabled=false;
+}
+</script>
+</body>
+</html>
