@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NNB 節點開通（owner）</title>
+<script src="ethers.min.js"></script>
+<script src="nnb-nodeadmin-data.js"></script>
+<style>
+:root{--gold:#c9a227;--bg:#0f1220;--card:#171b2e;--line:#2a3050;--txt:#e6e9f5;--dim:#8b93b3;--ok:#37d67a;--bad:#ff5c5c}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--txt);padding:14px;font-size:14px}
+h1{color:var(--gold);font-size:19px;margin:6px 0 10px}
+h3{font-size:15px;margin:12px 0 6px;color:#dfe4f7}
+.sub{color:var(--dim);font-size:12px;margin-bottom:10px}
+.banner{background:#1b2a05;border:1px solid #4b6b12;color:#b6ff48;padding:11px 13px;border-radius:10px;font-size:13px;line-height:1.7;margin:10px 0}
+.warn{background:#2a1a05;border:1px solid #6b4b12;color:#ffd48a;padding:11px 13px;border-radius:10px;font-size:13px;line-height:1.8;margin:10px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+button{background:var(--gold);color:#171204;border:none;padding:14px 18px;border-radius:9px;font-weight:700;cursor:pointer;margin:6px 6px 0 0;font-size:14px;width:100%}
+button.g{background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff}
+button.b{background:#2a3156;color:#cdd5f0}
+button.danger{background:linear-gradient(135deg,#ff5c5c,#c92a2a);color:#fff}
+button:disabled{opacity:.45;cursor:not-allowed}
+.out{background:#0a0d18;border:1px dashed var(--line);border-radius:10px;padding:10px;font-family:monospace;font-size:12px;white-space:pre-wrap;margin:8px 0;color:#b7c6ff;max-height:400px;overflow:auto;line-height:1.7}
+input{width:100%;background:#0d1020;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:10px;font-family:monospace;font-size:13px;margin:6px 0}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+td,th{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#0d1020;color:var(--dim)}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+</style>
+</head>
+<body>
+<h1>NNB 節點開通（owner 專用）</h1>
+<div class="sub">用 owner 錢包操作 · 免費登記節點 · 不涉及轉帳</div>
+
+<div class="banner">
+✅ <b>這個操作做什麼</b><br>
+呼叫 <code>adminSetNode(地址, true)</code> → 把指定用戶登記為節點<br>
+・<b>不轉帳</b>（不用 500 USDT）<br>
+・<b>不影響其他用戶</b><br>
+・會增加 nodeCount
+</div>
+
+<div class="warn">
+⚠️ <b>操作前確認</b><br>
+・你必須用 <b>owner 錢包</b>（0x2366Eac0...）<br>
+・確認目標地址正確（下方可改）<br>
+・簽名前看清錢包內容
+</div>
+
+<div class="card">
+<h3>① 連接錢包（owner）</h3>
+<button onclick="connect()">連接錢包</button>
+<div class="out" id="conn">未連線</div>
+</div>
+
+<div class="card">
+<h3>② 目標地址 & 狀態檢查</h3>
+<input id="targetAddr" value="" placeholder="0x... 要開節點的地址">
+<button class="b" onclick="check()">查詢狀態</button>
+<div class="out" id="status">—</div>
+</div>
+
+<div class="card" style="border-color:#4b6b12">
+<h3 style="color:#b6ff48">③ 開通節點</h3>
+<button class="g" id="btnOn" onclick="doSetNode(true)" disabled>開通節點（adminSetNode true）</button>
+<button class="danger" id="btnOff" onclick="doSetNode(false)" disabled>⚠️ 取消節點（adminSetNode false）</button>
+<div class="out" id="out">—</div>
+</div>
+
+<script>
+var provider, signer, acct=null;
+const OWNER = NODECFG.owner.toLowerCase();
+const MINING = NODECFG.Mining.address;
+const ABI = NODECFG.Mining.abi;
+
+function $(i){return document.getElementById(i);}
+function L(id,t){var e=$(id);e.textContent+='\n'+t;e.scrollTop=e.scrollHeight;}
+function clr(id){$(id).textContent='';}
+
+window.addEventListener('DOMContentLoaded',function(){
+  $('targetAddr').value = NODECFG.target || '';
+});
+
+async function connect(){
+  if(!window.ethereum){L('conn','❌ 未偵測到錢包（請在 TP 內建瀏覽器打開）');return;}
+  try{
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    const net = await provider.getNetwork();
+    if(net.chainId!==56){L('conn','❌ 非 BSC 主網（chainId='+net.chainId+'）');return;}
+    await window.ethereum.request({method:'eth_requestAccounts'});
+    signer = provider.getSigner();
+    acct = (await signer.getAddress());
+    L('conn','✅ 已連線: '+acct);
+    if(acct.toLowerCase()===OWNER){
+      L('conn','✅ owner 確認（可執行）');
+      $('btnOn').disabled=false; $('btnOff').disabled=false;
+    }else{
+      L('conn','❌ 這不是 owner 錢包！owner='+NODECFG.owner);
+      L('conn','   請切換到 owner 錢包');
+    }
+    await check();
+  }catch(e){ L('conn','❌ '+String(e.message||e).slice(0,150)); }
+}
+
+async function check(){
+  clr('status');
+  const t = $('targetAddr').value.trim();
+  if(!/^0x[0-9a-fA-F]{40}$/.test(t)){ L('status','❌ 地址格式無效（需 0x+40位）'); return; }
+  try{
+    const rp = provider || new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org');
+    const c = new ethers.Contract(MINING, ABI, rp);
+    const isN   = await c.isNode(t);
+    const cnt   = await c.nodeCount();
+    const act   = await c.isUserActivated(t);
+    const ref   = await c.getUserReferrer(t);
+    const dcount= await c.getDirectReferralCount(t);
+    let snap='—';
+    try{ snap = (await c.nodeDivShareBase(t)).toString(); }catch(e){}
+    L('status','=== 目標地址狀態 ===');
+    L('status','地址: '+t);
+    L('status','');
+    L('status','是否節點:   '+(isN?'✅ 已是節點':'❌ 不是節點'));
+    L('status','已激活:     '+(act?'✅ 是':'❌ 否'));
+    L('status','上級:       '+ref);
+    L('status','直推人數:   '+dcount.toString());
+    L('status','節點分紅快照: '+snap);
+    L('status','');
+    L('status','全網節點數: '+cnt.toString());
+    L('status','');
+    // 用 owner 模擬
+    if(acct && acct.toLowerCase()===OWNER){
+      try{
+        await c.callStatic.adminSetNode(t, true, {from: acct});
+        L('status','✅ 模擬 adminSetNode(true) 成功（可執行）');
+      }catch(e){
+        L('status','⚠️ 模擬失敗: '+String(e.reason||e.message||e).slice(0,120));
+      }
+    }
+  }catch(e){ L('status','❌ '+String(e.message||e).slice(0,150)); }
+}
+
+async function doSetNode(flag){
+  clr('out');
+  const t = $('targetAddr').value.trim();
+  if(!/^0x[0-9a-fA-F]{40}$/.test(t)){ L('out','❌ 地址格式無效'); return; }
+  if(!acct){ L('out','❌ 請先連接錢包'); return; }
+  if(acct.toLowerCase()!==OWNER){ L('out','❌ 需用 owner 錢包'); return; }
+  try{
+    $('btnOn').disabled=true; $('btnOff').disabled=true;
+    const c = new ethers.Contract(MINING, ABI, signer);
+    L('out', flag?'=== 開通節點 ===':'=== 取消節點 ===');
+    L('out','目標: '+t);
+    L('out','請在錢包確認...');
+    const tx = await c.adminSetNode(t, flag, {gasLimit: 200000});
+    L('out','tx: '+tx.hash);
+    L('out','等待確認...');
+    const rc = await tx.wait();
+    L('out','✅ 交易成功（block '+(rc.blockNumber||'?')+'）');
+    L('out','');
+    L('out','=== 驗證 ===');
+    await new Promise(r=>setTimeout(r,3000));
+    const isN = await c.isNode(t);
+    const cnt = await c.nodeCount();
+    L('out','  isNode    = '+isN+(isN?' ✅':' ❌'));
+    L('out','  nodeCount = '+cnt.toString());
+    L('out','');
+    L('out', isN ? '🎉 節點開通成功！' : '⚠️ isNode 仍是 false，請重試');
+  }catch(e){
+    L('out','❌ '+String(e.reason||e.message||e).slice(0,200));
+  }
+  $('btnOn').disabled=false; $('btnOff').disabled=false;
+}
+</script>
+</body>
+</html>
