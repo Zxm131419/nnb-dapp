@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20261006f';
+window.NNB_VER='20261008a';
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
@@ -2426,8 +2426,6 @@ async function loadOrderBook(){
   }
   try{
     const MARKET = marketAddr();
-    // ★ 修復 v20261002c：掃描範圍改 30（與合約窗口一致，避免「總額≠列表」）
-    const SCAN = 30;
     const SEL_NEXT = '0x2a58b330';   // nextOrderId()
     const SEL_GET  = '0xd09ef241';   // getOrder(uint256)
     const SEL_FILL = '0xa96ad7f2';   // fillableAmount(uint256)
@@ -2437,72 +2435,91 @@ async function loadOrderBook(){
     const next = (r0 && r0[0]) ? parseInt(r0[0], 16) : 0;
     if(!next || next===0){ host.innerHTML='<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>'; return; }
 
-    // ② 批次查全部訂單（1 個 HTTP 請求搞定）
-    const count = Math.min(next, SCAN);
-    const calls = [];
-    const idMap = [];
-    for(let i=next-1; i>=next-count && i>=0; i--){
-      calls.push({to:MARKET, data:SEL_GET + _pad32(i)});
-      idMap.push({id:i, kind:'order'});
-      calls.push({to:MARKET, data:SEL_FILL + _pad32(i)});
-      idMap.push({id:i, kind:'fill'});
+    // ★ v20261008 兩段式載入：首屏 20 筆（快）+ 背景補到 100 筆（完整）
+    const SCAN_FAST = 20;
+    const SCAN_FULL = 100;
+
+    // ★ 掃描指定 ID 範圍（可重用）
+    async function scanIds(idsArr){
+      if(idsArr.length===0) return [];
+      const calls=[], idMap=[];
+      idsArr.forEach(function(i){
+        calls.push({to:MARKET, data:SEL_GET + _pad32(i)});
+        idMap.push({id:i, kind:'order'});
+        calls.push({to:MARKET, data:SEL_FILL + _pad32(i)});
+        idMap.push({id:i, kind:'fill'});
+      });
+      const res = await batchEthCall(calls, 6000);
+      const byId = {};
+      idMap.forEach(function(m, idx){
+        const v = res[idx];
+        if(!v) return;
+        if(!byId[m.id]) byId[m.id] = {};
+        byId[m.id][m.kind] = v;
+      });
+      const out=[];
+      Object.keys(byId).map(Number).forEach(function(i){
+        const o = byId[i].order;
+        if(!o) return;
+        const parsed = _parseOrder(o);
+        if(!parsed || !parsed.active || parsed.remain<=0) return;
+        let fillable=parsed.remain, invalid=false;
+        const fh = byId[i].fill;
+        if(fh){ fillable = Number(BigInt(fh))/1e18; if(fillable < parsed.remain-0.0001) invalid=true; }
+        out.push({id:i, seller:parsed.seller, remain:parsed.remain, price:parsed.price, fillable:fillable, invalid:invalid});
+      });
+      return out;
     }
 
-    const res = await batchEthCall(calls, 6000);
-
-    // ③ 解析
-    const byId = {};
-    idMap.forEach(function(m, idx){
-      const v = res[idx];
-      if(!v) return;
-      if(!byId[m.id]) byId[m.id] = {};
-      byId[m.id][m.kind] = v;
-    });
-
-    const valid = [], invalids = [];
-    Object.keys(byId).map(Number).sort(function(a,b){ return b-a; }).forEach(function(i){
-      const o = byId[i].order;
-      if(!o) return;
-      const parsed = _parseOrder(o);
-      if(!parsed || !parsed.active || parsed.remain <= 0) return;
-      let fillable = parsed.remain, invalid = false;
-      const fillHex = byId[i].fill;
-      if(fillHex){
-        fillable = Number(BigInt(fillHex)) / 1e18;
-        if(fillable < parsed.remain - 0.0001) invalid = true;
-      }
-      const item = {id:i, seller:parsed.seller, remain:parsed.remain, price:parsed.price, fillable:fillable, invalid:invalid};
-      if(invalid) invalids.push(item); else valid.push(item);
-    });
-
-    invalids.forEach(function(x){
-      _invalidOrders.push({id:x.id, seller:x.seller, remain:x.remain, price:x.price, fillable:x.fillable});
-    });
-
-    let html='';
-    valid.slice(0,15).forEach(function(r){
-      var _b1=r.seller.slice(2,4);
-      html+='<div style="background:rgba(0,0,0,0.22);border:1px solid var(--line);border-radius:12px;padding:11px;margin-bottom:8px">'+
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
-          '<div style="display:flex;align-items:center;gap:7px">'+
-            '<div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#c084fc);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff">'+_b1+'</div>'+
-            '<div><div style="font-size:11px;color:var(--muted)">'+r.seller.slice(0,6)+'…'+r.seller.slice(-4)+'</div>'+
-            '<div style="font-size:10px;color:var(--dim)">ID '+r.id+'</div></div>'+
+    // ★ 渲染列表（可重用）
+    function renderOrderList(items){
+      items = items.slice().sort(function(a,b){ return b.id-a.id; });   // 最新優先
+      const valid = items.filter(function(x){ return !x.invalid; });
+      const invalids = items.filter(function(x){ return x.invalid; });
+      _invalidOrders=[];
+      invalids.forEach(function(x){
+        _invalidOrders.push({id:x.id, seller:x.seller, remain:x.remain, price:x.price, fillable:x.fillable});
+      });
+      let html='';
+      valid.slice(0,20).forEach(function(r){
+        var _b1=r.seller.slice(2,4);
+        html+='<div style="background:rgba(0,0,0,0.22);border:1px solid var(--line);border-radius:12px;padding:11px;margin-bottom:8px">'+
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
+            '<div style="display:flex;align-items:center;gap:7px">'+
+              '<div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#c084fc);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff">'+_b1+'</div>'+
+              '<div><div style="font-size:11px;color:var(--muted)">'+r.seller.slice(0,6)+'…'+r.seller.slice(-4)+'</div>'+
+              '<div style="font-size:10px;color:var(--dim)">ID '+r.id+'</div></div>'+
+            '</div>'+
+            '<button class="btn" style="padding:8px 16px;font-size:12px;font-weight:700;margin:0;background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff;border:none;border-radius:8px;cursor:pointer;min-width:60px" onclick="buyOrder('+r.id+','+r.remain+')">買入</button>'+
           '</div>'+
-          '<button class="btn" style="padding:8px 16px;font-size:12px;font-weight:700;margin:0;background:linear-gradient(135deg,#37d67a,#1f8f5a);color:#fff;border:none;border-radius:8px;cursor:pointer;min-width:60px" onclick="buyOrder('+r.id+','+r.remain+')">買入</button>'+
-        '</div>'+
-        '<div style="display:flex;justify-content:space-between;align-items:flex-end">'+
-          '<div><div style="font-size:14px;font-weight:800">'+r.remain.toFixed(2)+' <span style="font-size:11px;font-weight:400;color:var(--muted)">NNB</span></div>'+
-          '<div style="font-size:11px;color:var(--muted);margin-top:2px">單價 '+r.price.toFixed(6)+' USDT</div></div>'+
-          '<div style="text-align:right"><div style="color:var(--gold);font-weight:700">'+ (r.remain*r.price).toFixed(4)+' U</div></div>'+
-        '</div>'+
-      '</div>';
-    });
-    host.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>';
-    if(valid.length===0 && next>0){
-      host.innerHTML='<div style="text-align:center;color:var(--muted);padding:14px">暫無有效掛單（可點刷新）</div>';
+          '<div style="display:flex;justify-content:space-between;align-items:flex-end">'+
+            '<div><div style="font-size:14px;font-weight:800">'+r.remain.toFixed(2)+' <span style="font-size:11px;font-weight:400;color:var(--muted)">NNB</span></div>'+
+            '<div style="font-size:11px;color:var(--muted);margin-top:2px">單價 '+r.price.toFixed(6)+' USDT</div></div>'+
+            '<div style="text-align:right"><div style="color:var(--gold);font-weight:700">'+ (r.remain*r.price).toFixed(4)+' U</div></div>'+
+          '</div>'+
+        '</div>';
+      });
+      host.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:14px">暫無賣單</div>';
+      _renderInvalidHint();
     }
-    _renderInvalidHint();
+
+    // ===== 第一段：快速掃 20 筆（立即顯示）=====
+    const fastIds=[];
+    for(let i=next-1; i>=next-SCAN_FAST && i>=0; i--) fastIds.push(i);
+    const quick = await scanIds(fastIds);
+    renderOrderList(quick);
+
+    // ===== 第二段：背景補到 100 筆（自動更新）=====
+    const moreIds=[];
+    for(let i=next-SCAN_FAST-1; i>=next-SCAN_FULL && i>=0; i--) moreIds.push(i);
+    if(moreIds.length>0){
+      scanIds(moreIds).then(function(rest){
+        if(document.getElementById('orderBook')===host) renderOrderList(quick.concat(rest));
+      }).catch(function(){});
+    }
+    return;   // ★ 兩段式已自行渲染，返回
+
+    // （舊邏輯已由兩段式取代）
   }catch(e){
     host.innerHTML='<div style="text-align:center;color:var(--red);padding:14px">載入失敗（請點刷新重試）</div>';
   }
