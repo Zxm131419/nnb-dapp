@@ -8,7 +8,22 @@
 <meta http-equiv="Expires" content="0">
 <script>
 // ★ 版本戳（每次发布递增）—— 用于破 CDN / 浏览器快取
-window.NNB_VER='20261008d';
+window.NNB_VER='20261008e';
+// ★★★ 自動破快取（v20261008e）：若 URL 無 v 參數 → 自動加參數重定向一次
+//   解決 TP 等內建瀏覽器「頑固快取」問題
+(function(){
+  try{
+    var u=new URL(location.href);
+    if(u.searchParams.get('v')) return;            // 已有 v 參數 → 不重定向
+    var KEY='nnb_autobust';
+    var last=sessionStorage.getItem(KEY);
+    var now=Date.now();
+    if(last && (now-parseInt(last))<120000) return; // 2 分鐘內已跳過 → 不再跳（避免循環）
+    sessionStorage.setItem(KEY, String(now));
+    u.searchParams.set('v', window.NNB_VER);
+    location.replace(u.toString());
+  }catch(e){}
+})();
 (function(){
   try{
     var seen=localStorage.getItem('nnb_seen_ver');
