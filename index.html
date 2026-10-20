@@ -1157,7 +1157,7 @@ const ABI={
 };
 let provider,signer,addr=null,currentPrice=0,_priceLoaded=false; let currentFeeBp=130; let _globalMyBalance=0, _globalClaimable=-1;
 let _projectFeeBp=100;  // ★ v3.7 項目方分成（千分，預設 100 = 10%）
-let _minBuyNNB=714;     // ★ v20261006f 買礦機/復投最低 NNB（從鏈上動態讀，不寫死）
+let _minBuyNNB=0;       // ★ v20261020 買礦機/復投最低 NNB（從鏈上動態讀，0=無門檻）
 let _liveFeeBp=-1;      // ★ v3.7.1 即時費率（千分，來自 Market.getFeeStatusFull）
 const $=id=>document.getElementById(id);
 
@@ -1946,7 +1946,7 @@ async function doBuyMining(){
   const amt=parseFloat(document.getElementById('mineAmount')?.value);
   if(!amt||amt<=0){toast('请输入数量');return}
   // ★ 買礦機最低門檻（動態，從鏈上 minBuyMining 讀取）
-  if(amt<_minBuyNNB){toast('最低購買 '+_minBuyNNB+' NNB');return}
+  if(_minBuyNNB>0 && amt<_minBuyNNB){toast('最低購買 '+_minBuyNNB+' NNB');return}
   // 检查是否绑定上级
   try{
     const refContract=new ethers.Contract(C.contracts.referral,['function getUserReferrer(address) view returns (address)'],provider);
@@ -2141,14 +2141,15 @@ async function loadDynamicFee(){
       const mb = await batchEthCall([{to:C.contracts.referral, data:'0xbfb789f9'}], 15000);
       if(mb && mb[0]){
         const v = Number(BigInt(mb[0]))/1e18;
-        if(v>0 && v<1e9) _minBuyNNB = v;
+        if(v>=0 && v<1e9) _minBuyNNB = v;   // ★ v20261020 修正：0 也要接受（無門檻）
         // 更新 UI 文字（動態）
         const hint=document.querySelector('[data-i18n="mine.purchaseHint"]');
-        if(hint) hint.textContent='持 NNB 即可购买矿机，最低 '+_minBuyNNB.toFixed(0)+' NNB，不限额度.';
+        const _noMin = (_minBuyNNB <= 0);
+        if(hint) hint.textContent = _noMin ? '持 NNB 即可购买矿机，无最低门槛，不限额度.' : ('持 NNB 即可购买矿机，最低 '+_minBuyNNB.toFixed(0)+' NNB，不限额度.');
         const rd=document.querySelector('[data-i18n="mine.reinvestDesc"]');
-        if(rd) rd.textContent='产能产完后复投重新获得3倍产能，最低 '+_minBuyNNB.toFixed(0)+' NNB。';
+        if(rd) rd.textContent = _noMin ? '产能产完后复投重新获得3倍产能，无最低门槛。' : ('产能产完后复投重新获得3倍产能，最低 '+_minBuyNNB.toFixed(0)+' NNB。');
         const rb=document.querySelector('[data-i18n="mine.reinvestBtn"]');
-        if(rb) rb.textContent='复投 (最低'+_minBuyNNB.toFixed(0)+' NNB)';
+        if(rb) rb.textContent = _noMin ? '复投' : ('复投 (最低'+_minBuyNNB.toFixed(0)+' NNB)');
       }
     }catch(e){}
     // ★ 用 getFeeStatusFull()（含封頂）；若失敗則退回 getFeeStatus()
@@ -3129,10 +3130,11 @@ async function reinvest(){
   if(!signer){toast('请先连接钱包');return}
   if(typeof ethers==='undefined'){toast('组件加载中,请稍后');return}
   // 让用户输入NNB数量，最低2000
-  const input=prompt('请输入复投NNB数量(最低'+_minBuyNNB+')',String(_minBuyNNB));
+  const _pmin = (_minBuyNNB>0 ? '最低'+_minBuyNNB+' NNB' : '无最低门槛');
+  const input=prompt('请输入复投NNB数量('+_pmin+')', String(_minBuyNNB||''));
   if(!input)return;
   const amt=parseFloat(input);
-  if(!amt||amt<_minBuyNNB){toast('最低复投 '+_minBuyNNB+' NNB');return}
+  if(!amt||(_minBuyNNB>0 && amt<_minBuyNNB)){toast('最低复投 '+_minBuyNNB+' NNB');return}
   try{
     const nnbAmt=ethers.utils.parseUnits(amt.toFixed(6),18);
     // 1. 先 approve NNB 给 V35 合约

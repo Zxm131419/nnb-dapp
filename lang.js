@@ -27,8 +27,8 @@ NNB_DICT["zh-CN"]={
  "invite.id":"我的推广ID(钱包地址)","common.notConnected":"未连接","invite.contract":"NNB 合约地址",
  "invite.desc":"分享此推广ID给好友,当好友使用您的地址绑定并购买矿机后,您将获得收益.","invite.count":"累计邀请",
  "invite.list":"邀约用户列表","invite.empty":"暂无邀约用户开始分享推广链接吧!","node.btn":"授权激活节点","node.identity":"身份:矿工",
- "node.website":"官网链接","invite.promoId":"推广ID","mine.reinvest":"复投","mine.reinvestDesc":"产能产完后复投重新获得3倍产能,最低2000 NNB(约20U).",
- "mine.reinvestBtn":"复投 (最低2000 NNB)","node.status":"节点状态","profile.title":"我的收益","node.revenue":"推广节点收益(9%)",
+ "node.website":"官网链接","invite.promoId":"推广ID","mine.reinvest":"复投","mine.reinvestDesc":"产能产完后复投重新获得3倍产能.",
+ "mine.reinvestBtn":"复投","node.status":"节点状态","profile.title":"我的收益","node.revenue":"推广节点收益(9%)",
  "nav.home":"首页","nav.trade":"交易","nav.mining":"矿机","nav.invite":"邀请","nav.profile":"我的",
  "trade.noOrders":"暂无挂单","profile.direct":"直推人数","profile.nodeIncome":"节点收益(9%)",
  "lang.title":"选择语言"
@@ -57,8 +57,8 @@ NNB_DICT["zh-TW"]={
  "invite.id":"我的推廣ID(錢包地址)","common.notConnected":"未連接","invite.contract":"NNB 合約地址",
  "invite.desc":"分享此推廣ID給好友,當好友使用您的地址綁定並購買礦機後,您將獲得收益.","invite.count":"累計邀請",
  "invite.list":"邀約用戶列表","invite.empty":"暫無邀約用戶開始分享推廣連結吧!","node.btn":"授權啟動節點","node.identity":"身份:礦工",
- "node.website":"官網連結","invite.promoId":"推廣ID","mine.reinvest":"復投","mine.reinvestDesc":"產能產完後復投重新獲得3倍產能,最低2000 NNB(約20U).",
- "mine.reinvestBtn":"復投 (最低2000 NNB)","node.status":"節點狀態","profile.title":"我的收益","node.revenue":"推廣節點收益(9%)",
+ "node.website":"官網連結","invite.promoId":"推廣ID","mine.reinvest":"復投","mine.reinvestDesc":"產能產完後復投重新獲得3倍產能.",
+ "mine.reinvestBtn":"復投","node.status":"節點狀態","profile.title":"我的收益","node.revenue":"推廣節點收益(9%)",
  "nav.home":"首頁","nav.trade":"交易","nav.mining":"礦機","nav.invite":"邀請","nav.profile":"我的",
  "trade.noOrders":"暫無掛單","profile.direct":"直推人數","profile.nodeIncome":"節點收益(9%)",
  "lang.title":"選擇語言"
@@ -86,8 +86,8 @@ NNB_DICT["en"]={
  "invite.id":"My Referral ID","common.notConnected":"Not Connected","invite.contract":"NNB Contract Address",
  "invite.desc":"Share your Referral ID; friends earn when buying miner.","invite.count":"Total Invites",
  "invite.list":"Invitee List","invite.empty":"No invitees yet, share your link!","node.btn":"Authorize & Activate Node","node.identity":"Role: Miner",
- "node.website":"Official Website","invite.promoId":"Referral ID","mine.reinvest":"Reinvest","mine.reinvestDesc":"Reinvest for 3x capacity, min 2000 NNB (~20U).",
- "mine.reinvestBtn":"Reinvest (min 2000 NNB)","node.status":"Node Status","profile.title":"My Earnings","node.revenue":"Node Income (9%)",
+ "node.website":"Official Website","invite.promoId":"Referral ID","mine.reinvest":"Reinvest","mine.reinvestDesc":"Reinvest for 3x capacity.",
+ "mine.reinvestBtn":"Reinvest","node.status":"Node Status","profile.title":"My Earnings","node.revenue":"Node Income (9%)",
  "nav.home":"Home","nav.trade":"Trade","nav.mining":"Miner","nav.invite":"Invite","nav.profile":"Me",
  "trade.noOrders":"No orders","profile.direct":"Direct Referrals","profile.nodeIncome":"Node Income (9%)",
  "lang.title":"Select Language"
@@ -111,8 +111,8 @@ NNB_DICT["ja"]={
  "invite.title":"私の紹介","invite.link":"紹介リンク(一括綁定)","common.connectToShow":"接続後に表示","invite.copy":"コピー","invite.id":"紹介ID",
  "common.notConnected":"未接続","invite.contract":"NNB契約アドレス","invite.desc":"紹介IDで友人を招待し、鉱機購入で収益獲得",
  "invite.count":"累計招待","invite.list":"招待者リスト","invite.empty":"まだ招待者がいません","node.btn":"ノード起動を承認","node.identity":"役割:鉱工",
- "node.website":"公式サイト","invite.promoId":"紹介ID","mine.reinvest":"再投資","mine.reinvestDesc":"再投資で3倍産能,最低2000NNB(約20U)",
- "mine.reinvestBtn":"再投資(最低2000NNB)","node.status":"ノード状態","profile.title":"私の収益","node.revenue":"ノード収益(9%)",
+ "node.website":"公式サイト","invite.promoId":"紹介ID","mine.reinvest":"再投資","mine.reinvestDesc":"再投資で3倍産能.",
+ "mine.reinvestBtn":"再投資","node.status":"ノード状態","profile.title":"私の収益","node.revenue":"ノード収益(9%)",
  "nav.home":"ホーム","nav.trade":"取引","nav.mining":"鉱機","nav.invite":"招待","nav.profile":"私",
  "trade.noOrders":"注文なし","profile.direct":"直推人数","profile.nodeIncome":"ノード収益(9%)","lang.title":"言語選択"
 ,"back":"戻る","brand.name":"牛牛コイン","brand.sub":"金 牛 聚 財 運","trade.amountUsdt":"USDT金額入力(最低200)","trade.amountNnb":"NNB数量入力","mine.amountBuy":"購入数量入力","bind.inputAddr":"上級ウォレット入力","trans.toAddr":"受取ウォレット(0x...)","trans.nnbAmt":"送金NNB数","invite.startSharing":"リンクを共有しよう!","node.dividend":"ノード配当(平均)","node.claimableDiv":"受取可能:","node.divHint":"累積、いつでも一括受取","node.divDesc":"受取の10%が配当プールへ、いつでも一括受取可能","common.claim":"受取","invite.unlockTitle":"実績解除代数","invite.unlockDesc":"累計直推実績(U)で代数解除","invite.tiers":"解除段階","invite.progress":"現在進度","invite.nextTier":"次の段階","invite.diamond":"ダイヤモンド","trade.myOrders":"私の注文","trade.buyOrders":"購入注文","trans.estPerf":"予定実績","trans.approveHint":"先にNNBをコントラクトへ承認してください(一度でOK)","perf.directAmt":"直推実績","perf.gen":"解除代数","perf.unit":"代","perf.maxReached":"全解除","perf.progress":"現在","perf.toReach":"まで","perf.unlock":"U解除","perf.remain":"代残","trans.title":"NNB 転送（DApp内）","trans.btn":"転送＆業績計上","trans.desc":"DApp内でNNB転送: 受取アドレスと数量を入力し、チェーン上で実転送、現在価格でUSDT業績に換算(解除)。業績=実際の転送量、偽造不可。","mine.active":"起動中","mine.inactive":"未起動","mine.accel19":"19代加速","mine.clickClaim":"受取可!今すぐ受取"};
@@ -135,8 +135,8 @@ NNB_DICT["ko"]={
  "invite.title":"내 추천","invite.link":"추천 링크(원클릭 바인딩)","common.connectToShow":"연결 후 표시","invite.copy":"복사","invite.id":"추천 ID",
  "common.notConnected":"미연결","invite.contract":"NNB 계약 주소","invite.desc":"추천 ID 공유, 친구가 광부 구매 시 보상",
  "invite.count":"총 초대","invite.list":"초대자 목록","invite.empty":"아직 초대자가 없습니다","node.btn":"노드 활성화 승인","node.identity":"역할: 광부",
- "node.website":"공식 사이트","invite.promoId":"추천 ID","mine.reinvest":"재투자","mine.reinvestDesc":"재투자로 3배 생산, 최소 2000 NNB(약20U)",
- "mine.reinvestBtn":"재투자(최소2000NNB)","node.status":"노드 상태","profile.title":"내 수익","node.revenue":"노드 수익(9%)",
+ "node.website":"공식 사이트","invite.promoId":"추천 ID","mine.reinvest":"재투자","mine.reinvestDesc":"재투자로 3배 생산.",
+ "mine.reinvestBtn":"재투자","node.status":"노드 상태","profile.title":"내 수익","node.revenue":"노드 수익(9%)",
  "nav.home":"홈","nav.trade":"거래","nav.mining":"광부","nav.invite":"초대","nav.profile":"내",
  "trade.noOrders":"주문 없음","profile.direct":"직추천 수","profile.nodeIncome":"노드 수익(9%)","lang.title":"언어 선택"
 ,"back":"돌아가기","brand.name":"우유코인","brand.sub":"황소 재물 운","trade.amountUsdt":"USDT 금액 입력(최소200)","trade.amountNnb":"NNB 수량 입력","mine.amountBuy":"구매 수량 입력","bind.inputAddr":"상위 지갑 입력","trans.toAddr":"수신 지갑(0x...)","trans.nnbAmt":"보낼 NNB","invite.startSharing":"링크 공유를 시작하세요!","node.dividend":"노드 배당(평균)","node.claimableDiv":"받기 가능:","node.divHint":"누적, 한번에 수령","node.divDesc":"수령의 10%가 배당 풀로, 언제든 한번에 수령","common.claim":"수령","invite.unlockTitle":"실적 해제대수","invite.unlockDesc":"누적 직추천 실적(U)로 대수 해제","invite.tiers":"해제 계단","invite.progress":"현재 진행","invite.nextTier":"다음 계단","invite.diamond":"다이아몬드","trade.myOrders":"내 주문","trade.buyOrders":"구매 주문","trans.estPerf":"예상 실적","trans.approveHint":"먼저 NNB를 컨트랙트에 승인하세요(한번이면 됨)","perf.directAmt":"직추천 실적","perf.gen":"해제 대수","perf.unit":"대","perf.maxReached":"완전 해제","perf.progress":"현재","perf.toReach":"까지","perf.unlock":"U 해제","perf.remain":"대 남음","trans.title":"NNB 전송 (DApp 내)","trans.btn":"전송&실적 반영","trans.desc":"DApp 내 NNB 전송: 수신 주소와 수량 입력, 체인 상 실전송, 현재가로 USDT 실적 환산(해제). 실적=실제 전송량, 위조 불가.","mine.active":"활성","mine.inactive":"비활성","mine.accel19":"19대 가속","mine.clickClaim":"받기! 바로 받기"};
@@ -159,8 +159,8 @@ NNB_DICT["vi"]={
  "invite.title":"Giới thiệu của tôi","invite.link":"Link giới thiệu (liên kết nhanh)","common.connectToShow":"Hiện sau khi kết nối","invite.copy":"Sao chép","invite.id":"Mã giới thiệu",
  "common.notConnected":"Chưa kết nối","invite.contract":"Địa chỉ hợp đồng NNB","invite.desc":"Chia sẻ mã, bạn bè mua miner bạn nhận thưởng",
  "invite.count":"Tổng mời","invite.list":"Danh sách đã mời","invite.empty":"Chưa có người được mời","node.btn":"Phê duyệt kích hoạt Node","node.identity":"Vai trò: Thợ mỏ",
- "node.website":"Website chính thức","invite.promoId":"Mã giới thiệu","mine.reinvest":"Tái đầu tư","mine.reinvestDesc":"Tái đầu tư để sản xuất x3, tối thiểu 2000 NNB",
- "mine.reinvestBtn":"Tái đầu tư (tối thiểu 2000 NNB)","node.status":"Trạng thái Node","profile.title":"Thu nhập của tôi","node.revenue":"Thu nhập Node (9%)",
+ "node.website":"Website chính thức","invite.promoId":"Mã giới thiệu","mine.reinvest":"Tái đầu tư","mine.reinvestDesc":"Tái đầu tư để sản xuất x3.",
+ "mine.reinvestBtn":"Tái đầu tư","node.status":"Trạng thái Node","profile.title":"Thu nhập của tôi","node.revenue":"Thu nhập Node (9%)",
  "nav.home":"Trang chủ","nav.trade":"Giao dịch","nav.mining":"Miner","nav.invite":"Mời","nav.profile":"Tôi",
  "trade.noOrders":"Chưa có lệnh","profile.direct":"Số giới thiệu trực tiếp","profile.nodeIncome":"Thu nhập Node (9%)","lang.title":"Chọn ngôn ngữ"
 ,"back":"Quay lại","brand.name":"Bò Vàng","brand.sub":"Tài Lộc Bò Vàng","trade.amountUsdt":"Nhập USDT (tối thiểu 200)","trade.amountNnb":"Nhập số NNB","mine.amountBuy":"Nhập số mua","bind.inputAddr":"Nhập ví cấp trên","trans.toAddr":"Ví nhận (0x...)","trans.nnbAmt":"Số NNB chuyển","invite.startSharing":"Bắt đầu chia sẻ link!","node.dividend":"Cổ tức Node (bình quân)","node.claimableDiv":"Có thể nhận:","node.divHint":"Tích lũy · nhận bất cứ lúc nào","node.divDesc":"10% mỗi lần nhận vào quỹ chia Node; nhận cùng lúc bất cứ lúc nào","common.claim":"Nhận","invite.unlockTitle":"Mở khóa hệ số","invite.unlockDesc":"Mở khóa hệ số bằng doanh thu trực tiếp (U)","invite.tiers":"Thang mở khóa","invite.progress":"Tiến độ hiện tại","invite.nextTier":"Thang kế tiếp","invite.diamond":"Kim cương","trade.myOrders":"Lệnh của tôi","trade.buyOrders":"Lệnh mua","trans.estPerf":"Doanh thu dự kiến","trans.approveHint":"Vui lòng phê duyệt NNB cho hợp đồng trước (1 lần, tái dùng)","perf.directAmt":"Doanh thu trực tiếp","perf.gen":"Hệ số mở khóa","perf.unit":"hệ","perf.maxReached":"Mở khóa tối đa","perf.progress":"Hiện tại","perf.toReach":"còn","perf.unlock":"U mở","perf.remain":"hệ còn","trans.title":"NNB Chuyển (trong DApp)","trans.btn":"Chuyển & Tính Doanh thu","trans.desc":"Chuyển NNB trong DApp: nhập địa chỉ và số lượng, chuyển thật trên chuỗi, tự quy đổi USDT (mở khóa). Doanh thu=số thực chuyển, không giả mạo.","mine.active":"Đã kích hoạt","mine.inactive":"Chưa kích hoạt","mine.accel19":"19 hệ tăng tốc","mine.clickClaim":"Nhận được! Nhấn để nhận"};
@@ -183,8 +183,8 @@ NNB_DICT["ms"]={
  "invite.title":"Rujukan Saya","invite.link":"Pautan Rujukan (1-klik)","common.connectToShow":"Tunjuk selepas sambung","invite.copy":"Salin","invite.id":"ID Rujukan",
  "common.notConnected":"Belum Disambung","invite.contract":"Alamat Kontrak NNB","invite.desc":"Kongsi ID, rakan beli miner anda dapat hasil",
  "invite.count":"Jumlah Jemputan","invite.list":"Senarai Jemputan","invite.empty":"Belum ada jemputan","node.btn":"Lulus Aktifkan Node","node.identity":"Peranan: Pelombong",
- "node.website":"Laman Web Rasmi","invite.promoId":"ID Rujukan","mine.reinvest":"Pelaburan Semula","mine.reinvestDesc":"Pelaburan semula untuk kapasiti x3, min 2000 NNB",
- "mine.reinvestBtn":"Pelaburan Semula (min 2000 NNB)","node.status":"Status Node","profile.title":"Hasil Saya","node.revenue":"Hasil Node (9%)",
+ "node.website":"Laman Web Rasmi","invite.promoId":"ID Rujukan","mine.reinvest":"Pelaburan Semula","mine.reinvestDesc":"Pelaburan semula untuk kapasiti x3.",
+ "mine.reinvestBtn":"Pelaburan Semula","node.status":"Status Node","profile.title":"Hasil Saya","node.revenue":"Hasil Node (9%)",
  "nav.home":"Utama","nav.trade":"Dagang","nav.mining":"Miner","nav.invite":"Jemput","nav.profile":"Saya",
  "trade.noOrders":"Tiada pesanan","profile.direct":"Bilangan Rujukan Langsung","profile.nodeIncome":"Hasil Node (9%)","lang.title":"Pilih Bahasa"
 ,"back":"Kembali","brand.name":"Lembu Emas","brand.sub":"Rezeki Lembu Emas","trade.amountUsdt":"Masukkan USDT (min 200)","trade.amountNnb":"Masukkan NNB","mine.amountBuy":"Masukkan kuantiti","bind.inputAddr":"Masukkan dompet rujukan","trans.toAddr":"Dompet penerima (0x...)","trans.nnbAmt":"Nilai NNB hantar","invite.startSharing":"Mula kongsi pautan!","node.dividend":"Dividen Node (purata)","node.claimableDiv":"Boleh tuntut:","node.divHint":"Terkumpul · tuntut bila-bila","node.divDesc":"10% setiap tuntutan masuk kolam dividen Node; tuntut sekali gus bila-bila","common.claim":"Tuntut","invite.unlockTitle":"Buka Kunci Peruntukan","invite.unlockDesc":"Buka kunci tahap dengan prestasi langsung (U)","invite.tiers":"Tangga Buka Kunci","invite.progress":"Kemajuan Semasa","invite.nextTier":"Tangga Seterusnya","invite.diamond":"Berlian","trade.myOrders":"Pesanan Saya","trade.buyOrders":"Pesanan Beli","trans.estPerf":"Prestasi Est.","trans.approveHint":"Sila lulus NNB kepada kontrak dahulu (sekali, boleh guna semula)","perf.directAmt":"Prestasi Langsung","perf.gen":"Peruntukan Dibuka","perf.unit":"peringkat","perf.maxReached":"Dibuka penuh","perf.progress":"Semasa","perf.toReach":"jarak ke","perf.unlock":"U buka","perf.remain":"peringkat tinggal","trans.title":"NNB Pemindahan (Dalam DApp)","trans.btn":"Pindah & Kira Prestasi","trans.desc":"Pindah NNB dalam DApp: isi alamat & nilai, pindah sebenar on-chain, auto tukar ke prestasi USDT (buka kunci). Prestasi= nilai sebenar, tidak boleh palsu.","mine.active":"Aktif","mine.inactive":"Tak Aktif","mine.accel19":"19-peringkat akselerasi","mine.clickClaim":"Boleh tuntut! Klik untuk tuntut"};
