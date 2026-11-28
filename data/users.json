@@ -18,7 +18,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "37230878221815450768",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x03342f52cd7829705534309de49fa0b984608459",
@@ -27,8 +27,8 @@
   "totalInvestedUSD": "286182359378110863836",
   "totalMined": "83397198650941105294233",
   "lastBuyTime": "1791959048",
-  "myBalance": "20084184964658581371594",
-  "myBalance_div3": "6694728321552860457198",
+  "myBalance": "19451368304492662387299",
+  "myBalance_div3": "6483789434830887462433",
   "directPushTotalUSD": "1674144502465266888509",
   "teamLevel": "0",
   "teamCount": "3",
@@ -39,7 +39,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1203978007717928506999",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x0439b9c0ab10e94fc84af3d9b567052ef3f62073",
@@ -60,7 +60,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "317724697324664945062",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x059aec2e094837de258444b2be7905a375d0f97e",
@@ -69,8 +69,8 @@
   "totalInvestedUSD": "8866109334991111258329",
   "totalMined": "141106778505289950135335",
   "lastBuyTime": "1789707362",
-  "myBalance": "659866244382828784010627",
-  "myBalance_div3": "219955414794276261336875",
+  "myBalance": "659610777559951119475988",
+  "myBalance_div3": "219870259186650373158662",
   "directPushTotalUSD": "4818706310631171401975",
   "teamLevel": "19",
   "teamCount": "1",
@@ -81,7 +81,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "2290787167081265426242",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x05b113ff6edc1239e3c455a237d0146916c55f88",
@@ -102,7 +102,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "166647344813742791663",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x097cc038c81da7d5f8f0a888adf4b3f9030bd6aa",
@@ -111,8 +111,8 @@
   "totalInvestedUSD": "5977937126820514912215",
   "totalMined": "93219612859956202212912",
   "lastBuyTime": "1790414261",
-  "myBalance": "963551533807669270044975",
-  "myBalance_div3": "321183844602556423348325",
+  "myBalance": "963467381096231141020077",
+  "myBalance_div3": "321155793698743713673359",
   "directPushTotalUSD": "4931528923654205199880",
   "teamLevel": "19",
   "teamCount": "1",
@@ -123,7 +123,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1251937566712491254286",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x09985e46555a15f9a58441df6084b5b4bb578cb6",
@@ -144,7 +144,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "136293210127043425438",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x09a25b8993d7714d1cf33a59351e36cdffcb1861",
@@ -165,28 +165,28 @@
   "boostMultiplier": "1623240000000000000000",
   "boostExpireTime": "168702925771586603070",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "200000000000000000000",
-  "totalMined": "14039491789387290505985",
+  "totalMined": "14224305156652130329142",
   "lastBuyTime": "0",
-  "myBalance": "39555066930941201658581",
-  "myBalance_div3": "13185022310313733886193",
+  "myBalance": "39404757676603625092279",
+  "myBalance_div3": "13134919225534541697426",
   "directPushTotalUSD": "458372883163694340331",
   "teamLevel": "0",
   "teamCount": "2",
   "referrer": "0x5d1dc12f3834e5b342f82719facb5d30819a9245",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "70",
+  "totalWithdrawCount": "71",
   "lockedUntil": "0",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "202630369978080078718",
+  "boostExpireTime": "205505618421987456939",
   "addr": "0x0b204182f10e497e32082f27cf552471543936ce",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x0b4e127c49e3e678a21d8153e1505c0c3617af28",
@@ -207,7 +207,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1201369564782322012085",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x0c9da6c0cbd634659e64ac1aa4649df5349ba22f",
@@ -216,8 +216,8 @@
   "totalInvestedUSD": "1460957150752428687648",
   "totalMined": "35227054980898732293966",
   "lastBuyTime": "1792401111",
-  "myBalance": "308502059174795558846303",
-  "myBalance_div3": "102834019724931852948767",
+  "myBalance": "308299592356271590310609",
+  "myBalance_div3": "102766530785423863436869",
   "directPushTotalUSD": "1156371251937618464829",
   "teamLevel": "19",
   "teamCount": "1",
@@ -228,7 +228,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "865914974499764372762",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x0eec96eba87078158cbcafb5911fc7726d372954",
@@ -249,7 +249,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "68147426476151310821",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x10189d3a36969e5fa2baafb3910cf7f8deed849e",
@@ -258,8 +258,8 @@
   "totalInvestedUSD": "344688651070177110625",
   "totalMined": "27283290993706307641051",
   "lastBuyTime": "1792930006",
-  "myBalance": "55845718218413676532827",
-  "myBalance_div3": "18615239406137892177609",
+  "myBalance": "55788423617867519588736",
+  "myBalance_div3": "18596141205955839862912",
   "directPushTotalUSD": "2464613529011815828796",
   "teamLevel": "19",
   "teamCount": "1",
@@ -270,7 +270,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "393548822215053957116",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x1068831db70bdad494e684c5d6fc94a4b1b638de",
@@ -279,8 +279,8 @@
   "totalInvestedUSD": "1530017375426089939779",
   "totalMined": "91136251542553986517694",
   "lastBuyTime": "1792815284",
-  "myBalance": "185762432186701877124897",
-  "myBalance_div3": "61920810728900625708299",
+  "myBalance": "185170230588991765129299",
+  "myBalance_div3": "61723410196330588376433",
   "directPushTotalUSD": "3611371971040824963238",
   "teamLevel": "19",
   "teamCount": "5",
@@ -291,7 +291,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1267139153817380641241",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x107770bd39cbe0d1c6d29a03745a84f4cbe8fbba",
@@ -312,7 +312,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "139501232933916119337",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x10c92783bed27379c0faa9c835eccc88f2a808c7",
@@ -333,28 +333,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1221179485737212920019",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x11619b1eb673e575b4fb1d0133dbcac289ce0425",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "78349612969975530796",
-  "totalMined": "15827146578484496158747",
+  "totalMined": "16053990446664999035508",
   "lastBuyTime": "1791959158",
-  "myBalance": "59695754784342862305767",
-  "myBalance_div3": "19898584928114287435255",
+  "myBalance": "59468910916162359429006",
+  "myBalance_div3": "19822970305387453143002",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0x03342f52cd7829705534309de49fa0b984608459",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "64",
+  "totalWithdrawCount": "65",
   "lockedUntil": "1794551158",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "228602942269951820277",
+  "boostExpireTime": "232132083525525959451",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x1272133e96f7bf2cb0eb1cb7cd8497aec9d6ad64",
@@ -363,9 +363,9 @@
   "totalInvestedUSD": "1427140559774299672944",
   "totalMined": "86023993106062442076754",
   "lastBuyTime": "1793403567",
-  "myBalance": "257078051724943965247587",
-  "myBalance_div3": "85692683908314655082529",
-  "directPushTotalUSD": "2264503371596915256992",
+  "myBalance": "256456974334387506675707",
+  "myBalance_div3": "85485658111462502225235",
+  "directPushTotalUSD": "2281396231137688631328",
   "teamLevel": "19",
   "teamCount": "4",
   "referrer": "0xd617cb23b467afabda56e892c8f10ece746048aa",
@@ -375,7 +375,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1224859880958226621059",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x1330622e8f15a771ec87353bfa9552a6d9577763",
@@ -396,28 +396,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "156890060253071417992",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x148e7fed7fb183459c8d386e72c41d8d612c1b2f",
   "activated": 1,
   "isNode": 1,
   "totalInvestedUSD": "658680716594637821786",
-  "totalMined": "30829346514708679816643",
+  "totalMined": "31356447827674628104376",
   "lastBuyTime": "1794409128",
-  "myBalance": "107146684712572632122862",
-  "myBalance_div3": "35715561570857544040954",
+  "myBalance": "106583109400509826366962",
+  "myBalance_div3": "35527703133503275455654",
   "directPushTotalUSD": "1230994107078930562090",
   "teamLevel": "0",
   "teamCount": "5",
   "referrer": "0x3b3ee8e3d8d68dd405938457bb44e3172173031e",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "68",
+  "totalWithdrawCount": "69",
   "lockedUntil": "1797001128",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "636386134361042320734",
+  "boostExpireTime": "644570186239434776483",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x149ee83cf12061bb34287ff8f37366b8718a6c94",
@@ -438,7 +438,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "676017208769753930925",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x14e95e57468c46868b7cd15e919d8c583ceedbe6",
@@ -459,7 +459,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "53814802160190492110",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x14fcbe7cc70fbd9eacc90ae055b01129033bbedf",
@@ -468,8 +468,8 @@
   "totalInvestedUSD": "394486050858560462220",
   "totalMined": "9478755793222712460318",
   "lastBuyTime": "1792081510",
-  "myBalance": "85822031183225598759550",
-  "myBalance_div3": "28607343727741866253183",
+  "myBalance": "85807455094278959832203",
+  "myBalance_div3": "28602485031426319944067",
   "directPushTotalUSD": "908665189319811484266",
   "teamLevel": "19",
   "teamCount": "1",
@@ -480,7 +480,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "131982795742569136715",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x16255a4303eb71b1e7f8e9e5176e0825c366efd3",
@@ -501,7 +501,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "25164399030425540620",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x182cd8aafd72e301c2934fa4c1e72a9a7831036e",
@@ -510,8 +510,8 @@
   "totalInvestedUSD": "370347305876641181349",
   "totalMined": "25619876992770421334587",
   "lastBuyTime": "1792154287",
-  "myBalance": "60624700583950717713294",
-  "myBalance_div3": "20208233527983572571098",
+  "myBalance": "60543270846760616369420",
+  "myBalance_div3": "20181090282253538789806",
   "directPushTotalUSD": "590790127739730578597",
   "teamLevel": "0",
   "teamCount": "1",
@@ -522,7 +522,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "356206223481610332393",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x1891fa1de592ecad9d1b820afcc2fbba7f91de71",
@@ -543,49 +543,49 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "0",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x191519ba17390432789c99b3a0aaa72f98f2bf7c",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "93412264621049018636",
-  "totalMined": "37475253263135282189145",
+  "totalMined": "37615171880620113638291",
   "lastBuyTime": "1792404633",
-  "myBalance": "25212181531111290698743",
-  "myBalance_div3": "8404060510370430232914",
+  "myBalance": "24979292817165838112215",
+  "myBalance_div3": "8326430939055279370738",
   "directPushTotalUSD": "2460671042159114273789",
   "teamLevel": "19",
   "teamCount": "3",
   "referrer": "0xe2479b2a484923c711483bd00683bb0650916a67",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "67",
+  "totalWithdrawCount": "68",
   "lockedUntil": "1794996633",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "535431396340000384262",
+  "boostExpireTime": "537603846296168082073",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x1b9bc4150de2bfef277d2f982841d776a5b74110",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "795558947297505780941",
-  "totalMined": "42745985267617016223664",
-  "lastBuyTime": "1795755466",
-  "myBalance": "138282692747753922660973",
-  "myBalance_div3": "46094230915917974220324",
-  "directPushTotalUSD": "1782339543491413182613",
+  "totalInvestedUSD": "803602215311609635572",
+  "totalMined": "43392033119088808349396",
+  "lastBuyTime": "1795843279",
+  "myBalance": "139187644896282130535241",
+  "myBalance_div3": "46395881632094043511747",
+  "directPushTotalUSD": "1791456284412621807011",
   "teamLevel": "0",
   "teamCount": "4",
   "referrer": "0xf1d7941871de962c58b769c74d40b39fe0eb6426",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "65",
-  "lockedUntil": "1798347466",
+  "totalWithdrawCount": "66",
+  "lockedUntil": "1798435279",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "621218897327570458647",
+  "boostExpireTime": "631269837403631548568",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
@@ -606,7 +606,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "135465695541628826601",
   "addr": "0x1d1c4bd99a935b8cd949396a13a9e55d445b6086",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x1db7d83d9b6fa955e339d626e3a841eefbb47c14",
@@ -627,7 +627,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "42135487425532254260",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x1e53e94385481a4d23adaeb0c7241d8149e5ba30",
@@ -636,8 +636,8 @@
   "totalInvestedUSD": "10500516004933296122100",
   "totalMined": "28137735078440008630396",
   "lastBuyTime": "1789982916",
-  "myBalance": "87558304070674727477641",
-  "myBalance_div3": "29186101356891575825880",
+  "myBalance": "87487492731929961274633",
+  "myBalance_div3": "29162497577309987091544",
   "directPushTotalUSD": "309430014276178092168",
   "teamLevel": "19",
   "teamCount": "1",
@@ -648,7 +648,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "729282411257155551538",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x1ef17b20a5d24534563c133432043492ce5b1f06",
@@ -669,28 +669,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "94339752414154105891",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x1f644c722f2a940fbc4484bfe96be397ed029e02",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "1198907403381132922956",
-  "totalMined": "48514058670689296428645",
-  "lastBuyTime": "1795694332",
-  "myBalance": "236487348217503289513967",
-  "myBalance_div3": "78829116072501096504655",
+  "totalInvestedUSD": "1210070975081331503974",
+  "totalMined": "49412710593915808928798",
+  "lastBuyTime": "1795775237",
+  "myBalance": "237745696294276777013814",
+  "myBalance_div3": "79248565431425592337938",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0x42bb89cabf7578d37539f879a0079744cd25cb6e",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "64",
-  "lockedUntil": "1798286332",
+  "totalWithdrawCount": "65",
+  "lockedUntil": "1798367237",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "701927048658614122789",
+  "boostExpireTime": "715879990492356157351",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "v33",
@@ -711,7 +711,7 @@
   "boostMultiplier": "0",
   "boostExpireTime": "0",
   "addr": "0x1fe7344a8f63c69b6f1399dc4578bdc70c14cb11",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x2026b2cbf8993595d7836c1b7ff4d2a14a89409e",
@@ -720,9 +720,9 @@
   "totalInvestedUSD": "2261965883691714334954",
   "totalMined": "85835073459255244796105",
   "lastBuyTime": "1793341819",
-  "myBalance": "505857551909050469326133",
-  "myBalance_div3": "168619183969683489775377",
-  "directPushTotalUSD": "5670578575110953691165",
+  "myBalance": "505687109884450597156750",
+  "myBalance_div3": "168562369961483532385583",
+  "directPushTotalUSD": "5693635465201071761835",
   "teamLevel": "0",
   "teamCount": "5",
   "referrer": "0x191519ba17390432789c99b3a0aaa72f98f2bf7c",
@@ -732,7 +732,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1222778575969200003761",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x2099f08c59d255b0f2404c6840be1ce383df3158",
@@ -753,7 +753,7 @@
   "boostMultiplier": "0",
   "boostExpireTime": "0",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x22ab9e28f306b6c2e0dd3be9f50d86ddf83cd4d3",
@@ -762,8 +762,8 @@
   "totalInvestedUSD": "446133333042958887400",
   "totalMined": "13716220205640719402009",
   "lastBuyTime": "1790507156",
-  "myBalance": "101275900110597114854334",
-  "myBalance_div3": "33758633370199038284778",
+  "myBalance": "101240691642912518236845",
+  "myBalance_div3": "33746897214304172745615",
   "directPushTotalUSD": "387290878924516854664",
   "teamLevel": "0",
   "teamCount": "1",
@@ -774,7 +774,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "195724193343195492034",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x22c84312497a6d99d185fc4b47ca5f15e0bf7e87",
@@ -795,7 +795,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "213518038644374289102",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
@@ -816,7 +816,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "147116230755856727265",
   "addr": "0x2471bc72b805b0e8213e98c9e92835a96a23d0a9",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
@@ -837,28 +837,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1213376517241959734608",
   "addr": "0x247a1b13f6d930776d7d11ba6bf9696a71641f61",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x24937c66bc5bd76a789badbe1c678b1c71245b95",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "1135258052028654467842",
-  "totalMined": "43473082146932985920424",
-  "lastBuyTime": "1795585785",
-  "myBalance": "226687797856591470917491",
-  "myBalance_div3": "75562599285530490305830",
+  "totalInvestedUSD": "1146949525589502216808",
+  "totalMined": "44414473815608199239279",
+  "lastBuyTime": "1795768105",
+  "myBalance": "228070599155355236142153",
+  "myBalance_div3": "76023533051785078714051",
   "directPushTotalUSD": "343912982483301486322",
   "teamLevel": "0",
   "teamCount": "2",
   "referrer": "0xce1c53f126d82298f9f8952c9f32c5d3f54e672e",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "54",
-  "lockedUntil": "1798177785",
+  "totalWithdrawCount": "55",
+  "lockedUntil": "1798360105",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "626627834893124351325",
+  "boostExpireTime": "641244376466455826170",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x2546d5ff1f3374b844c95cd08ee0f762ebb49d13",
@@ -879,28 +879,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "620311729667079946930",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x255000c8791457ab1e21dc66ffa04f89a8cff165",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "366316678113178856296",
-  "totalMined": "16544642505385337648841",
+  "totalMined": "17079381036952903447812",
   "lastBuyTime": "1792844934",
-  "myBalance": "61542824473796167368511",
-  "myBalance_div3": "20514274824598722456170",
+  "myBalance": "61045048611461104602032",
+  "myBalance_div3": "20348349537153701534010",
   "directPushTotalUSD": "225532119686205914966",
   "teamLevel": "19",
   "teamCount": "1",
   "referrer": "0x4201743d202af597a880b4efa6fc20a55b75f84f",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "61",
+  "totalWithdrawCount": "63",
   "lockedUntil": "1795436934",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "239964979187552825094",
+  "boostExpireTime": "248275407633837033463",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x25a20839286ff4bfc2a6f37ea065e19d3f240d34",
@@ -921,28 +921,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "196388222904528351355",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x266b50f8e27df28bac0e275e142418deb11b4a84",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "656219680825732969582",
-  "totalMined": "27151563872287525396316",
+  "totalMined": "27649461280130330552169",
   "lastBuyTime": "1795742392",
-  "myBalance": "121235932210955953070737",
-  "myBalance_div3": "40411977403651984356912",
-  "directPushTotalUSD": "482298912225769202043",
+  "myBalance": "120738034803113147914884",
+  "myBalance_div3": "40246011601037715971628",
+  "directPushTotalUSD": "487453718629755194947",
   "teamLevel": "0",
   "teamCount": "3",
   "referrer": "0x2099f08c59d255b0f2404c6840be1ce383df3158",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "70",
+  "totalWithdrawCount": "71",
   "lockedUntil": "1798334392",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "394375700928269085585",
+  "boostExpireTime": "402121778867934958702",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x269dd3d9334280d380d724b3a0f30fd9938938b2",
@@ -951,11 +951,11 @@
   "totalInvestedUSD": "908665189319811484266",
   "totalMined": "27590992344873208793709",
   "lastBuyTime": "1792646687",
-  "myBalance": "167441293512341632110270",
-  "myBalance_div3": "55813764504113877370090",
+  "myBalance": "167423073401158333451086",
+  "myBalance_div3": "55807691133719444483695",
   "directPushTotalUSD": "1926035953063357206043",
   "teamLevel": "0",
-  "teamCount": "10",
+  "teamCount": "11",
   "referrer": "0x14fcbe7cc70fbd9eacc90ae055b01129033bbedf",
   "totalReinvestCount": "0",
   "totalWithdrawCount": "38",
@@ -963,28 +963,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "389568149062829130580",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x272b0058431be12bbc56fb5a5e28e11212484bd8",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "1558790353742025375318",
-  "totalMined": "68178099520084332403498",
-  "lastBuyTime": "1795700075",
-  "myBalance": "219323261680126556759983",
-  "myBalance_div3": "73107753893375518919994",
-  "directPushTotalUSD": "1092959630690369055225",
+  "totalInvestedUSD": "1575683213282798749654",
+  "totalMined": "69538743318292703363065",
+  "lastBuyTime": "1795790141",
+  "myBalance": "221232974086195209713177",
+  "myBalance_div3": "73744324695398403237725",
+  "directPushTotalUSD": "1100226044536951719921",
   "teamLevel": "19",
   "teamCount": "12",
   "referrer": "0x1272133e96f7bf2cb0eb1cb7cd8497aec9d6ad64",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "70",
-  "lockedUntil": "1798292075",
+  "totalWithdrawCount": "71",
+  "lockedUntil": "1798382141",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "996214195136165611523",
+  "boostExpireTime": "1017340265511311200922",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x2863489020adb935e653e38528bd0a7e9e5ee533",
@@ -1005,7 +1005,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "510457572721685941903",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x28665d716fb374af01df831efa7d7f44b7e6925a",
@@ -1026,7 +1026,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "218551652698293125551",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x28f01de2116de8e8c38f1a97eecaba6c58d86fe9",
@@ -1047,28 +1047,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "86318251494875364658",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x2a3430b3492b44538ab56b871e8c8b1f69612a7f",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "447326884075463827519",
-  "totalMined": "21986117395073505415293",
+  "totalMined": "22319200141294405942028",
   "lastBuyTime": "1793420983",
-  "myBalance": "87653354268658033351379",
-  "myBalance_div3": "29217784756219344450459",
+  "myBalance": "87320271522437132824644",
+  "myBalance_div3": "29106757174145710941548",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0x9d75616336837c1fd06ea75c22bc1d3927613b11",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "68",
+  "totalWithdrawCount": "69",
   "lockedUntil": "1796012983",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "319357998847780044639",
+  "boostExpireTime": "324539959773753817889",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x2a5e6834413aec5a0d5b8be8f039093ac386437b",
@@ -1089,7 +1089,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "198407231543898245194",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x2d0a95e1d935b72883c48c05916180678d1a7a8e",
@@ -1110,7 +1110,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1184448224332694460085",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x2d955a00795464f31eb1c11e5ac5fae12735a93f",
@@ -1119,8 +1119,8 @@
   "totalInvestedUSD": "506499094253983985367",
   "totalMined": "27389429018384142297915",
   "lastBuyTime": "1792558694",
-  "myBalance": "85808970779732547389805",
-  "myBalance_div3": "28602990259910849129935",
+  "myBalance": "85680289558391863023911",
+  "myBalance_div3": "28560096519463954341303",
   "directPushTotalUSD": "1687002959133413781846",
   "teamLevel": "0",
   "teamCount": "6",
@@ -1131,49 +1131,49 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "386776590030400118157",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x2dd3eb2b834f93f245e365e6308a3c8959d4e72d",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "318820581191332870282",
-  "totalMined": "15046445336321007608954",
+  "totalMined": "15289789813409887257830",
   "lastBuyTime": "1792398469",
-  "myBalance": "52916515145901376124829",
-  "myBalance_div3": "17638838381967125374943",
+  "myBalance": "52618283870012895318460",
+  "myBalance_div3": "17539427956670965106153",
   "directPushTotalUSD": "340238513523963311879",
   "teamLevel": "0",
   "teamCount": "2",
   "referrer": "0x148e7fed7fb183459c8d386e72c41d8d612c1b2f",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "58",
+  "totalWithdrawCount": "59",
   "lockedUntil": "1794990469",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "217099674575570494113",
+  "boostExpireTime": "220877968758921034901",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x2ea937f8260fc8bb11f5f344ab355af37c14e10a",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "499802033971382383336",
-  "totalMined": "21465317572868536579640",
+  "totalMined": "21896512900222839211685",
   "lastBuyTime": "1795394873",
-  "myBalance": "96679900379111434444371",
-  "myBalance_div3": "32226633459703811481457",
-  "directPushTotalUSD": "483321840467857456597",
+  "myBalance": "96280732377313796208493",
+  "myBalance_div3": "32093577459104598736164",
+  "directPushTotalUSD": "544509796172829333316",
   "teamLevel": "0",
   "teamCount": "3",
   "referrer": "0x66647ab885cea00d1b771512f795170e03500a37",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "63",
+  "totalWithdrawCount": "64",
   "lockedUntil": "1797986873",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "309619860790567588724",
+  "boostExpireTime": "316328215886002604656",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x2ff7528b11110a56eb67cf40165593b6af70caf0",
@@ -1194,7 +1194,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "214795886119525082045",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x30c9b04b4ff52e9e97f44df6b0869b2ceff511e9",
@@ -1215,28 +1215,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "653923557039783564",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x34e04cd99f9c75cfd5e8f293fcd374e4608b4a1e",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "225532119686205914966",
-  "totalMined": "11553315872475750221862",
+  "totalMined": "11810274392054028254528",
   "lastBuyTime": "0",
-  "myBalance": "33874693440995527379269",
-  "myBalance_div3": "11291564480331842459756",
+  "myBalance": "33610972227957933444131",
+  "myBalance_div3": "11203657409319311148043",
   "directPushTotalUSD": "384816175613778308566",
   "teamLevel": "19",
   "teamCount": "5",
   "referrer": "0x255000c8791457ab1e21dc66ffa04f89a8cff165",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "67",
+  "totalWithdrawCount": "69",
   "lockedUntil": "0",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "166721782573375629715",
+  "boostExpireTime": "170715437610202861284",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x35181efdf75df73c669b5b046a14b217447d5949",
@@ -1257,7 +1257,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "519850640703457268544",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
@@ -1278,7 +1278,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "300646050098022469436",
   "addr": "0x3584cf027c8cf83a9ddb10d45b821ba879139ed9",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x369d195968d3e5fb82f11e2973f465e0b5e52813",
@@ -1299,28 +1299,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "880931086219153382247",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x36adaa13c4eff387911c69724d04f1c794101b70",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "324696701684532891264",
-  "totalMined": "9350891350858988256466",
+  "totalMined": "9620315230085642839952",
   "lastBuyTime": "1792473280",
-  "myBalance": "60301363363414573117491",
-  "myBalance_div3": "20100454454471524372497",
+  "myBalance": "60031939484187918534005",
+  "myBalance_div3": "20010646494729306178001",
   "directPushTotalUSD": "759145967279174161281",
   "teamLevel": "0",
   "teamCount": "2",
   "referrer": "0xbd98fa68ed58387731e290b3b35a08a8f2893df3",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "38",
+  "totalWithdrawCount": "39",
   "lockedUntil": "1795065280",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "131357341644044306547",
+  "boostExpireTime": "135540558324840414282",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x378587e7bb6b7be052625534899178e397f2d1d2",
@@ -1341,7 +1341,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "296796802802654698893",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x37e7103a8e5a849e9d1d4244ecf172291c9415a2",
@@ -1350,8 +1350,8 @@
   "totalInvestedUSD": "1701161430529855439492",
   "totalMined": "98585003502017598790506",
   "lastBuyTime": "1792400973",
-  "myBalance": "128263557323736495024171",
-  "myBalance_div3": "42754519107912165008057",
+  "myBalance": "127541326178609592697849",
+  "myBalance_div3": "42513775392869864232616",
   "directPushTotalUSD": "3681156042972176234234",
   "teamLevel": "19",
   "teamCount": "6",
@@ -1362,7 +1362,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1371868784143588057678",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x39274cb7888f50b5f04e1e97e06034457d278e22",
@@ -1383,7 +1383,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "369587085147778207486",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x3973ab577507891bd441106802db712615d929b6",
@@ -1404,7 +1404,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "170049549220859388297",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x398c25370c4bbcfdcea7598f29ad2f1d3b83a850",
@@ -1425,7 +1425,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "101661923869860524016",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x3a43a0ac8c0b52ae658fc40bb546a3be722ea977",
@@ -1446,28 +1446,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "182471102630908479348",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x3a4fa0009509d7dfde9e06e0295c4b1bed53762c",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "372084796141920744206",
-  "totalMined": "23848868253867514787047",
-  "lastBuyTime": "1795702305",
-  "myBalance": "65654914624256683800382",
-  "myBalance_div3": "21884971541418894600127",
+  "totalInvestedUSD": "373621922147928615584",
+  "totalMined": "24223159050605881369154",
+  "lastBuyTime": "1795794432",
+  "myBalance": "65577623827518317218275",
+  "myBalance_div3": "21859207942506105739425",
   "directPushTotalUSD": "624932679893395503323",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0x53c2724e74351bf5fd37a6ab4c03ab5508d96378",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "69",
-  "lockedUntil": "1798294305",
+  "totalWithdrawCount": "70",
+  "lockedUntil": "1798386432",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "344271478080566511008",
+  "boostExpireTime": "350082913610626606317",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x3b3ee8e3d8d68dd405938457bb44e3172173031e",
@@ -1476,8 +1476,8 @@
   "totalInvestedUSD": "1540330685940364250873",
   "totalMined": "41186894577244678820889",
   "lastBuyTime": "1790097500",
-  "myBalance": "283691101255980339903706",
-  "myBalance_div3": "94563700418660113301235",
+  "myBalance": "283525608804693371179102",
+  "myBalance_div3": "94508536268231123726367",
   "directPushTotalUSD": "658680716594637821786",
   "teamLevel": "0",
   "teamCount": "1",
@@ -1488,28 +1488,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "568076629712134968678",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
   "activated": 1,
   "isNode": 1,
   "totalInvestedUSD": "228504614734464461624",
-  "totalMined": "39250300814051536239890",
+  "totalMined": "39834671351803413634248",
   "lastBuyTime": "1792595536",
-  "myBalance": "15695874732228459921372",
-  "myBalance_div3": "5231958244076153307124",
+  "myBalance": "15240379817183779396667",
+  "myBalance_div3": "5080126605727926465555",
   "directPushTotalUSD": "242325556505932310412",
   "teamLevel": "19",
   "teamCount": "1",
   "referrer": "0x9b359982768a8f76b1ea2ef17ba99c4d9f639232",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "65",
+  "totalWithdrawCount": "66",
   "lockedUntil": "1795187536",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "1115529845742445965492",
+  "boostExpireTime": "1136606840745938957647",
   "addr": "0x3beb2bf52799ae5d88c5f08018bedbfb9d39529c",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x3bf77018a83af1a720d64dfa29d68e34b660f4b5",
@@ -1530,28 +1530,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "73806555359816041371",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x3c5570e22fbfcf50488d6b625f6fd8ba57d6da83",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "697001643554455830400",
-  "totalMined": "18518440221953312312695",
+  "totalMined": "19149222741741943645203",
   "lastBuyTime": "1790494045",
-  "myBalance": "165995399944376666449492",
-  "myBalance_div3": "55331799981458888816497",
+  "myBalance": "165364617424588035116984",
+  "myBalance_div3": "55121539141529345038994",
   "directPushTotalUSD": "319416799443544361028",
   "teamLevel": "0",
   "teamCount": "5",
   "referrer": "0x79454f6124749954fdba2f7bb29c605e8c3ca4bd",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "27",
+  "totalWithdrawCount": "28",
   "lockedUntil": "1793086045",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "260652723232379634081",
+  "boostExpireTime": "270446583993008724707",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x3c9184420f7d94925d8f9e5e3227886e52102822",
@@ -1572,7 +1572,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "607662355605909034276",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x3e5d8821a6955d156bd6829b6b9b994dec759bcc",
@@ -1581,8 +1581,8 @@
   "totalInvestedUSD": "4931528923654205199880",
   "totalMined": "92168508501480207989003",
   "lastBuyTime": "1789987136",
-  "myBalance": "773516974044405893064870",
-  "myBalance_div3": "257838991348135297688290",
+  "myBalance": "773432821332967764039972",
+  "myBalance_div3": "257810940444322588013324",
   "directPushTotalUSD": "6099235697897096010057",
   "teamLevel": "19",
   "teamCount": "1",
@@ -1593,7 +1593,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1244589337085323128851",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x3eef42713c6efe62f475988b9f3df181328c7f56",
@@ -1602,8 +1602,8 @@
   "totalInvestedUSD": "387195580749091682652",
   "totalMined": "24610358962130443660311",
   "lastBuyTime": "1795361782",
-  "myBalance": "110568233588849232950130",
-  "myBalance_div3": "36856077862949744316710",
+  "myBalance": "110496461712981037369724",
+  "myBalance_div3": "36832153904327012456574",
   "directPushTotalUSD": "533768921724192419050",
   "teamLevel": "19",
   "teamCount": "2",
@@ -1614,7 +1614,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "354616123852880593554",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x3f06665c7f97acfee66abc404aa9098576e4d294",
@@ -1623,8 +1623,8 @@
   "totalInvestedUSD": "2329413073748626696519",
   "totalMined": "92939401016627850867647",
   "lastBuyTime": "1791209892",
-  "myBalance": "305580192746286721396578",
-  "myBalance_div3": "101860064248762240465526",
+  "myBalance": "305030476600498880046807",
+  "myBalance_div3": "101676825533499626682269",
   "directPushTotalUSD": "702168819287562761279",
   "teamLevel": "19",
   "teamCount": "1",
@@ -1635,7 +1635,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1272081358450588180321",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x3f4570f5b8b536deb2fa0da68d0930b827771a08",
@@ -1644,9 +1644,9 @@
   "totalInvestedUSD": "1156371251937618464829",
   "totalMined": "66224301056487788972484",
   "lastBuyTime": "1790347210",
-  "myBalance": "211337979182415682071120",
-  "myBalance_div3": "70445993060805227357040",
-  "directPushTotalUSD": "1933238302181751154668",
+  "myBalance": "211049257806694614661315",
+  "myBalance_div3": "70349752602231538220438",
+  "directPushTotalUSD": "1938372303041817444858",
   "teamLevel": "19",
   "teamCount": "3",
   "referrer": "0x0c9da6c0cbd634659e64ac1aa4649df5349ba22f",
@@ -1656,7 +1656,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1317385300887447376042",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x4201743d202af597a880b4efa6fc20a55b75f84f",
@@ -1665,8 +1665,8 @@
   "totalInvestedUSD": "237747093802508973299",
   "totalMined": "6557933486650551229483",
   "lastBuyTime": "1791007219",
-  "myBalance": "42382190756845057398774",
-  "myBalance_div3": "14127396918948352466258",
+  "myBalance": "42304102606046449034782",
+  "myBalance_div3": "14101367535348816344927",
   "directPushTotalUSD": "366316678113178856296",
   "teamLevel": "0",
   "teamCount": "2",
@@ -1677,28 +1677,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "90513629331757828959",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x42bb89cabf7578d37539f879a0079744cd25cb6e",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "624932679893395503323",
-  "totalMined": "27100550631171864944140",
+  "totalMined": "27634410875025820409456",
   "lastBuyTime": "1795694390",
-  "myBalance": "116930668226876392118799",
-  "myBalance_div3": "38976889408958797372933",
-  "directPushTotalUSD": "1198907403381132922956",
+  "myBalance": "116396807983022436653483",
+  "myBalance_div3": "38798935994340812217827",
+  "directPushTotalUSD": "1210070975081331503974",
   "teamLevel": "0",
   "teamCount": "2",
   "referrer": "0x3a4fa0009509d7dfde9e06e0295c4b1bed53762c",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "61",
+  "totalWithdrawCount": "62",
   "lockedUntil": "1798286390",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "392065573851776577990",
+  "boostExpireTime": "400354568441691919681",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
@@ -1719,7 +1719,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "8284213511120836353",
   "addr": "0x42d4a129a9fe8e676bc91e06d2d6e1924ea73588",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x43e99ea95abd879d468adc22ee2994b9853a2df0",
@@ -1740,7 +1740,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "498500360914036496570",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x4469a361b7d057233b8f5064f31ae4cd2c08f2dd",
@@ -1761,7 +1761,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "34819210731681833336",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x44a1aa72b6b96a047290ee6fad139bf551d2f126",
@@ -1782,7 +1782,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1203987368358448381766",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x47d7fba10fa2e5a5e91795203fde10fc0e63fd87",
@@ -1791,8 +1791,8 @@
   "totalInvestedUSD": "3903368531067082248334",
   "totalMined": "180415360483065189967485",
   "lastBuyTime": "0",
-  "myBalance": "752111062327775585043268",
-  "myBalance_div3": "250703687442591861681089",
+  "myBalance": "751617087178003650870748",
+  "myBalance_div3": "250539029059334550290249",
   "directPushTotalUSD": "807282062415782972857",
   "teamLevel": "19",
   "teamCount": "1",
@@ -1803,7 +1803,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "2793734012543436538254",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x485d516b9104f71bbf426fb9e25dacb3cf1d752f",
@@ -1824,7 +1824,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "153838900925894146980",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x487ee7d105ec099e556b42713b4897a10a46d989",
@@ -1833,8 +1833,8 @@
   "totalInvestedUSD": "382506439660044356658",
   "totalMined": "9736497824461461337097",
   "lastBuyTime": "0",
-  "myBalance": "79161074982263933680482",
-  "myBalance_div3": "26387024994087977893494",
+  "myBalance": "79060602585569466205442",
+  "myBalance_div3": "26353534195189822068480",
   "directPushTotalUSD": "748753408437983985367",
   "teamLevel": "19",
   "teamCount": "3",
@@ -1845,7 +1845,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "136027801268572408361",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x4b27472c7390ae322fc0c7cd7af9d1a3e87ad30f",
@@ -1854,9 +1854,9 @@
   "totalInvestedUSD": "1076736904097264139469",
   "totalMined": "59126987364172609832886",
   "lastBuyTime": "1795753460",
-  "myBalance": "171014561257976670721901",
-  "myBalance_div3": "57004853752658890240633",
-  "directPushTotalUSD": "1313833801668356814028",
+  "myBalance": "170777037988903980136323",
+  "myBalance_div3": "56925679329634660045441",
+  "directPushTotalUSD": "1321892627260824505902",
   "teamLevel": "19",
   "teamCount": "5",
   "referrer": "0x4ecaa025c5104b222a826c42c576ca9558acb436",
@@ -1866,28 +1866,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "861264230289591595219",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "242325556505932310412",
-  "totalMined": "41011291565746833017643",
+  "totalMined": "41625073973643937661707",
   "lastBuyTime": "1792671997",
-  "myBalance": "19039152459171515519491",
-  "myBalance_div3": "6346384153057171839830",
+  "myBalance": "18563263860703477852920",
+  "myBalance_div3": "6187754620234492617640",
   "directPushTotalUSD": "243181714345884088026",
   "teamLevel": "19",
   "teamCount": "1",
   "referrer": "0x3beb2bf52799ae5d88c5f08018bedbfb9d39529c",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "67",
+  "totalWithdrawCount": "68",
   "lockedUntil": "1795263997",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "592455006218950273386",
+  "boostExpireTime": "601984914311968158576",
   "addr": "0x4c3f04befe0fb1e7789648657ced98a78a477dd5",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
@@ -1908,7 +1908,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "250179483585333150043",
   "addr": "0x4d421b8c2b799ce222a216322ee87b07f1c5f77c",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x4e36287034cc2d160252e5624bb33334a14ee52f",
@@ -1929,7 +1929,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "126503326136621886179",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x4eb568278c27ed7a5114d9ad25bd8b316aab4b84",
@@ -1950,7 +1950,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "465445317716795069512",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x4ecaa025c5104b222a826c42c576ca9558acb436",
@@ -1959,8 +1959,8 @@
   "totalInvestedUSD": "948777972296284175553",
   "totalMined": "63750417519590349075632",
   "lastBuyTime": "1795753518",
-  "myBalance": "186743378427514154172268",
-  "myBalance_div3": "62247792809171384724089",
+  "myBalance": "186575018657840488777441",
+  "myBalance_div3": "62191672885946829592480",
   "directPushTotalUSD": "1322263940964119945754",
   "teamLevel": "19",
   "teamCount": "2",
@@ -1971,7 +1971,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "927893347070322941686",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x4f90ae3893ce66124102aa5dc23a3627ab03556c",
@@ -1992,7 +1992,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "44089972442028292834",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x50a65ef5136099ce1afcbd65add20c16ab22f8fe",
@@ -2001,8 +2001,8 @@
   "totalInvestedUSD": "317630802054889284056",
   "totalMined": "12993175066306884041780",
   "lastBuyTime": "1792546386",
-  "myBalance": "52681594018042721026055",
-  "myBalance_div3": "17560531339347573675351",
+  "myBalance": "52597138171486006956650",
+  "myBalance_div3": "17532379390495335652216",
   "directPushTotalUSD": "1304061212474857541926",
   "teamLevel": "19",
   "teamCount": "2",
@@ -2013,7 +2013,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "185618162090664170689",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x50d5ee0c15335b6bfdc6d5e931a31541c17daa0e",
@@ -2034,7 +2034,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1208160385082094869044",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x513be2feb1c6d620823a6c71e9d6a621b4fe1dd6",
@@ -2055,28 +2055,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "107525702690827661443",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x53c2724e74351bf5fd37a6ab4c03ab5508d96378",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "858238729419546820429",
-  "totalMined": "58613651669220863649556",
+  "totalMined": "59423466397734750802598",
   "lastBuyTime": "1789972230",
-  "myBalance": "147880230619805436875549",
-  "myBalance_div3": "49293410206601812291849",
-  "directPushTotalUSD": "1712242823688650156591",
+  "myBalance": "147070415891291549722507",
+  "myBalance_div3": "49023471963763849907502",
+  "directPushTotalUSD": "1713779949694658027969",
   "teamLevel": "19",
   "teamCount": "3",
   "referrer": "0x79454f6124749954fdba2f7bb29c605e8c3ca4bd",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "64",
+  "totalWithdrawCount": "65",
   "lockedUntil": "1792564230",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "847013573785379744745",
+  "boostExpireTime": "859612329884424126374",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x5497dcb3f086569e74fb566000433e5f869fa69d",
@@ -2097,7 +2097,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "8053818983682363739",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x563cb109ff10dc4b5b0d2c2e780f84b651a5c800",
@@ -2118,28 +2118,28 @@
   "boostMultiplier": "0",
   "boostExpireTime": "0",
   "source": "old",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x57362fb870df3646c4d49e461294505198e745a0",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "1283635393324472686853",
-  "totalMined": "59232958421383332975519",
-  "lastBuyTime": "1795695816",
-  "myBalance": "288535305595842397815100",
-  "myBalance_div3": "96178435198614132605033",
+  "totalInvestedUSD": "1297252156024158577747",
+  "totalMined": "60329392582647534087216",
+  "lastBuyTime": "1795788832",
+  "myBalance": "290069871434578196703403",
+  "myBalance_div3": "96689957144859398901134",
   "directPushTotalUSD": "490554708688134809343",
   "teamLevel": "19",
   "teamCount": "1",
   "referrer": "0xc09dadc01340900c4067fc911ffa81b7f82f4c3e",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "61",
-  "lockedUntil": "1798287816",
+  "totalWithdrawCount": "62",
+  "lockedUntil": "1798380832",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "855668576680637497874",
+  "boostExpireTime": "872692389439775192958",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x57655414c04a731afaa901298dc15e740832cd6b",
@@ -2160,7 +2160,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "298740781544384695720",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x59b67431d36dcda3b3b2ea9181dfd378fc82a351",
@@ -2181,70 +2181,70 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "95239366188743806224",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x5be15101a339019da1f4af8bde647a54d9537c45",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "691452353753633670833",
-  "totalMined": "66463864392668818189023",
+  "totalMined": "67343971961505595872372",
   "lastBuyTime": "1792671815",
-  "myBalance": "87692574005579829688345",
-  "myBalance_div3": "29230858001859943229448",
-  "directPushTotalUSD": "1217696849033908637785",
+  "myBalance": "86988054077200920172550",
+  "myBalance_div3": "28996018025733640057516",
+  "directPushTotalUSD": "1222665337134136100825",
   "teamLevel": "19",
   "teamCount": "5",
   "referrer": "0x887549e9a856f5a43365293ddb3e20ec5324e2e4",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "68",
+  "totalWithdrawCount": "69",
   "lockedUntil": "1795263815",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "956754269716003131625",
+  "boostExpireTime": "970419282161895796328",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x5c4c69076ffdb66f20ad4801e3a0cb5c1f9ee8c0",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "766435129669029819783",
-  "totalMined": "41529907970039454067684",
+  "totalMined": "42102775165485159964339",
   "lastBuyTime": "1789972141",
-  "myBalance": "150754525117291025435530",
-  "myBalance_div3": "50251508372430341811843",
+  "myBalance": "150181657921845319538875",
+  "myBalance_div3": "50060552640615106512958",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0x53c2724e74351bf5fd37a6ab4c03ab5508d96378",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "64",
+  "totalWithdrawCount": "65",
   "lockedUntil": "1792564141",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "600196501240039538562",
+  "boostExpireTime": "609108927525257773810",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x5cdc779e5963f75197b37880b17312e8e1844a74",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "98767430666743363820",
-  "totalMined": "2972255323967872285636",
+  "totalMined": "3039882258561031310360",
   "lastBuyTime": "1792572040",
-  "myBalance": "17796561735041848611823",
-  "myBalance_div3": "5932187245013949537274",
+  "myBalance": "17728934800448689587099",
+  "myBalance_div3": "5909644933482896529033",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0x34e04cd99f9c75cfd5e8f293fcd374e4608b4a1e",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "66",
+  "totalWithdrawCount": "67",
   "lockedUntil": "1795164040",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "43879780594045245202",
+  "boostExpireTime": "44931891928484412430",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x5d1dc12f3834e5b342f82719facb5d30819a9245",
@@ -2253,8 +2253,8 @@
   "totalInvestedUSD": "343912982483301486322",
   "totalMined": "11749621654186275224330",
   "lastBuyTime": "1794970238",
-  "myBalance": "71497229158959118396115",
-  "myBalance_div3": "23832409719653039465371",
+  "myBalance": "71478747822232634413800",
+  "myBalance_div3": "23826249274077544804600",
   "directPushTotalUSD": "200000000000000000000",
   "teamLevel": "0",
   "teamCount": "5",
@@ -2265,7 +2265,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "165718969790564119452",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x5dca308f6be42f04d6832240b4d78945c531d5b6",
@@ -2286,7 +2286,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "231203200045245109273",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x5dcbf1fa057caa0a1b9ef8a0db50be94d9e9789f",
@@ -2307,7 +2307,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "713303722977203095478",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x6053b4afd18272345cb83250757430c81e11f93b",
@@ -2328,7 +2328,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "179277284774334723356",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x605c2f0bee936276edd6fd26dd9e27430b39a7db",
@@ -2349,7 +2349,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1223771162511234309769",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x609429abe54d04d04ef9d0a5a271cce6df48cb9f",
@@ -2358,8 +2358,8 @@
   "totalInvestedUSD": "1294106309746137878065",
   "totalMined": "74824823390001905499855",
   "lastBuyTime": "1794970398",
-  "myBalance": "146842141162382917767534",
-  "myBalance_div3": "48947380387460972589178",
+  "myBalance": "146195662245954709844191",
+  "myBalance_div3": "48731887415318236614730",
   "directPushTotalUSD": "2335277137417869616012",
   "teamLevel": "19",
   "teamCount": "12",
@@ -2370,91 +2370,91 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1302176205610434158233",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x609adf2e7d1106cf163b41850a92fce014053aa9",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "593287095263420048469",
-  "totalMined": "28688668326494309383453",
+  "totalMined": "29149879317635257370908",
   "lastBuyTime": "1792809203",
-  "myBalance": "121371313458144207225244",
-  "myBalance_div3": "40457104486048069075081",
+  "myBalance": "120910102467003259237789",
+  "myBalance_div3": "40303367489001086412596",
   "directPushTotalUSD": "210000000000000000000",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0x8e112dffd4343c717ecafd9f0808b9ab1186741f",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "60",
+  "totalWithdrawCount": "61",
   "lockedUntil": "1795401203",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "412907457384473424935",
+  "boostExpireTime": "420082783521411767701",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x613c9fe0e614df41fd99da4a7805ad789c417a61",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "135792624118530736957",
-  "totalMined": "17872841246332050634057",
+  "totalMined": "18130852568141064660851",
   "lastBuyTime": "1793353400",
-  "myBalance": "58185503745868555385306",
-  "myBalance_div3": "19395167915289518461768",
+  "myBalance": "57946015883252455818784",
+  "myBalance_div3": "19315338627750818606261",
   "directPushTotalUSD": "75420705188336692257",
   "teamLevel": "10",
   "teamCount": "2",
   "referrer": "0x148e7fed7fb183459c8d386e72c41d8d612c1b2f",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "70",
+  "totalWithdrawCount": "71",
   "lockedUntil": "1795945400",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "258072705090549955218",
+  "boostExpireTime": "262078724409712594919",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x61bdc757b8dc13930aeeedda6638d287cf855dea",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "357503544317909829978",
-  "totalMined": "14856860741153551244542",
+  "totalMined": "15147505913943071329449",
   "lastBuyTime": "1795682038",
-  "myBalance": "69625007411495454020676",
-  "myBalance_div3": "23208335803831818006892",
+  "myBalance": "69334461305255512117736",
+  "myBalance_div3": "23111487101751837372578",
   "directPushTotalUSD": "147224593477495565531",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0xbf45282d6a2f7d6b99da4ffd684933448ad7e1c7",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "66",
+  "totalWithdrawCount": "67",
   "lockedUntil": "1798274038",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "214620667138614756236",
+  "boostExpireTime": "219142402190358730898",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x62165b3e1db3201d99033d6aeb9ff44b13652aa2",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "408383387344565969269",
-  "totalMined": "20705036270834641107160",
+  "totalMined": "21034653186317646026089",
   "lastBuyTime": "1793711705",
-  "myBalance": "77939679666548247351904",
-  "myBalance_div3": "25979893222182749117301",
+  "myBalance": "77609885466369692894975",
+  "myBalance_div3": "25869961822123230964991",
   "directPushTotalUSD": "435970348006192826395",
   "teamLevel": "0",
   "teamCount": "3",
   "referrer": "0xdc24d836ac0a3c284b407ddc7519a830c1d2e796",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "62",
+  "totalWithdrawCount": "63",
   "lockedUntil": "1796303705",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "298488330625436911327",
+  "boostExpireTime": "303606136007346259319",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x63cb0e417d9f6292215b8d52ac561334c524b630",
@@ -2463,8 +2463,8 @@
   "totalInvestedUSD": "3379880287363982136549",
   "totalMined": "89966646448874356896361",
   "lastBuyTime": "1792675424",
-  "myBalance": "463105119244005138369709",
-  "myBalance_div3": "154368373081335046123236",
+  "myBalance": "462584295201833266272845",
+  "myBalance_div3": "154194765067277755424281",
   "directPushTotalUSD": "3283507039114632357172",
   "teamLevel": "19",
   "teamCount": "1",
@@ -2475,7 +2475,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1230807856954417551251",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x64a075932643a7bee93a4680f4738e7008d403ec",
@@ -2496,7 +2496,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "308100214980853227020",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x6549d65bcae204c88fd2753fedb64cc7e8a2887d",
@@ -2517,7 +2517,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "277864961171791560978",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x65aa4ed24a5dddbd8a00006eb80da0d028f12f60",
@@ -2538,7 +2538,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "232470354523005822361",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x65c385a0e222f1eff2a2fa1711f26e5c371bef31",
@@ -2559,7 +2559,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "160169462891293651915",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x65d6320a70fffe13b2413c2e01c8b84dd3de1bbb",
@@ -2580,7 +2580,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "227059104748415254774",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x66647ab885cea00d1b771512f795170e03500a37",
@@ -2589,8 +2589,8 @@
   "totalInvestedUSD": "1698410734139429603298",
   "totalMined": "53763332824109984577130",
   "lastBuyTime": "1793805447",
-  "myBalance": "383885220088478386807159",
-  "myBalance_div3": "127961740029492795602386",
+  "myBalance": "383763296707265048536964",
+  "myBalance_div3": "127921098902421682845654",
   "directPushTotalUSD": "2030664272399173959239",
   "teamLevel": "0",
   "teamCount": "2",
@@ -2601,7 +2601,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1218858928400155399031",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x68ebfcd7114a07e046b5fea5eb37f79c5163d2be",
@@ -2622,7 +2622,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "172222746788356471550",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x690c0b63f5745fbec505be599975edc7af6359f5",
@@ -2631,8 +2631,8 @@
   "totalInvestedUSD": "3283507039114632357172",
   "totalMined": "90440556948444201403457",
   "lastBuyTime": "1792675365",
-  "myBalance": "431434682493606691841454",
-  "myBalance_div3": "143811560831202230613818",
+  "myBalance": "430896256300058084190924",
+  "myBalance_div3": "143632085433352694730308",
   "directPushTotalUSD": "4014748969208221462891",
   "teamLevel": "19",
   "teamCount": "1",
@@ -2643,7 +2643,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1237268685131785204799",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x69be65a4645b6152161e6bc82c924827bea8da0f",
@@ -2664,7 +2664,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "360561260044000175236",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x6ae41e779b60c0d866a56b9e025552e2ced00ca3",
@@ -2673,8 +2673,8 @@
   "totalInvestedUSD": "429189335986003888808",
   "totalMined": "32282265901101594899634",
   "lastBuyTime": "1794756688",
-  "myBalance": "112765401567840378012904",
-  "myBalance_div3": "37588467189280126004301",
+  "myBalance": "112676482130547550109768",
+  "myBalance_div3": "37558827376849183369922",
   "directPushTotalUSD": "2384297843807053567996",
   "teamLevel": "0",
   "teamCount": "3",
@@ -2685,7 +2685,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "458829088454742344890",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x6ae9b654df36845a73239e7be78d47d8f7b79582",
@@ -2706,7 +2706,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "199156740201438444036",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x6cc2d71917927eafd46bf2320660ee901ec6a31e",
@@ -2727,7 +2727,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "160256868747251149026",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x6e983e02624c04706c3c567971e7357e95326108",
@@ -2748,7 +2748,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "445188322431827890412",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x6f2ac83051a000bbca1de322a6ff99d6b526bf43",
@@ -2769,28 +2769,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "90684844310453271542",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x70570d6487d14a42db1617309ff4673b39ca514f",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "292679938764335886043",
-  "totalMined": "13076086160546062944910",
+  "totalMined": "13258287272379049536755",
   "lastBuyTime": "1790494093",
-  "myBalance": "47947661008680682064504",
-  "myBalance_div3": "15982553669560227354834",
+  "myBalance": "47765459896847695472659",
+  "myBalance_div3": "15921819965615898490886",
   "directPushTotalUSD": "2050750306464368212186",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0x269dd3d9334280d380d724b3a0f30fd9938938b2",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "52",
+  "totalWithdrawCount": "53",
   "lockedUntil": "1793086093",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "186287121628854277928",
+  "boostExpireTime": "189121729704174240004",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x70d2c542b684ce846bddbdd257ae223f1bd7757a",
@@ -2799,8 +2799,8 @@
   "totalInvestedUSD": "4301833143903882018577",
   "totalMined": "100185385753814622039015",
   "lastBuyTime": "1794091694",
-  "myBalance": "824866093410422813189132",
-  "myBalance_div3": "274955364470140937729710",
+  "myBalance": "824171013468546803495476",
+  "myBalance_div3": "274723671156182267831825",
   "directPushTotalUSD": "15698479678023391739492",
   "teamLevel": "19",
   "teamCount": "3",
@@ -2811,7 +2811,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1563823926626327636070",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x716d34589e10c422df03fe8865afb9bc5dcfbdc5",
@@ -2832,7 +2832,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "196407639965532773812",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x71ec78213d5bdad916908524330dba904f28e8ff",
@@ -2853,7 +2853,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1214275851815062591179",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7600fb6ad223983a7cb18024a4d953a2ff535968",
@@ -2862,9 +2862,9 @@
   "totalInvestedUSD": "463643842713128713919",
   "totalMined": "19952885094733662447046",
   "lastBuyTime": "1795220652",
-  "myBalance": "87752965326055705872312",
-  "myBalance_div3": "29250988442018568624104",
-  "directPushTotalUSD": "472188793127318187785",
+  "myBalance": "87681607439010225762818",
+  "myBalance_div3": "29227202479670075254272",
+  "directPushTotalUSD": "485437477807318977648",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0xd8afeff7e239191c8985078ac20f4eab15081e86",
@@ -2874,7 +2874,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "288123045015869851843",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x765c7bd7b221ae768e39ae67a57c68c1f1bf0b4f",
@@ -2895,7 +2895,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "271279957586807181926",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x771d1f911c950e362d84ef6d91121692827e951c",
@@ -2904,8 +2904,8 @@
   "totalInvestedUSD": "3565779465234003554737",
   "totalMined": "32085243319777429904739",
   "lastBuyTime": "1795092708",
-  "myBalance": "173232653702565637423853",
-  "myBalance_div3": "57744217900855212474617",
+  "myBalance": "173216497756234960445436",
+  "myBalance_div3": "57738832585411653481812",
   "directPushTotalUSD": "1138082085303684701598",
   "teamLevel": "0",
   "teamCount": "1",
@@ -2916,7 +2916,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "455740777305232358745",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x79454f6124749954fdba2f7bb29c605e8c3ca4bd",
@@ -2925,8 +2925,8 @@
   "totalInvestedUSD": "360372763606970610960",
   "totalMined": "53482087563659819651093",
   "lastBuyTime": "1790493730",
-  "myBalance": "59205153528489550194523",
-  "myBalance_div3": "19735051176163183398174",
+  "myBalance": "58776706045495323845235",
+  "myBalance_div3": "19592235348498441281745",
   "directPushTotalUSD": "2200715250423599447389",
   "teamLevel": "19",
   "teamCount": "6",
@@ -2937,7 +2937,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "767716500043997633715",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7a063c8326b775ab48e60db9c068aab3c25942d3",
@@ -2946,8 +2946,8 @@
   "totalInvestedUSD": "942544419402357533113",
   "totalMined": "33640576810956927119055",
   "lastBuyTime": "1792478330",
-  "myBalance": "172755163841406981466693",
-  "myBalance_div3": "57585054613802327155564",
+  "myBalance": "172751519819170321734857",
+  "myBalance_div3": "57583839939723440578285",
   "directPushTotalUSD": "1376969299954675063468",
   "teamLevel": "19",
   "teamCount": "1",
@@ -2958,7 +2958,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "472849064922713738659",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7b57fe136cc7c699bc9244ce3326c1fd0d7bb148",
@@ -2967,8 +2967,8 @@
   "totalInvestedUSD": "4679715682739836800182",
   "totalMined": "166491627807622295931209",
   "lastBuyTime": "1790174394",
-  "myBalance": "810332162183563293831125",
-  "myBalance_div3": "270110720727854431277041",
+  "myBalance": "809680810351115937937985",
+  "myBalance_div3": "269893603450371979312661",
   "directPushTotalUSD": "1400684507314494769304",
   "teamLevel": "19",
   "teamCount": "19",
@@ -2979,7 +2979,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "2338722271544929332405",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7c47c9d22b38d99b16c30af24c8cb7c90ea109ae",
@@ -2988,8 +2988,8 @@
   "totalInvestedUSD": "530322451941663795041",
   "totalMined": "18271007732744612143821",
   "lastBuyTime": "1794548877",
-  "myBalance": "102352115292961094407119",
-  "myBalance_div3": "34117371764320364802373",
+  "myBalance": "102346649259606104809364",
+  "myBalance_div3": "34115549753202034936454",
   "directPushTotalUSD": "1940237423205653222435",
   "teamLevel": "19",
   "teamCount": "1",
@@ -3000,28 +3000,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "259395649978397596236",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7c5298a8bc289382f9fc042202ddb86be3367ac1",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "482298912225769202043",
-  "totalMined": "16138347828020157311536",
-  "lastBuyTime": "1795707026",
-  "myBalance": "98270441998469273197825",
-  "myBalance_div3": "32756813999489757732608",
+  "totalInvestedUSD": "487453718629755194947",
+  "totalMined": "16511775507614340549687",
+  "lastBuyTime": "1795792999",
+  "myBalance": "98893014318875089959674",
+  "myBalance_div3": "32964338106291696653224",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0x266b50f8e27df28bac0e275e142418deb11b4a84",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "51",
-  "lockedUntil": "1798299026",
+  "totalWithdrawCount": "52",
+  "lockedUntil": "1798384999",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "231991874284897718898",
+  "boostExpireTime": "237789908604770385282",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7cfaa4cadf8479a4f0f7060087daa3980c7f852d",
@@ -3030,8 +3030,8 @@
   "totalInvestedUSD": "5045707826880584580648",
   "totalMined": "99402485118521138998697",
   "lastBuyTime": "1789977569",
-  "myBalance": "964801245537425586998969",
-  "myBalance_div3": "321600415179141862332989",
+  "myBalance": "964776762021799975691467",
+  "myBalance_div3": "321592254007266658563822",
   "directPushTotalUSD": "3830296235882462514641",
   "teamLevel": "19",
   "teamCount": "11",
@@ -3042,7 +3042,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1350386822052515047016",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7de996ae7c1935519b240922ad9bc712420c8c09",
@@ -3051,8 +3051,8 @@
   "totalInvestedUSD": "594518230098357282351",
   "totalMined": "26648911915933864843508",
   "lastBuyTime": "1794967181",
-  "myBalance": "112559197733534513266527",
-  "myBalance_div3": "37519732577844837755509",
+  "myBalance": "112491633056289142011003",
+  "myBalance_div3": "37497211018763047337001",
   "directPushTotalUSD": "317630802054889284056",
   "teamLevel": "19",
   "teamCount": "2",
@@ -3063,28 +3063,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "382493092074605212258",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7df192d0f182f183e017acc2213114f200cc5308",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "1049087831879266485386",
-  "totalMined": "69799041771789010224314",
+  "totalMined": "71347689264592574892650",
   "lastBuyTime": "1794235091",
-  "myBalance": "144502226853290209893957",
-  "myBalance_div3": "48167408951096736631319",
-  "directPushTotalUSD": "3809213164704059193281",
+  "myBalance": "143396476309954662216153",
+  "myBalance_div3": "47798825436651554072051",
+  "directPushTotalUSD": "3812157770229709625673",
   "teamLevel": "19",
   "teamCount": "12",
   "referrer": "0x7b57fe136cc7c699bc9244ce3326c1fd0d7bb148",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "68",
+  "totalWithdrawCount": "69",
   "lockedUntil": "1796827091",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "1022642399981333367717",
+  "boostExpireTime": "1046687514479588388838",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7e1c6755917647e19fc5129257234bc35db5f2a9",
@@ -3105,7 +3105,7 @@
   "boostMultiplier": "0",
   "boostExpireTime": "0",
   "source": "v33",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7e641c3ae8775358cdf1a4c0847922a6b3a909ae",
@@ -3126,7 +3126,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "140813694317134050196",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7fad5d4a58a93bd95414c17b335f3cde79681034",
@@ -3147,7 +3147,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "149847333363884725188",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7fed06858b194f095ef8825ea6e5a5f2a1802074",
@@ -3156,8 +3156,8 @@
   "totalInvestedUSD": "2762335818733312468109",
   "totalMined": "89235513033872622484174",
   "lastBuyTime": "1791181438",
-  "myBalance": "341644270555297184211791",
-  "myBalance_div3": "113881423518432394737263",
+  "myBalance": "341231792800450554516934",
+  "myBalance_div3": "113743930933483518172311",
   "directPushTotalUSD": "3261975681544373046561",
   "teamLevel": "19",
   "teamCount": "1",
@@ -3168,28 +3168,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1227762206738292896464",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x7ff4c578dbae120c86902c1ce2ddf3293d725fbe",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "645474877449596796560",
-  "totalMined": "42357109724992322791906",
+  "totalMined": "42838422696621326362401",
   "lastBuyTime": "1790495306",
-  "myBalance": "111645320452694150104586",
-  "myBalance_div3": "37215106817564716701528",
+  "myBalance": "111147560395904646219257",
+  "myBalance_div3": "37049186798634882073085",
   "directPushTotalUSD": "3224183908165758105392",
   "teamLevel": "0",
   "teamCount": "8",
   "referrer": "0x79454f6124749954fdba2f7bb29c605e8c3ca4bd",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "35",
+  "totalWithdrawCount": "36",
   "lockedUntil": "1793087306",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "612768544782477381515",
+  "boostExpireTime": "620241662820051827660",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x80234b5b9297897abf8c5c9ddc22b995a6447bd7",
@@ -3210,7 +3210,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "123352307921233699762",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x82b9cd36cc005df54267c93054c8a55f8aa2923a",
@@ -3219,8 +3219,8 @@
   "totalInvestedUSD": "537141889127192781472",
   "totalMined": "42875475610860041939174",
   "lastBuyTime": "1792553734",
-  "myBalance": "78655423130615795387244",
-  "myBalance_div3": "26218474376871931795748",
+  "myBalance": "78636324930433743072547",
+  "myBalance_div3": "26212108310144581024182",
   "directPushTotalUSD": "2139296395739358583007",
   "teamLevel": "19",
   "teamCount": "2",
@@ -3231,28 +3231,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "614699731263057194540",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x8421d2ec8419c5f4c27b70736ddef659146b8efe",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "351596675435228283918",
-  "totalMined": "15297790806615812177284",
+  "totalMined": "15581283105504990636732",
   "lastBuyTime": "1794235002",
-  "myBalance": "59199523040643229025234",
-  "myBalance_div3": "19733174346881076341744",
+  "myBalance": "58916030741754050565786",
+  "myBalance_div3": "19638676913918016855262",
   "directPushTotalUSD": "338586872120809291700",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0x7b57fe136cc7c699bc9244ce3326c1fd0d7bb148",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "64",
+  "totalWithdrawCount": "65",
   "lockedUntil": "1796827002",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "222147882804008758340",
+  "boostExpireTime": "226549533158811915885",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x85c42dcc17b5a4c879c3e4fed5a52652da40f1d3",
@@ -3261,8 +3261,8 @@
   "totalInvestedUSD": "1376969299954675063468",
   "totalMined": "68332026923661493123298",
   "lastBuyTime": "1795609094",
-  "myBalance": "277446044647105773628010",
-  "myBalance_div3": "92482014882368591209336",
+  "myBalance": "277442400624869113896174",
+  "myBalance_div3": "92480800208289704632058",
   "directPushTotalUSD": "1362704515473215297188",
   "teamLevel": "19",
   "teamCount": "1",
@@ -3273,7 +3273,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "973309377814275435032",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x862c0d405b3445cdaa2ae68e8432884ac52e15e7",
@@ -3294,7 +3294,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "111964717941549565324",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
@@ -3315,49 +3315,49 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "489899132775975605076",
   "addr": "0x864b1dcd5754fe5b9980769b3b0b1ab6f5dbf1ed",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x86fc6408b9c2a6b1f151a66aec738b5c900c1e83",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "1304061212474857541926",
-  "totalMined": "55056620872359010989527",
+  "totalMined": "55901179337926151683585",
   "lastBuyTime": "1793580512",
-  "myBalance": "222252227780826498436552",
-  "myBalance_div3": "74084075926942166145517",
+  "myBalance": "221407669315259357742494",
+  "myBalance_div3": "73802556438419785914164",
   "directPushTotalUSD": "365955467448359489720",
   "teamLevel": "0",
   "teamCount": "6",
   "referrer": "0x50a65ef5136099ce1afcbd65add20c16ab22f8fe",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "62",
+  "totalWithdrawCount": "63",
   "lockedUntil": "1796172512",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "789053056675026411364",
+  "boostExpireTime": "802166115069141111756",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x874314a21bd56eaf8d6b4cd411974d7ed2d58b9c",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "602470836460646307118",
-  "totalMined": "27218708510455241761052",
-  "lastBuyTime": "1795727791",
-  "myBalance": "106000272554509564676603",
-  "myBalance_div3": "35333424184836521558867",
-  "directPushTotalUSD": "777509222134440342849",
+  "totalInvestedUSD": "609193821921266593044",
+  "totalMined": "27759467911851912737908",
+  "lastBuyTime": "1795810301",
+  "myBalance": "106758513153112893699747",
+  "myBalance_div3": "35586171051037631233249",
+  "directPushTotalUSD": "782617448962486703287",
   "teamLevel": "0",
   "teamCount": "2",
   "referrer": "0xbf45282d6a2f7d6b99da4ffd684933448ad7e1c7",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "63",
-  "lockedUntil": "1798319791",
+  "totalWithdrawCount": "64",
+  "lockedUntil": "1798402301",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "393686940559337397522",
+  "boostExpireTime": "402083055093479540976",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x87a0e25b4c9cf36f00647fdd80c659f9a660d37b",
@@ -3366,8 +3366,8 @@
   "totalInvestedUSD": "2869790268929790414604",
   "totalMined": "89754491164662808799492",
   "lastBuyTime": "1791106265",
-  "myBalance": "408788561213857407767473",
-  "myBalance_div3": "136262853737952469255824",
+  "myBalance": "408704408502419278742575",
+  "myBalance_div3": "136234802834139759580858",
   "directPushTotalUSD": "5977937126820514912215",
   "teamLevel": "0",
   "teamCount": "1",
@@ -3378,28 +3378,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1232020870187822118979",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "243181714345884088026",
-  "totalMined": "42670163352348695896701",
+  "totalMined": "43297965887019003119120",
   "lastBuyTime": "1792671896",
-  "myBalance": "16785512295611843699743",
-  "myBalance_div3": "5595170765203947899914",
+  "myBalance": "16317950883439500556158",
+  "myBalance_div3": "5439316961146500185386",
   "directPushTotalUSD": "691452353753633670833",
   "teamLevel": "19",
   "teamCount": "1",
   "referrer": "0x4c3f04befe0fb1e7789648657ced98a78a477dd5",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "67",
+  "totalWithdrawCount": "68",
   "lockedUntil": "1795263896",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "615774397766528075583",
+  "boostExpireTime": "625521989712784515367",
   "addr": "0x887549e9a856f5a43365293ddb3e20ec5324e2e4",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x8db252edb573b6c8683ce90f735db02c360e87cf",
@@ -3420,7 +3420,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "256459415428135608202",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x8dbee2564adf2ce87c3cba135ec678830f7c2f3c",
@@ -3441,7 +3441,7 @@
   "boostMultiplier": "0",
   "boostExpireTime": "0",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x8e112dffd4343c717ecafd9f0808b9ab1186741f",
@@ -3450,8 +3450,8 @@
   "totalInvestedUSD": "1649674545314725087167",
   "totalMined": "73581588843108695899505",
   "lastBuyTime": "1794756588",
-  "myBalance": "210110663962988430287230",
-  "myBalance_div3": "70036887987662810095743",
+  "myBalance": "209740535935249718988332",
+  "myBalance_div3": "69913511978416572996110",
   "directPushTotalUSD": "1847053848835824515576",
   "teamLevel": "19",
   "teamCount": "5",
@@ -3462,7 +3462,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1045954300784849882891",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x8fafc3c5951640be1fd56c2af0d514fa47828062",
@@ -3483,7 +3483,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "145029654577557015763",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x90bdff953a3134fe219b05341284c501955c7da8",
@@ -3492,8 +3492,8 @@
   "totalInvestedUSD": "317585330060174833541",
   "totalMined": "7052637749819306667719",
   "lastBuyTime": "1795230671",
-  "myBalance": "61093452728492254642546",
-  "myBalance_div3": "20364484242830751547515",
+  "myBalance": "61066526151274459678518",
+  "myBalance_div3": "20355508717091486559506",
   "directPushTotalUSD": "407875560649449870335",
   "teamLevel": "0",
   "teamCount": "1",
@@ -3504,7 +3504,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "99713828524852935438",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x91d11d5f788bcc526ce79f727c462f124d144aa0",
@@ -3525,7 +3525,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "16967513732238565156",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x9259aebbf63b3bd46823eee7bbb9def88e1260f4",
@@ -3534,8 +3534,8 @@
   "totalInvestedUSD": "419242690670443192843",
   "totalMined": "36097266643059665899661",
   "lastBuyTime": "1790347465",
-  "myBalance": "109527878520677775386860",
-  "myBalance_div3": "36509292840225925128953",
+  "myBalance": "109489440127043891095303",
+  "myBalance_div3": "36496480042347963698434",
   "directPushTotalUSD": "552262251933624803950",
   "teamLevel": "19",
   "teamCount": "1",
@@ -3546,7 +3546,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1028342975392719592671",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x92624cc05029c5238447f8d62baad0402332f030",
@@ -3555,8 +3555,8 @@
   "totalInvestedUSD": "552262251933624803950",
   "totalMined": "32353387061670564134284",
   "lastBuyTime": "1794838698",
-  "myBalance": "148464138881031272494423",
-  "myBalance_div3": "49488046293677090831474",
+  "myBalance": "148406162658417379087929",
+  "myBalance_div3": "49468720886139126362643",
   "directPushTotalUSD": "429189335986003888808",
   "teamLevel": "0",
   "teamCount": "2",
@@ -3567,7 +3567,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "461603246688920108965",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x92cdf740c8140679139074773b70d197435564fb",
@@ -3576,8 +3576,8 @@
   "totalInvestedUSD": "431949173633929062546",
   "totalMined": "26664801175865169123638",
   "lastBuyTime": "1795434543",
-  "myBalance": "70872068741570640745118",
-  "myBalance_div3": "23624022913856880248372",
+  "myBalance": "70852970541388588430421",
+  "myBalance_div3": "23617656847129529476807",
   "directPushTotalUSD": "537141889127192781472",
   "teamLevel": "19",
   "teamCount": "1",
@@ -3588,7 +3588,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "386579183351102232570",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x94d295d2cde1e56edb712ed270109686b59aa07a",
@@ -3597,8 +3597,8 @@
   "totalInvestedUSD": "1381844520160164746727",
   "totalMined": "26115478992067168864360",
   "lastBuyTime": "1794970085",
-  "myBalance": "265817228650467294555920",
-  "myBalance_div3": "88605742883489098185306",
+  "myBalance": "265811843335023735563115",
+  "myBalance_div3": "88603947778341245187705",
   "directPushTotalUSD": "958804737190474437811",
   "teamLevel": "0",
   "teamCount": "1",
@@ -3609,28 +3609,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "370025102481631582555",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x956b4c5c5a700764f0431e8b00e44930c200e959",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "392682532042795268792",
-  "totalMined": "15739126957859856412100",
-  "lastBuyTime": "1795755131",
-  "myBalance": "66976685267857896795691",
-  "myBalance_div3": "22325561755952632265230",
-  "directPushTotalUSD": "303713362604150768576",
+  "totalInvestedUSD": "396105199282839462252",
+  "totalMined": "16014730254285289564344",
+  "lastBuyTime": "1795842871",
+  "myBalance": "67361081971432463643447",
+  "myBalance_div3": "22453693990477487881149",
+  "directPushTotalUSD": "306358150926003099886",
   "teamLevel": "0",
-  "teamCount": "2",
+  "teamCount": "3",
   "referrer": "0xd36dd73d0d65490b4d264407d021d12388e28d2a",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "68",
-  "lockedUntil": "1798347131",
+  "totalWithdrawCount": "69",
+  "lockedUntil": "1798434871",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "228669291236931209687",
+  "boostExpireTime": "232957011118401750669",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x96723a765864b35f3e83fe726dbd5d76b8d5d942",
@@ -3639,8 +3639,8 @@
   "totalInvestedUSD": "310953743902107414315",
   "totalMined": "23152474458425903656647",
   "lastBuyTime": "1795267182",
-  "myBalance": "96706430745380179442576",
-  "myBalance_div3": "32235476915126726480858",
+  "myBalance": "96640644695704327375875",
+  "myBalance_div3": "32213548231901442458625",
   "directPushTotalUSD": "271821075400233872170",
   "teamLevel": "19",
   "teamCount": "4",
@@ -3651,7 +3651,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "331489474361996884314",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x96c9d7e1f08d92ad1d606b0ff9cc2949b2351c8b",
@@ -3672,7 +3672,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1207850863512753672205",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x971b29b4aa629fd03d4ab5e66515c228d02e00b1",
@@ -3681,8 +3681,8 @@
   "totalInvestedUSD": "309430014276178092168",
   "totalMined": "24036690260815679434479",
   "lastBuyTime": "1789982292",
-  "myBalance": "50129673437276321684063",
-  "myBalance_div3": "16709891145758773894687",
+  "myBalance": "50058862098531555481055",
+  "myBalance_div3": "16686287366177185160351",
   "directPushTotalUSD": "370347305876641181349",
   "teamLevel": "19",
   "teamCount": "1",
@@ -3693,7 +3693,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "332424925103423738385",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x9a7807914d61ee7f5da6ad812e43bd1b93615603",
@@ -3702,8 +3702,8 @@
   "totalInvestedUSD": "471821075400233872170",
   "totalMined": "19120972087592434704668",
   "lastBuyTime": "1792565952",
-  "myBalance": "76692029765739117179522",
-  "myBalance_div3": "25564009921913039059840",
+  "myBalance": "76604315032837981090587",
+  "myBalance_div3": "25534771677612660363529",
   "directPushTotalUSD": "435219277222834101201",
   "teamLevel": "19",
   "teamCount": "1",
@@ -3714,28 +3714,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "269165836925525550496",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "244595026795357831967",
-  "totalMined": "39444219931973277314745",
+  "totalMined": "40033972058831934630412",
   "lastBuyTime": "1792672160",
-  "myBalance": "18074967691104451730450",
-  "myBalance_div3": "6024989230368150576816",
+  "myBalance": "17613418723082032252695",
+  "myBalance_div3": "5871139574360677417565",
   "directPushTotalUSD": "228504614734464461624",
   "teamLevel": "19",
   "teamCount": "2",
   "referrer": "0x272b0058431be12bbc56fb5a5e28e11212484bd8",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "67",
+  "totalWithdrawCount": "68",
   "lockedUntil": "1795264160",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "569998352537841606379",
+  "boostExpireTime": "579155153864032469086",
   "addr": "0x9b359982768a8f76b1ea2ef17ba99c4d9f639232",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x9c48e19694d251929cc221621bef2a66831e344c",
@@ -3756,28 +3756,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "176072053561830224805",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x9cb3075178ae083e59267c894bfaf6af62a6a251",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "283563756867026067501",
-  "totalMined": "6501522616334323276194",
-  "lastBuyTime": "1795753413",
-  "myBalance": "54661700229946523395806",
-  "myBalance_div3": "18220566743315507798602",
+  "totalInvestedUSD": "288697757727092357691",
+  "totalMined": "6709237077208120065098",
+  "lastBuyTime": "1795839580",
+  "myBalance": "55443985769072726606902",
+  "myBalance_div3": "18481328589690908868967",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0x3f4570f5b8b536deb2fa0da68d0930b827771a08",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "35",
-  "lockedUntil": "1798345413",
+  "totalWithdrawCount": "36",
+  "lockedUntil": "1798431580",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "95927899499599514440",
+  "boostExpireTime": "99159433501945812915",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x9cd16101cd4646ffe3158f5aa018f3318f2e7bb4",
@@ -3798,70 +3798,70 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "208483440244751753931",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x9cf52aa797e78b2d78f6bbd6515aa2e6f02ecfc3",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "471542776726254795785",
-  "totalMined": "21999805920935874903425",
+  "totalMined": "22304410427804611629675",
   "lastBuyTime": "1792659372",
-  "myBalance": "80159080754930717434266",
-  "myBalance_div3": "26719693584976905811422",
+  "myBalance": "79854476248061980708016",
+  "myBalance_div3": "26618158749353993569338",
   "directPushTotalUSD": "1344914321762453700",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0xb79bda078ec1a42572b5bd3723ae77b2bcbdfba9",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "68",
+  "totalWithdrawCount": "69",
   "lockedUntil": "1795251372",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "318707578985795416059",
+  "boostExpireTime": "323446487471383787423",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x9d75616336837c1fd06ea75c22bc1d3927613b11",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "533768921724192419050",
-  "totalMined": "23000120740225717654623",
+  "totalMined": "23451373301930953037312",
   "lastBuyTime": "1795315610",
-  "myBalance": "101119569753712140833862",
-  "myBalance_div3": "33706523251237380277954",
+  "myBalance": "100702007114025944646021",
+  "myBalance_div3": "33567335704675314882007",
   "directPushTotalUSD": "447326884075463827519",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0x3eef42713c6efe62f475988b9f3df181328c7f56",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "65",
+  "totalWithdrawCount": "66",
   "lockedUntil": "1797907610",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "332953183371933636418",
+  "boostExpireTime": "339973580462545136840",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x9e2121c564cfe68d8962a40b29ad33b6ef086b78",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "801157247422444364516",
-  "totalMined": "35365592017824858301086",
-  "lastBuyTime": "1795746701",
-  "myBalance": "162669761715790636543788",
-  "myBalance_div3": "54223253905263545514596",
+  "totalInvestedUSD": "808858248712543799801",
+  "totalMined": "35983737112344862719952",
+  "lastBuyTime": "1795847794",
+  "myBalance": "163536616621270632124922",
+  "myBalance_div3": "54512205540423544041640",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0x68705c89882ec9ad0f65d206a6ce3bcca369738b",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "69",
-  "lockedUntil": "1798338701",
+  "totalWithdrawCount": "70",
+  "lockedUntil": "1798439794",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "509277560745159996296",
+  "boostExpireTime": "518894401493376544566",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0x9e87ff17ab7c56b8b1572175e59f47f4502ae892",
@@ -3870,8 +3870,8 @@
   "totalInvestedUSD": "7165974437228400338109",
   "totalMined": "97235054884612090297611",
   "lastBuyTime": "1789698337",
-  "myBalance": "1184743363453007689312458",
-  "myBalance_div3": "394914454484335896437486",
+  "myBalance": "1184647360868798843549350",
+  "myBalance_div3": "394882453622932947849783",
   "directPushTotalUSD": "201559123913285561813621",
   "teamLevel": "19",
   "teamCount": "13",
@@ -3882,7 +3882,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1350250321262974249682",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xa0b32dc35ce8b9295dc91ddc04002d093d6285dd",
@@ -3903,7 +3903,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "242406078192121401535",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xa0b432106eec8ad8dd5ec9a015437d727c12c949",
@@ -3924,7 +3924,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "192616841523407304754",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xa20107b0039a31fa19291f60917ed9872657fe64",
@@ -3933,9 +3933,9 @@
   "totalInvestedUSD": "1530862238427791575903",
   "totalMined": "38673683392774045443205",
   "lastBuyTime": "1794756353",
-  "myBalance": "283945049514995271136140",
-  "myBalance_div3": "94648349838331757045380",
-  "directPushTotalUSD": "659672375390933816599",
+  "myBalance": "283869012857330117753761",
+  "myBalance_div3": "94623004285776705917920",
+  "directPushTotalUSD": "663911116801440371005",
   "teamLevel": "0",
   "teamCount": "2",
   "referrer": "0x66647ab885cea00d1b771512f795170e03500a37",
@@ -3945,7 +3945,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1067066465120137025722",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xa35b886954cbc7c07950a97f97fdf6837720efdd",
@@ -3966,7 +3966,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "437009246928740562393",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xa404e3563ad7c3b64e0df714f1d7a76013473571",
@@ -3987,7 +3987,7 @@
   "boostMultiplier": "0",
   "boostExpireTime": "0",
   "source": "old",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
@@ -4008,7 +4008,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "692884871255068726754",
   "addr": "0xa5342b7276308d2ee1e9e821dfb195fb4165d590",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xa54248325922d1e57fe1c77bafa13332629a2123",
@@ -4029,7 +4029,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "439858536341477184817",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
@@ -4050,7 +4050,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "132882358944633816609",
   "addr": "0xa5a8b35eb2cd56205090b7d306ba5f550db3bc6a",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xa6720cae66e1d5ffabf7ef7f12b1dbba4efadd30",
@@ -4059,8 +4059,8 @@
   "totalInvestedUSD": "590790127739730578597",
   "totalMined": "35660693672859996892247",
   "lastBuyTime": "1791028749",
-  "myBalance": "102559980077374155843997",
-  "myBalance_div3": "34186660025791385281332",
+  "myBalance": "102436770871722127435700",
+  "myBalance_div3": "34145590290574042478566",
   "directPushTotalUSD": "1473155323071189302377",
   "teamLevel": "0",
   "teamCount": "1",
@@ -4071,7 +4071,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "492834651111046556979",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xa7dde765a0e423c3c38f960dc91aef755622dcd0",
@@ -4092,7 +4092,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "135278221020999062544",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xaa35bfb9eabc6d6e25e200c0601c85a26b58f1b5",
@@ -4113,7 +4113,7 @@
   "boostMultiplier": "0",
   "boostExpireTime": "0",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xaa97004155eefd312ce761393e0b0025f25e1111",
@@ -4122,8 +4122,8 @@
   "totalInvestedUSD": "3342548933697146507055",
   "totalMined": "90390113824545721042354",
   "lastBuyTime": "1789718438",
-  "myBalance": "463327467794448672479891",
-  "myBalance_div3": "154442489264816224159963",
+  "myBalance": "462850809296394338205506",
+  "myBalance_div3": "154283603098798112735168",
   "directPushTotalUSD": "3379880287363982136549",
   "teamLevel": "19",
   "teamCount": "1",
@@ -4134,7 +4134,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1236620067585817655270",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xaabc98bc23920fd2731c34cdd4be633292a28adc",
@@ -4155,28 +4155,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "250662616448654184802",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xabf63ae9b14a3421f5253c7bc8ae340eaa7bb3b5",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "387290878924516854664",
-  "totalMined": "12641541405809900241372",
+  "totalMined": "12993626082655866416268",
   "lastBuyTime": "1790495846",
-  "myBalance": "92653862327885835499040",
-  "myBalance_div3": "30884620775961945166346",
+  "myBalance": "92301777651039869324144",
+  "myBalance_div3": "30767259217013289774714",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0x22ab9e28f306b6c2e0dd3be9f50d86ddf83cd4d3",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "34",
+  "totalWithdrawCount": "35",
   "lockedUntil": "1793087846",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "186942095804891645663",
+  "boostExpireTime": "192408747452334191675",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xad1a7e2f66acce04dc37fc1592e9df60c170fadc",
@@ -4197,7 +4197,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "188809436518530099317",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xae7f516a5c2ae566c10458090a97fdadb64b40b4",
@@ -4206,8 +4206,8 @@
   "totalInvestedUSD": "2147309784840117220814",
   "totalMined": "88544899545805617956842",
   "lastBuyTime": "1795222773",
-  "myBalance": "405814748801944585764873",
-  "myBalance_div3": "135271582933981528588291",
+  "myBalance": "405786371708534822192139",
+  "myBalance_div3": "135262123902844940730713",
   "directPushTotalUSD": "14032687648584110474822",
   "teamLevel": "0",
   "teamCount": "7",
@@ -4218,7 +4218,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1283174626821403225213",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xb002b2d6034293a2affa2e8012073176a51cd5b7",
@@ -4227,8 +4227,8 @@
   "totalInvestedUSD": "6249036563875802796495",
   "totalMined": "104072090906660551399603",
   "lastBuyTime": "1793369602",
-  "myBalance": "1306935977221676016119951",
-  "myBalance_div3": "435645325740558672039983",
+  "myBalance": "1306932333199439356388115",
+  "myBalance_div3": "435644111066479785462705",
   "directPushTotalUSD": "525724440741663795041",
   "teamLevel": "19",
   "teamCount": "1",
@@ -4239,7 +4239,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1473085242657848447928",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xb0e09957b4c43fec7746949f56ea3f4443413d37",
@@ -4260,28 +4260,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "134980879508350000489",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xb1054bd37575f60303936b5097651ec71b1d77af",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "435970348006192826395",
-  "totalMined": "18217938616959966486633",
+  "totalMined": "18554172791416677656557",
   "lastBuyTime": "1795741606",
-  "myBalance": "88482677488608202611597",
-  "myBalance_div3": "29494225829536067537199",
+  "myBalance": "88146443314151491441673",
+  "myBalance_div3": "29382147771383830480557",
   "directPushTotalUSD": "335574033440355840768",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0x62165b3e1db3201d99033d6aeb9ff44b13652aa2",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "61",
+  "totalWithdrawCount": "62",
   "lockedUntil": "1798333606",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "264194281303607649807",
+  "boostExpireTime": "269425270821318056493",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xb210649c649ba24728242c857978b5ff0d384065",
@@ -4290,8 +4290,8 @@
   "totalInvestedUSD": "1940237423205653222435",
   "totalMined": "46339191564472472921202",
   "lastBuyTime": "1794548792",
-  "myBalance": "435343330660809202537197",
-  "myBalance_div3": "145114443553603067512399",
+  "myBalance": "435332398594099223341687",
+  "myBalance_div3": "145110799531366407780562",
   "directPushTotalUSD": "394486050858560462220",
   "teamLevel": "19",
   "teamCount": "2",
@@ -4302,7 +4302,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "657335726911746341901",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xb23fd84c60708f7937a331600c1ee36bc71df81b",
@@ -4323,28 +4323,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "235073877051053261481",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xb4e5d7972432df557eec6f9e0877d4d7b77f648a",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "552384621818190218440",
-  "totalMined": "23072285844095303195918",
-  "lastBuyTime": "1795660416",
-  "myBalance": "105535315038112894228049",
-  "myBalance_div3": "35178438346037631409349",
+  "totalInvestedUSD": "557353109918417681480",
+  "totalMined": "23473320041240132193984",
+  "lastBuyTime": "1795832144",
+  "myBalance": "106094280840968065229983",
+  "myBalance_div3": "35364760280322688409994",
   "directPushTotalUSD": "464275275850064531231",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0x5be15101a339019da1f4af8bde647a54d9537c45",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "64",
-  "lockedUntil": "1798252416",
+  "totalWithdrawCount": "65",
+  "lockedUntil": "1798424144",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "334647631962496769794",
+  "boostExpireTime": "340874299575929136391",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xb5019841ab292f8d71561a1065d58ffcdbadfdb6",
@@ -4365,28 +4365,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "254264676042280813296",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "338586872120809291700",
-  "totalMined": "14918343609745204189818",
+  "totalMined": "15180065809728473535114",
   "lastBuyTime": "1794234922",
-  "myBalance": "58196188886254795810182",
-  "myBalance_div3": "19398729628751598603394",
+  "myBalance": "57934466686271526464886",
+  "myBalance_div3": "19311488895423842154962",
   "directPushTotalUSD": "589618842568614149784",
   "teamLevel": "0",
   "teamCount": "2",
   "referrer": "0x8421d2ec8419c5f4c27b70736ddef659146b8efe",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "64",
+  "totalWithdrawCount": "65",
   "lockedUntil": "1796826922",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "216915282274013222671",
+  "boostExpireTime": "220978918637082679134",
   "addr": "0xb55cb1a4ecf10b7654fa07bccfb05cf5ed0bb816",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xb7104830d05b491b55c46c944276fd915034f5b9",
@@ -4407,28 +4407,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "34450179682464467292",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xb79bda078ec1a42572b5bd3723ae77b2bcbdfba9",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "204038417920206673084",
-  "totalMined": "11918590669646762260062",
+  "totalMined": "12069969974386707750521",
   "lastBuyTime": "0",
-  "myBalance": "31851211517284720471164",
-  "myBalance_div3": "10617070505761573490388",
+  "myBalance": "31699832212544774980705",
+  "myBalance_div3": "10566610737514924993568",
   "directPushTotalUSD": "471542776726254795785",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0xc12b846938f51c7472a7268186d9a4546ad93b51",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "68",
+  "totalWithdrawCount": "69",
   "lockedUntil": "0",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "172125817110313153608",
+  "boostExpireTime": "174480912506468054175",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xb8773bbeab45273df59bfeb8ffac5f51391b41ae",
@@ -4449,7 +4449,7 @@
   "boostMultiplier": "0",
   "boostExpireTime": "0",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xb9757ce17b3f3c77c24595aacd4873ec2df7db24",
@@ -4470,7 +4470,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "110587185994945904749",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xb9cb355006a8540b8352fdc107f57a810330b854",
@@ -4491,7 +4491,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "192511062449160802762",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xba258f300d179d9012a5766420cd7e40612ff653",
@@ -4512,49 +4512,49 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "61681538211402575939",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "574737680030925088148",
-  "totalMined": "43506599378946320024226",
+  "totalMined": "44124037450359138735233",
   "lastBuyTime": "1793892420",
-  "myBalance": "31837040562969906124919",
-  "myBalance_div3": "10612346854323302041639",
+  "myBalance": "31354217642118340804951",
+  "myBalance_div3": "10451405880706113601650",
   "directPushTotalUSD": "1755604753181193473873",
   "teamLevel": "19",
   "teamCount": "3",
   "referrer": "0x5be15101a339019da1f4af8bde647a54d9537c45",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "68",
+  "totalWithdrawCount": "69",
   "lockedUntil": "1796484420",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "628905851374496859971",
+  "boostExpireTime": "638492519219628060889",
   "addr": "0xbc6f5cb3bcfa9a13c52b16ab981dc708f5ba5a7c",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xbd98fa68ed58387731e290b3b35a08a8f2893df3",
   "activated": 1,
   "isNode": 1,
   "totalInvestedUSD": "340238513523963311879",
-  "totalMined": "15903640867978285438902",
+  "totalMined": "16417903045243518632334",
   "lastBuyTime": "1792559576",
-  "myBalance": "56976318988384969983282",
-  "myBalance_div3": "18992106329461656661094",
+  "myBalance": "56485058736514333796259",
+  "myBalance_div3": "18828352912171444598753",
   "directPushTotalUSD": "320996892836532891264",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0x2dd3eb2b834f93f245e365e6308a3c8959d4e72d",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "64",
+  "totalWithdrawCount": "66",
   "lockedUntil": "1795151576",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "536317921893507509193",
+  "boostExpireTime": "544311158439546547426",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xbde92cf1493683e00c0710a08db4fbf8de3a13c6",
@@ -4575,7 +4575,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "405335960157652952854",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xbf2c63d769236cd14aad00720e457358656eee46",
@@ -4584,8 +4584,8 @@
   "totalInvestedUSD": "1337886862246049751713",
   "totalMined": "61583629607046117328640",
   "lastBuyTime": "1795609399",
-  "myBalance": "279185703199023324968162",
-  "myBalance_div3": "93061901066341108322720",
+  "myBalance": "279182059176786665236326",
+  "myBalance_div3": "93060686392262221745442",
   "directPushTotalUSD": "6249036563875802796495",
   "teamLevel": "19",
   "teamCount": "1",
@@ -4596,28 +4596,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "875932015736317543892",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xbf45282d6a2f7d6b99da4ffd684933448ad7e1c7",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "427931198289374796550",
-  "totalMined": "21965897383453710239512",
+  "totalMined": "22434714313114655493463",
   "lastBuyTime": "1795681951",
-  "myBalance": "68362327958216884933974",
-  "myBalance_div3": "22787442652738961644658",
-  "directPushTotalUSD": "749974380778556137096",
+  "myBalance": "67893511028555939680023",
+  "myBalance_div3": "22631170342851979893341",
+  "directPushTotalUSD": "756697366239176423022",
   "teamLevel": "0",
   "teamCount": "2",
   "referrer": "0xd8afeff7e239191c8985078ac20f4eab15081e86",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "65",
+  "totalWithdrawCount": "66",
   "lockedUntil": "1798273951",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "318358264712426809363",
+  "boostExpireTime": "325651920833920537864",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xbf931efd11b807c9f66040cdbc2c99d628690840",
@@ -4626,8 +4626,8 @@
   "totalInvestedUSD": "1473155323071189302377",
   "totalMined": "58303095514130090592614",
   "lastBuyTime": "1789982183",
-  "myBalance": "261938971291290399654280",
-  "myBalance_div3": "87312990430430133218093",
+  "myBalance": "261758933578251352116606",
+  "myBalance_div3": "87252977859417117372202",
   "directPushTotalUSD": "4445050862023216641892",
   "teamLevel": "0",
   "teamCount": "4",
@@ -4638,7 +4638,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "805164073053425381177",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc09dadc01340900c4067fc911ffa81b7f82f4c3e",
@@ -4647,9 +4647,9 @@
   "totalInvestedUSD": "635219277222834101201",
   "totalMined": "24746548190410925088676",
   "lastBuyTime": "1792565835",
-  "myBalance": "117101158797875531281435",
-  "myBalance_div3": "39033719599291843760478",
-  "directPushTotalUSD": "1283635393324472686853",
+  "myBalance": "116991515381749111170266",
+  "myBalance_div3": "38997171793916370390088",
+  "directPushTotalUSD": "1297252156024158577747",
   "teamLevel": "19",
   "teamCount": "4",
   "referrer": "0x9a7807914d61ee7f5da6ad812e43bd1b93615603",
@@ -4659,49 +4659,49 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "348236648017985208986",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc0b0caaf38f17fbfea27197a1b4b0f2326088c0c",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "461187644533127413145",
-  "totalMined": "20623182151515562996086",
-  "lastBuyTime": "1795726869",
-  "myBalance": "76345269101825641795705",
-  "myBalance_div3": "25448423033941880598568",
-  "directPushTotalUSD": "1800301391584739964431",
+  "totalInvestedUSD": "466295871361173773583",
+  "totalMined": "21034520254002262471581",
+  "lastBuyTime": "1795792354",
+  "myBalance": "76920930999338942320210",
+  "myBalance_div3": "25640310333112980773403",
+  "directPushTotalUSD": "1815408700714494094237",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0x874314a21bd56eaf8d6b4cd411974d7ed2d58b9c",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "64",
-  "lockedUntil": "1798318869",
+  "totalWithdrawCount": "65",
+  "lockedUntil": "1798384354",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "298938873797449522657",
+  "boostExpireTime": "305325525257997369430",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc12b846938f51c7472a7268186d9a4546ad93b51",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "229951492840435312485",
-  "totalMined": "13777905072296264130724",
+  "totalMined": "13951288816360764577114",
   "lastBuyTime": "0",
-  "myBalance": "35270414986025324867441",
-  "myBalance_div3": "11756804995341774955813",
+  "myBalance": "35097031241960824421051",
+  "myBalance_div3": "11699010413986941473683",
   "directPushTotalUSD": "204038417920206673084",
   "teamLevel": "0",
   "teamCount": "1",
   "referrer": "0x7df192d0f182f183e017acc2213114f200cc5308",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "68",
+  "totalWithdrawCount": "69",
   "lockedUntil": "0",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "198925076852197221443",
+  "boostExpireTime": "201622508037496187590",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc2dc5fffdfe0c0376b01165017c15cc7ba0b390d",
@@ -4722,7 +4722,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "217395218041545314012",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc409af2a368070114f6ea523fdb20ff02eafb7d9",
@@ -4731,8 +4731,8 @@
   "totalInvestedUSD": "4991859967916835592289",
   "totalMined": "79706242396703324814832",
   "lastBuyTime": "1789718538",
-  "myBalance": "832504106301751829366601",
-  "myBalance_div3": "277501368767250609788867",
+  "myBalance": "832182831923916479134419",
+  "myBalance_div3": "277394277307972159711473",
   "directPushTotalUSD": "2762335818733312468109",
   "teamLevel": "19",
   "teamCount": "1",
@@ -4743,7 +4743,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1251519993495311918753",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc40f586f4647e4c5c4dca478910345a4231d9724",
@@ -4764,7 +4764,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "341477023166476460473",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc5ba840ddd98e63b9ff1cdbecf5827792a878882",
@@ -4773,8 +4773,8 @@
   "totalInvestedUSD": "1049096374999176267548",
   "totalMined": "72692236964269764089802",
   "lastBuyTime": "1795757099",
-  "myBalance": "139519835318399591490361",
-  "myBalance_div3": "46506611772799863830120",
+  "myBalance": "139495351802773980182859",
+  "myBalance_div3": "46498450600924660060953",
   "directPushTotalUSD": "9610659841103485571895",
   "teamLevel": "0",
   "teamCount": "10",
@@ -4785,28 +4785,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1038560700138631894840",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc6a9419ea8515eed65ea3ff5e3eca63eec82aa91",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "2357433491882991105295",
-  "totalMined": "75282572773244852954694",
-  "lastBuyTime": "1795741735",
-  "myBalance": "427333604201451534468165",
-  "myBalance_div3": "142444534733817178156055",
+  "totalInvestedUSD": "2380490381973109175965",
+  "totalMined": "76950552796876977330164",
+  "lastBuyTime": "1795828196",
+  "myBalance": "430161092483249358905350",
+  "myBalance_div3": "143387030827749786301783",
   "directPushTotalUSD": "942544419402357533113",
   "teamLevel": "19",
   "teamCount": "2",
   "referrer": "0x2026b2cbf8993595d7836c1b7ff4d2a14a89409e",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "54",
-  "lockedUntil": "1798333735",
+  "totalWithdrawCount": "55",
+  "lockedUntil": "1798420196",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "1094136617528138161422",
+  "boostExpireTime": "1120034551586992325622",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc7607b9b8a46fbe2de9c43bb8a1eebc4c0d771e7",
@@ -4815,8 +4815,8 @@
   "totalInvestedUSD": "958804737190474437811",
   "totalMined": "28022351628186745156346",
   "lastBuyTime": "1795092762",
-  "myBalance": "175909090085456373754430",
-  "myBalance_div3": "58636363361818791251476",
+  "myBalance": "175901012112291035265222",
+  "myBalance_div3": "58633670704097011755074",
   "directPushTotalUSD": "3565779465234003554737",
   "teamLevel": "0",
   "teamCount": "1",
@@ -4827,7 +4827,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "397977974346594566140",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc78409125cfb97186534b3fcbde8909bb2f59ce9",
@@ -4836,8 +4836,8 @@
   "totalInvestedUSD": "769639771858223933379",
   "totalMined": "35623064115451261232439",
   "lastBuyTime": "1795223216",
-  "myBalance": "127600823460618611810741",
-  "myBalance_div3": "42533607820206203936913",
+  "myBalance": "127583797204572753667101",
+  "myBalance_div3": "42527932401524251222367",
   "directPushTotalUSD": "778045055787249456955",
   "teamLevel": "0",
   "teamCount": "1",
@@ -4848,7 +4848,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "519140852185824164204",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc7d48cbfc7ee3a0c6dd4be34aaf89a8bec4c5bf8",
@@ -4869,7 +4869,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "551373757894900531712",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc95a3aef8cd8ceceb026adf6dda317b788f2b17f",
@@ -4878,9 +4878,9 @@
   "totalInvestedUSD": "803406453080578969595",
   "totalMined": "30083973104272228966495",
   "lastBuyTime": "1793021714",
-  "myBalance": "139691059038435508721371",
-  "myBalance_div3": "46563686346145169573790",
-  "directPushTotalUSD": "1938928463478829304996",
+  "myBalance": "139595568037525247147886",
+  "myBalance_div3": "46531856012508415715962",
+  "directPushTotalUSD": "1950814453348800958648",
   "teamLevel": "0",
   "teamCount": "3",
   "referrer": "0xfbbda008d2911b32e23561c12a3d1fbf789dbc35",
@@ -4890,7 +4890,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "438740253800935800395",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc95ade36443ebf0f5f87b5fb54c69f6d419887e4",
@@ -4911,7 +4911,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "15150016943106184216",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xc987e0736c6f2ad8aef6eb1afd59ad2bdf9c59d7",
@@ -4932,7 +4932,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1208146927972416747402",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xcaa2ab3c04eaa69f67e3312fdc79d5e482fc9af0",
@@ -4953,7 +4953,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "283122045983345673320",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xcc0408abd102c5611af2df452f0e80830c76f1c6",
@@ -4962,8 +4962,8 @@
   "totalInvestedUSD": "469190573337781234852",
   "totalMined": "22679081561505624369226",
   "lastBuyTime": "1795434478",
-  "myBalance": "83551170256672078694044",
-  "myBalance_div3": "27850390085557359564681",
+  "myBalance": "83532072056490026379347",
+  "myBalance_div3": "27844024018830008793115",
   "directPushTotalUSD": "431949173633929062546",
   "teamLevel": "19",
   "teamCount": "3",
@@ -4974,7 +4974,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "328275022282251324234",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xcc6ad98b8d4806ec3b0861fd48e1ba72441b1d58",
@@ -4995,7 +4995,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "650292255368892010267",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xcdfd3cdcdce054851fd95f1c698128a143410f64",
@@ -5016,7 +5016,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "24685460005677589869",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xce139d6fffeae42c910f43f0b220ec969213afd7",
@@ -5025,8 +5025,8 @@
   "totalInvestedUSD": "615064611067067536108",
   "totalMined": "58273660192855045981958",
   "lastBuyTime": "0",
-  "myBalance": "138745891855128483098298",
-  "myBalance_div3": "46248630618376161032766",
+  "myBalance": "138721408339502871790796",
+  "myBalance_div3": "46240469446500957263598",
   "directPushTotalUSD": "1049096374999176267548",
   "teamLevel": "19",
   "teamCount": "2",
@@ -5037,7 +5037,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1220695634569799140249",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xce1c53f126d82298f9f8952c9f32c5d3f54e672e",
@@ -5046,9 +5046,9 @@
   "totalInvestedUSD": "1932284308644477333223",
   "totalMined": "52480199593616188416411",
   "lastBuyTime": "1792541970",
-  "myBalance": "133803195130595568284648",
-  "myBalance_div3": "44601065043531856094882",
-  "directPushTotalUSD": "2269354454208548856987",
+  "myBalance": "133523293634906289466565",
+  "myBalance_div3": "44507764544968763155521",
+  "directPushTotalUSD": "2281045927769396605953",
   "teamLevel": "19",
   "teamCount": "7",
   "referrer": "0xd617cb23b467afabda56e892c8f10ece746048aa",
@@ -5058,7 +5058,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1203957060700440976037",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xcef04f76ca6406867301d18a982e96ab901cf72e",
@@ -5079,7 +5079,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "253860191454548285406",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xcf6cb97fb1fd699cda5dd3a3a6139da66abd9ccf",
@@ -5100,7 +5100,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "0",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xd0f53f86dd58b82577091f73888aae139f72ee2e",
@@ -5109,8 +5109,8 @@
   "totalInvestedUSD": "1138082085303684701598",
   "totalMined": "52537854044277066775510",
   "lastBuyTime": "1793403612",
-  "myBalance": "193159024878859802049516",
-  "myBalance_div3": "64386341626286600683172",
+  "myBalance": "193137483617085566078294",
+  "myBalance_div3": "64379161205695188692764",
   "directPushTotalUSD": "1583502002724772423946",
   "teamLevel": "19",
   "teamCount": "4",
@@ -5121,28 +5121,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "741844838595658912777",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "1538883753181193473873",
-  "totalMined": "53420253457991293199086",
+  "totalMined": "54254107153717007476738",
   "lastBuyTime": "1794235218",
-  "myBalance": "51523642432197967341505",
-  "myBalance_div3": "17174547477399322447168",
+  "myBalance": "50902631246011446424962",
+  "myBalance_div3": "16967543748670482141654",
   "directPushTotalUSD": "4477761511699761191118",
   "teamLevel": "19",
   "teamCount": "1",
   "referrer": "0xbc6f5cb3bcfa9a13c52b16ab981dc708f5ba5a7c",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "68",
+  "totalWithdrawCount": "69",
   "lockedUntil": "1796827218",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "773799013726522986348",
+  "boostExpireTime": "786745864240722683688",
   "addr": "0xd18a542a8097280acaee0ac4c7d10c338596c481",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xd1b0266b2c5a2ac99d0182131bef343860a2188b",
@@ -5151,8 +5151,8 @@
   "totalInvestedUSD": "778045055787249456955",
   "totalMined": "36550093054561037852813",
   "lastBuyTime": "1795223050",
-  "myBalance": "122757408076610551376449",
-  "myBalance_div3": "40919136025536850458816",
+  "myBalance": "122734706401882740518262",
+  "myBalance_div3": "40911568800627580172754",
   "directPushTotalUSD": "2147309784840117220814",
   "teamLevel": "0",
   "teamCount": "5",
@@ -5163,7 +5163,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "530746673481773287799",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xd1ed06d9dd288bfb6ffd3eb3b2560537d8932edc",
@@ -5184,7 +5184,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "185899851436584907695",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xd20b3dff7c6022e223c0dbc7647ca3a317e33b21",
@@ -5205,28 +5205,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1314735505699916316374",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xd36dd73d0d65490b4d264407d021d12388e28d2a",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "500676140962200994854",
-  "totalMined": "22762215635807900416160",
-  "lastBuyTime": "1795755324",
-  "myBalance": "95090185704796017216260",
-  "myBalance_div3": "31696728568265339072086",
-  "directPushTotalUSD": "392682532042795268792",
+  "totalInvestedUSD": "505732353930448098829",
+  "totalMined": "23167887455802085447743",
+  "lastBuyTime": "1795842997",
+  "myBalance": "95659513884801832184677",
+  "myBalance_div3": "31886504628267277394892",
+  "directPushTotalUSD": "396105199282839462252",
   "teamLevel": "0",
   "teamCount": "2",
   "referrer": "0xf1d7941871de962c58b769c74d40b39fe0eb6426",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "66",
-  "lockedUntil": "1798347324",
+  "totalWithdrawCount": "67",
+  "lockedUntil": "1798434997",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "330448698528688666076",
+  "boostExpireTime": "336759969658248675800",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xd617cb23b467afabda56e892c8f10ece746048aa",
@@ -5247,7 +5247,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1237924510904569278652",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xd6260d9f8dd0db7049b40198f41442ec2c1eec43",
@@ -5268,7 +5268,7 @@
   "boostMultiplier": "6965453154870425013438",
   "boostExpireTime": "0",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "source": "new",
@@ -5289,7 +5289,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "234914859115296258134",
   "addr": "0xd66899c3a0cbc91a465ebb0a3791bed690b3b606",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xd8afeff7e239191c8985078ac20f4eab15081e86",
@@ -5298,8 +5298,8 @@
   "totalInvestedUSD": "955636638127511972287",
   "totalMined": "48785567307565322058571",
   "lastBuyTime": "1795692439",
-  "myBalance": "157913238134764230966589",
-  "myBalance_div3": "52637746044921410322196",
+  "myBalance": "157665988284376319779238",
+  "myBalance_div3": "52555329428125439926412",
   "directPushTotalUSD": "1579366276020208995893",
   "teamLevel": "19",
   "teamCount": "4",
@@ -5310,7 +5310,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "705567593742079022061",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xd8bf43b51221a86e26b04fc128c3e752a9cc0bf0",
@@ -5331,7 +5331,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "187205330071931763953",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xd9d9165fa123f98fdeae408195797036d747fba4",
@@ -5352,7 +5352,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "128121812296067336809",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xdb0cc1b38f5e391f87cf3c01e18835167aa64c2a",
@@ -5361,8 +5361,8 @@
   "totalInvestedUSD": "1362704515473215297188",
   "totalMined": "66095188695221058817882",
   "lastBuyTime": "1795609193",
-  "myBalance": "278594370575064689305751",
-  "myBalance_div3": "92864790191688229768583",
+  "myBalance": "278590726552828029573915",
+  "myBalance_div3": "92863575517609343191305",
   "directPushTotalUSD": "1388907363181086710249",
   "teamLevel": "19",
   "teamCount": "1",
@@ -5373,7 +5373,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "940795990248815754711",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xdb75456d0ab58d24e0fc7bdf576bb1e69766d066",
@@ -5394,28 +5394,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "663891907015186656347",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xdc1547b9b945e48ace70e7284cdea975b9917f5b",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "733425589855103632276",
-  "totalMined": "41023654086230450341083",
+  "totalMined": "42125022771281292674380",
   "lastBuyTime": "1792554008",
-  "myBalance": "145192798560797401022113",
-  "myBalance_div3": "48397599520265800340704",
+  "myBalance": "144091429875746558688816",
+  "myBalance_div3": "48030476625248852896272",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0x2d955a00795464f31eb1c11e5ac5fae12735a93f",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "70",
+  "totalWithdrawCount": "72",
   "lockedUntil": "1795146008",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "591717209692717177973",
+  "boostExpireTime": "608834706336439696719",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xdc24d836ac0a3c284b407ddc7519a830c1d2e796",
@@ -5424,8 +5424,8 @@
   "totalInvestedUSD": "705713017854889881674",
   "totalMined": "46292208389787882153434",
   "lastBuyTime": "1792546923",
-  "myBalance": "261613410204004910224209",
-  "myBalance_div3": "87204470068001636741403",
+  "myBalance": "261553549778500072838724",
+  "myBalance_div3": "87184516592833357612908",
   "directPushTotalUSD": "810152938651548299318",
   "teamLevel": "19",
   "teamCount": "3",
@@ -5436,7 +5436,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "656149922128152172757",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xdf0ce01d5ed1e8fc16c686a0e473db9941b94fca",
@@ -5445,8 +5445,8 @@
   "totalInvestedUSD": "1802044595349786288345",
   "totalMined": "68496933036728021138582",
   "lastBuyTime": "1792675748",
-  "myBalance": "371161831142536542242959",
-  "myBalance_div3": "123720610380845514080986",
+  "myBalance": "371026134806968391778732",
+  "myBalance_div3": "123675378268989463926244",
   "directPushTotalUSD": "6541633032296530947600",
   "teamLevel": "19",
   "teamCount": "5",
@@ -5457,7 +5457,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1261404007691262188010",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xe00ddf764cd8d8f07c9dead04b10e60eae99921e",
@@ -5478,7 +5478,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "168995906293332229711",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xe07fcd9db9b3f37762eb0b6b024d1a263f96b5c1",
@@ -5499,7 +5499,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1164248626052561914748",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xe196f491a2a8f681defd3c6ec1e04a33690eed0a",
@@ -5520,7 +5520,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "100951891744562878572",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xe1e5386d6fcd669b159b626ba8d1c9e0efb1e902",
@@ -5541,7 +5541,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "138429780279053046855",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xe1eebf1545fceef532faa2fd41efb41d465140a1",
@@ -5562,7 +5562,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "236787622031764931014",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xe34018c8a093c83ac1ce6cc6afb48d2a9e4e9fb8",
@@ -5571,9 +5571,9 @@
   "totalInvestedUSD": "2771072819063123450021",
   "totalMined": "86994009921868281245753",
   "lastBuyTime": "1792553684",
-  "myBalance": "350034834628149801328615",
-  "myBalance_div3": "116678278209383267109538",
-  "directPushTotalUSD": "2658636390009166730349",
+  "myBalance": "350006187327876722856570",
+  "myBalance_div3": "116668729109292240952190",
+  "directPushTotalUSD": "2666306493513892876417",
   "teamLevel": "19",
   "teamCount": "5",
   "referrer": "0x82b9cd36cc005df54267c93054c8a55f8aa2923a",
@@ -5583,7 +5583,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1236348904904649761540",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xe34a8454f696af2d161f3e17165751a3543b1ef1",
@@ -5604,7 +5604,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "0",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xe7004be0b611b330d1fcb324fcdd991a7ca1afd6",
@@ -5613,8 +5613,8 @@
   "totalInvestedUSD": "556297129145334368353",
   "totalMined": "36569393370873966497170",
   "lastBuyTime": "1795434372",
-  "myBalance": "83148996712527115468280",
-  "myBalance_div3": "27716332237509038489426",
+  "myBalance": "83124513196901504160778",
+  "myBalance_div3": "27708171065633834720259",
   "directPushTotalUSD": "1851035093497945981579",
   "teamLevel": "0",
   "teamCount": "2",
@@ -5625,7 +5625,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "522412088458252999190",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xe9a2229ec0c2a162c905b030f0ac3ef37626d33f",
@@ -5634,8 +5634,8 @@
   "totalInvestedUSD": "792855060000246772047",
   "totalMined": "43371265257249013462294",
   "lastBuyTime": "1795267120",
-  "myBalance": "102299773871486347354635",
-  "myBalance_div3": "34099924623828782451545",
+  "myBalance": "102266880846648421321285",
+  "myBalance_div3": "34088960282216140440428",
   "directPushTotalUSD": "1838950063778361071020",
   "teamLevel": "19",
   "teamCount": "2",
@@ -5646,7 +5646,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "616715872224342526081",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xebd296f4fd1ea40fa8b6b7f580b116daabde1b50",
@@ -5667,28 +5667,28 @@
   "boostMultiplier": "0",
   "boostExpireTime": "0",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xebf6ae468ba55c2b0d4a99498d968ba85a63e2ca",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "573722897877699592602",
-  "totalMined": "42360536668540298982172",
+  "totalMined": "42935252832242058193774",
   "lastBuyTime": "1790246764",
-  "myBalance": "151241095710989266211170",
-  "myBalance_div3": "50413698570329755403723",
+  "myBalance": "150666379547287506999568",
+  "myBalance_div3": "50222126515762502333189",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0x53c2724e74351bf5fd37a6ab4c03ab5508d96378",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "65",
+  "totalWithdrawCount": "66",
   "lockedUntil": "1792838764",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "611633395100543174506",
+  "boostExpireTime": "620574586854297206686",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xecb81b892489233110d4cc575a97001dde991916",
@@ -5709,28 +5709,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "240518153044870584316",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xeccfc69c5d219de14449120df5b8b895b808f148",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "407875560649449870335",
-  "totalMined": "15643689262946054456095",
+  "totalMined": "15912955035124004096379",
   "lastBuyTime": "1795741559",
-  "myBalance": "70859413731039379022231",
-  "myBalance_div3": "23619804577013126340743",
+  "myBalance": "70590147958861429381947",
+  "myBalance_div3": "23530049319620476460649",
   "directPushTotalUSD": "4067857584101104800",
   "teamLevel": "0",
   "teamCount": "3",
   "referrer": "0x90bdff953a3134fe219b05341284c501955c7da8",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "69",
+  "totalWithdrawCount": "70",
   "lockedUntil": "1798333559",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "227114440829530975898",
+  "boostExpireTime": "231295202657233169276",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xed8ae85d7b18c162e4b50f038ca13d9fc5fe3018",
@@ -5751,7 +5751,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "0",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xedac22a5b0a536b8735addb9cec45a6ab5225d3f",
@@ -5760,8 +5760,8 @@
   "totalInvestedUSD": "1388907363181086710249",
   "totalMined": "65205645094757908313453",
   "lastBuyTime": "1795609321",
-  "myBalance": "285085007002905598171781",
-  "myBalance_div3": "95028335667635199390593",
+  "myBalance": "285081362980668938439945",
+  "myBalance_div3": "95027120993556312813315",
   "directPushTotalUSD": "1337886862246049751713",
   "teamLevel": "19",
   "teamCount": "1",
@@ -5772,7 +5772,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "928029077093813115933",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xee1c8f8ac1361bde4d19d59e0062b647eddad1d4",
@@ -5793,28 +5793,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1217869398210030431298",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xf1d7941871de962c58b769c74d40b39fe0eb6426",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "690670702412817371511",
-  "totalMined": "41156333177125490754648",
-  "lastBuyTime": "1795755600",
-  "myBalance": "110021240471767755225575",
-  "myBalance_div3": "36673746823922585075191",
-  "directPushTotalUSD": "1096235088259706775795",
+  "totalInvestedUSD": "698729528005285063385",
+  "totalMined": "41804667138555263097839",
+  "lastBuyTime": "1795843567",
+  "myBalance": "110926906510337982882384",
+  "myBalance_div3": "36975635503445994294128",
+  "directPushTotalUSD": "1109334569242057734401",
   "teamLevel": "19",
   "teamCount": "2",
   "referrer": "0x4b27472c7390ae322fc0c7cd7af9d1a3e87ad30f",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "66",
-  "lockedUntil": "1798347600",
+  "totalWithdrawCount": "67",
+  "lockedUntil": "1798435567",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "598494684675479697669",
+  "boostExpireTime": "608581191086360413490",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xf30e0cdc9923e5d4ea558df4a9677598d4973645",
@@ -5823,8 +5823,8 @@
   "totalInvestedUSD": "6099235697897096010057",
   "totalMined": "88875955391091624974221",
   "lastBuyTime": "1790037450",
-  "myBalance": "1027532309254603415080049",
-  "myBalance_div3": "342510769751534471693349",
+  "myBalance": "1027445776214871652528649",
+  "myBalance_div3": "342481925404957217509549",
   "directPushTotalUSD": "7377322801250400338109",
   "teamLevel": "19",
   "teamCount": "5",
@@ -5835,49 +5835,49 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1288388499653509244682",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xf36b7aefdb49b3f66bfaa81f892f5b87f5e450ea",
   "activated": 1,
   "isNode": 0,
   "totalInvestedUSD": "347224593477495565531",
-  "totalMined": "13297783760894835942494",
+  "totalMined": "13557494541657427719120",
   "lastBuyTime": "1795682114",
-  "myBalance": "68344942305945204375269",
-  "myBalance_div3": "22781647435315068125089",
+  "myBalance": "68085231525182612598643",
+  "myBalance_div3": "22695077175060870866214",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0x61bdc757b8dc13930aeeedda6638d287cf855dea",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "66",
+  "totalWithdrawCount": "67",
   "lockedUntil": "1798274114",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "191795213475525625650",
+  "boostExpireTime": "195835684299173001147",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xf5bc564c593bb51930a9b8d9a6cef8220a125925",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "1800301391584739964431",
-  "totalMined": "63602293121303233389174",
-  "lastBuyTime": "1795727992",
-  "myBalance": "320232884698068546455662",
-  "myBalance_div3": "106744294899356182151887",
+  "totalInvestedUSD": "1815408700714494094237",
+  "totalMined": "64819178083155893865705",
+  "lastBuyTime": "1795790778",
+  "myBalance": "321934999736215885979131",
+  "myBalance_div3": "107311666578738628659710",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0xc0b0caaf38f17fbfea27197a1b4b0f2326088c0c",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "63",
-  "lockedUntil": "1798319992",
+  "totalWithdrawCount": "64",
+  "lockedUntil": "1798382778",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "922149809713789313781",
+  "boostExpireTime": "941043804877260232167",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xf5c6135cf59e0f75438037e09d8d8f1bfbd42bcc",
@@ -5886,8 +5886,8 @@
   "totalInvestedUSD": "4014748969208221462891",
   "totalMined": "90116212399210994554746",
   "lastBuyTime": "1792675312",
-  "myBalance": "676954015546124716774707",
-  "myBalance_div3": "225651338515374905591569",
+  "myBalance": "676370988350256699365382",
+  "myBalance_div3": "225456996116752233121794",
   "directPushTotalUSD": "6708683684619653349552",
   "teamLevel": "19",
   "teamCount": "7",
@@ -5898,7 +5898,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1231168670907359873918",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xf7955335cdef04bb576e609da1359a9eed6d9097",
@@ -5919,28 +5919,28 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "209977995741863456959",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xf9ce9713693534835dd192347772cc39c2078215",
   "activated": 1,
   "isNode": 0,
-  "totalInvestedUSD": "472188793127318187785",
-  "totalMined": "17024079265993172189752",
-  "lastBuyTime": "1795253346",
-  "myBalance": "92788314035456986030459",
-  "myBalance_div3": "30929438011818995343486",
+  "totalInvestedUSD": "485437477807318977648",
+  "totalMined": "17737658136447973284704",
+  "lastBuyTime": "1795768877",
+  "myBalance": "94634615965002184935507",
+  "myBalance_div3": "31544871988334061645169",
   "directPushTotalUSD": "0",
   "teamLevel": "0",
   "teamCount": "0",
   "referrer": "0x7600fb6ad223983a7cb18024a4d953a2ff535968",
   "totalReinvestCount": "0",
-  "totalWithdrawCount": "55",
-  "lockedUntil": "1797845346",
+  "totalWithdrawCount": "57",
+  "lockedUntil": "1798360877",
   "boostMultiplier": "1200000000000000000000",
-  "boostExpireTime": "246614259794896910165",
+  "boostExpireTime": "257704869821965466038",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xfacfefbf7545b5202025cc72cacc913615b98e4a",
@@ -5961,7 +5961,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "922945826447898964716",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xfb5c0d87bad15012ef63fa3c214df1f80a0342a3",
@@ -5982,7 +5982,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "175357653747026408573",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xfbbda008d2911b32e23561c12a3d1fbf789dbc35",
@@ -5991,8 +5991,8 @@
   "totalInvestedUSD": "2464613529011815828796",
   "totalMined": "78213359985708849966116",
   "lastBuyTime": "1793021843",
-  "myBalance": "297487844765776495013232",
-  "myBalance_div3": "99162614921925498337744",
+  "myBalance": "297411451965048285754444",
+  "myBalance_div3": "99137150655016095251481",
   "directPushTotalUSD": "803406453080578969595",
   "teamLevel": "19",
   "teamCount": "1",
@@ -6003,7 +6003,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1126183724083862344652",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xfbf572a42b9b354457b59f8cc2ef62cf39f7c2fe",
@@ -6024,7 +6024,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "129977384741294879416",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xfc3a6ce776fa458a3d314dd0de75dad34811c48c",
@@ -6045,7 +6045,7 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "157093735320523258763",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  },
  {
   "addr": "0xff27e764be9fc30bbb646a0c7104bbb50420d47c",
@@ -6066,6 +6066,6 @@
   "boostMultiplier": "1200000000000000000000",
   "boostExpireTime": "1229238121228022814251",
   "source": "new",
-  "updatedAt": 1795766032
+  "updatedAt": 1795850558
  }
 ]
